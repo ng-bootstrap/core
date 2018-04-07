@@ -3,11 +3,14 @@ import {
   Component,
   ContentChildren,
   Directive,
+  ElementRef,
   EventEmitter,
+  HostListener,
   Input,
   Output,
   QueryList,
-  TemplateRef
+  TemplateRef,
+  ViewChildren
 } from '@angular/core';
 
 import {isString} from '../util/util';
@@ -103,6 +106,16 @@ export interface NgbPanelChangeEvent {
   preventDefault: () => void;
 }
 
+@Directive({selector: '[role="heading"]'})
+export class Heading {
+  constructor(public element: ElementRef) {}
+}
+
+@Directive({selector: '[role="region"]'})
+export class Region {
+  constructor(public element: ElementRef) {}
+}
+
 /**
  * The NgbAccordion directive is a collection of panels.
  * It can assure that only one panel can be opened at a time.
@@ -110,11 +123,11 @@ export interface NgbPanelChangeEvent {
 @Component({
   selector: 'ngb-accordion',
   exportAs: 'ngbAccordion',
-  host: {'role': 'tablist', '[attr.aria-multiselectable]': '!closeOtherPanels'},
+  host: {'role': 'presentation', '[attr.aria-multiselectable]': '!closeOtherPanels'},
   template: `
     <ng-template ngFor let-panel [ngForOf]="panels">
       <div class="card">
-        <div role="tab" id="{{panel.id}}-header"
+        <div role="heading" id="{{panel.id}}-header"
           [class]="'card-header ' + (panel.type ? 'bg-'+panel.type: type ? 'bg-'+type : '')" [class.active]="panel.isOpen">
           <a href (click)="!!toggle(panel.id)" [class.text-muted]="panel.disabled" [attr.tabindex]="(panel.disabled ? '-1' : null)"
             [attr.aria-expanded]="panel.isOpen" [attr.aria-controls]="(panel.isOpen ? panel.id : null)"
@@ -122,7 +135,7 @@ export interface NgbPanelChangeEvent {
             {{panel.title}}<ng-template [ngTemplateOutlet]="panel.titleTpl?.templateRef"></ng-template>
           </a>
         </div>
-        <div id="{{panel.id}}" role="tabpanel" [attr.aria-labelledby]="panel.id + '-header'"
+        <div id="{{panel.id}}" role="region" [attr.aria-labelledby]="panel.id + '-header'"
              class="card-body collapse {{panel.isOpen ? 'show' : null}}" *ngIf="!destroyOnHide || panel.isOpen">
              <ng-template [ngTemplateOutlet]="panel.contentTpl?.templateRef"></ng-template>
         </div>
@@ -132,6 +145,10 @@ export interface NgbPanelChangeEvent {
 })
 export class NgbAccordion implements AfterContentChecked {
   @ContentChildren(NgbPanel) panels: QueryList<NgbPanel>;
+
+  @ViewChildren(Heading) headers: QueryList<Heading>;
+
+  @ViewChildren(Region) regions: QueryList<Region>;
 
   /**
    * An array or comma separated strings of panel identifiers that should be opened
@@ -160,9 +177,57 @@ export class NgbAccordion implements AfterContentChecked {
    */
   @Output() panelChange = new EventEmitter<NgbPanelChangeEvent>();
 
-  constructor(config: NgbAccordionConfig) {
+  constructor(config: NgbAccordionConfig, private elRef: ElementRef) {
     this.type = config.type;
     this.closeOtherPanels = config.closeOthers;
+  }
+
+  @HostListener('keydown', ['$event'])
+  keydown(event: KeyboardEvent) {
+    // Create the array of toggle elements for the accordion group
+    const headers = this.headers.map((heading: Heading) => heading.element.nativeElement);
+    const panels = this.regions.map((region: Region) => region.element.nativeElement);
+
+    const target = (event.target as any).parentElement;
+    const key = event.which.toString();
+    // 33 = Page Up, 34 = Page Down
+    const ctrlModifier = (event.ctrlKey && key.match(/33|34/));
+
+    // Is this coming from an accordion header?
+    if (target.classList.contains('card-header')) {
+      // Up/ Down arrow and Control + Page Up/ Page Down keyboard operations
+      // 38 = Up, 40 = Down
+      if (key.match(/38|40/) || ctrlModifier) {
+        const index = headers.indexOf(target);
+        const direction = (key.match(/34|40/)) ? 1 : -1;
+        const length = headers.length;
+        const newIndex = (index + length + direction) % length;
+        headers[newIndex].querySelector('a').focus();
+        event.preventDefault();
+      } else if (key.match(/35|36/)) {
+        // 35 = End, 36 = Home keyboard operations
+        switch (key) {
+          // Go to first accordion
+          case '36':
+            headers[0].querySelector('a').focus();
+            break;
+          // Go to last accordion
+          case '35':
+            headers[headers.length - 1].querySelector('a').focus();
+            break;
+        }
+        event.preventDefault();
+      }
+    } else if (ctrlModifier) {
+      // Control + Page Up/ Page Down keyboard operations
+      // Catches events that happen inside of panels
+      panels.forEach(function(panel, index) {
+        if (panel === target) {
+          headers[index].querySelector('a').focus();
+          event.preventDefault();
+        }
+      });
+    }
   }
 
   /**

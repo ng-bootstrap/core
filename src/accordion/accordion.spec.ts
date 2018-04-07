@@ -58,7 +58,7 @@ describe('ngb-accordion', () => {
 
   it('should initialize inputs with default values', () => {
     const defaultConfig = new NgbAccordionConfig();
-    const accordionCmp = new NgbAccordion(defaultConfig);
+    const accordionCmp = new NgbAccordion(defaultConfig, null);
     expect(accordionCmp.type).toBe(defaultConfig.type);
     expect(accordionCmp.closeOtherPanels).toBe(defaultConfig.closeOthers);
   });
@@ -69,7 +69,7 @@ describe('ngb-accordion', () => {
     const el = fixture.nativeElement;
     fixture.detectChanges();
     expectOpenPanels(el, [false, false, false]);
-    expect(accordionEl.getAttribute('role')).toBe('tablist');
+    expect(accordionEl.getAttribute('role')).toBe('presentation');
     expect(accordionEl.getAttribute('aria-multiselectable')).toBe('true');
   });
 
@@ -559,10 +559,10 @@ describe('ngb-accordion', () => {
     fixture.detectChanges();
 
     const headers = getPanels(fixture.nativeElement);
-    headers.forEach((header: HTMLElement) => expect(header.getAttribute('role')).toBe('tab'));
+    headers.forEach((header: HTMLElement) => expect(header.getAttribute('role')).toBe('heading'));
 
     const contents = getPanelsContent(fixture.nativeElement);
-    contents.forEach((content: HTMLElement) => expect(content.getAttribute('role')).toBe('tabpanel'));
+    contents.forEach((content: HTMLElement) => expect(content.getAttribute('role')).toBe('region'));
   });
 
   describe('Custom config', () => {
