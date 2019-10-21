@@ -1197,7 +1197,7 @@ export class WithSkipTabindexFirstFocusableModalCmpt {
 })
 class TestComponent {
   name = 'World';
-  openedModal: NgbModalRef;
+  openedModal: NgbModalRef<string>;
   show = true;
   @ViewChild('content', {static: true}) tplContent;
   @ViewChild('destroyableContent', {static: true}) tplDestroyableContent;
