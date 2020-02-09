@@ -137,7 +137,7 @@ export class NgbModalRef<T = any> {
       if (!this._beforeDismiss) {
         this._dismiss(reason);
       } else {
-        const dismiss = this._beforeDismiss();
+        const dismiss = this._beforeDismiss(this);
         if (dismiss && dismiss.then) {
           dismiss.then(
               result => {
