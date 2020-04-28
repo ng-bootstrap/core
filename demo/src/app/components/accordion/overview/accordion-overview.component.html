@@ -1,0 +1,114 @@
+<p>
+  Accordion is a component that allows you to organize sections of the user interface into collapsable panels.
+</p>
+
+
+<ngbd-overview-section [section]="sections['basic-usage']">
+  <p>
+    In the most primitive form, an accordion is used by creating an <code>ngb-accordion</code> element, with nested <code>ngb-panel</code> elements within it.
+  </p>
+  <p>
+    This example might look something like:
+    <ngbd-code [snippet]="snippets.basicNoOpts"></ngbd-code>
+  </p>
+
+  <p>
+    The above example uses the <code>title</code> attribute for the ngb-panel element to define the text displayed on the panel
+    header. While this can be customized, this setup provides the basic representation of the title as clickable text.
+  </p>
+
+  <p>
+    The above example also uses the <code>ngbPanelContent</code> directive to denote the container of the content to be displayed in the panel.
+  </p>
+
+  <p>
+    Some additional notes around basic usage of the component are the following:
+  </p>
+
+  <ul>
+    <li>
+      The accordion element can be given a template reference variable, which allows external controls to drive the
+      operation of the accordion (i.e., which panels are open).
+    </li>
+    <li>
+      Each <code>ngb-panel</code> can be given an <code>id</code> attribute, which would allow for direct access to
+      identify or toggle the open status of the given panel.
+    </li>
+    <li>
+      It is also possible to assign the <code>activeIds</code> attribute of the <code>ngb-accordion</code> element to the
+      value of one of the specified <code>ngb-panel</code> element's <code>id</code> to define which panel is open by default.
+    </li>
+    <li>
+      A panel can also be disabled, which prevents it from being able to be opened by using the <code>disabled</code> attribute.
+    </li>
+
+    <li>
+      The accordion itself can also be set to only allow one open panel at a time by using the <code>closeOthers</code> attribute.
+    </li>
+  </ul>
+
+
+</ngbd-overview-section>
+
+<ngbd-overview-section [section]="sections['customization']">
+  <p>
+    Customization Info
+  </p>
+  <p>
+    There are really 2 ways to customize the usage of the accordion.
+  </p>
+  <ul>
+    <li>Custom Panel Headers</li>
+    <li>Custom Global Configuration</li>
+  </ul>
+
+  <h3>Custom Panel Headers</h3>
+
+  <p>
+    <code>ngb-panel</code> supports the <code>title</code> attribute for defining a simple, click-able header with text
+    for the panel which works in many cases.
+  </p>
+
+  <p>
+    However, sometimes it is useful to be able to do something more advanced with the header, such as display custom
+    HTML, or use a button or a specific click-able element to trigger the toggle behavior for the panel.
+  </p>
+
+  <p>
+    To accomplish this, the following directives will be helpful:
+  </p>
+  <ol>
+    <li><code>ngbPanelHeader</code></li>
+    <li><code>ngbPanelToggle</code></li>
+  </ol>
+
+  <p>
+    By using these directives to associate the toggle element and the header content, custom panel headers can easily be implemented.
+    The common way of doing this basically involves defining multiple <code>ng-template</code> blocks, and applying the aforementioned
+    directives.  Let's take a look:
+  </p>
+
+  <h5>Using Bootstrap standard utility classes for a basic, stretched button</h5>
+  <p>Visiually, this is similar to the default text based implementation since the button is stretched the width of the panel.</p>
+  <ngbd-code [snippet]="snippets.customOption1"></ngbd-code>
+
+  <h5>Using Bootstrap standard utility classes for a more customized button</h5>
+  <p>This approach demonstrates how an arbitrarily placed button can be used to toggle the panel functionality.</p>
+  <ngbd-code [snippet]="snippets.customOption2"></ngbd-code>
+
+  <h5>Using entirely custom HTML</h5>
+  <p>If you would rather use some bit of HTML to define the header, this approach will work fine.</p>
+  <ngbd-code [snippet]="snippets.customOption3"></ngbd-code>
+
+
+
+  <h3>Custom Panel Headers</h3>
+
+  <p>
+    By injecting <code>NgbAccordionConfig</code>, default values can be established for all usages of an accordion.
+    For example, setting <code>closeOthers</code> could be used to ensure all accordions inherit that option when they are
+    used.
+  </p>
+
+
+</ngbd-overview-section>

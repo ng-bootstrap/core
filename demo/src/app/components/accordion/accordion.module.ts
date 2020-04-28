@@ -17,6 +17,12 @@ import { NgbdAccordionStatic } from './demos/static/accordion-static';
 import { NgbdAccordionStaticModule } from './demos/static/accordion-static.module';
 import { NgbdAccordionToggle } from './demos/toggle/accordion-toggle';
 import { NgbdAccordionToggleModule } from './demos/toggle/accordion-toggle.module';
+import { NgbdAccordionOverviewComponent } from './overview/accordion-overview.component';
+
+const OVERVIEW = {
+  'basic-usage': 'Basic Usage',
+  customization: 'Customization'
+};
 
 const DEMOS = {
   basic: {
@@ -58,11 +64,13 @@ const DEMOS = {
 };
 
 export const ROUTES = [
-  { path: '', pathMatch: 'full', redirectTo: 'examples' },
+  { path: '', pathMatch: 'full', redirectTo: 'overview' },
   {
     path: '',
     component: ComponentWrapper,
+    data: { OVERVIEW },
     children: [
+      { path: 'overview', component: NgbdAccordionOverviewComponent },
       { path: 'examples', component: NgbdExamplesPage },
       { path: 'api', component: NgbdApiPage }
     ]
@@ -79,10 +87,11 @@ export const ROUTES = [
     NgbdAccordionToggleModule,
     NgbdAccordionStaticModule,
     NgbdAccordionPreventchangeModule
-  ]
+  ],
+  declarations: [NgbdAccordionOverviewComponent]
 })
 export class NgbdAccordionModule {
   constructor(demoList: NgbdDemoList) {
-    demoList.register('accordion', DEMOS);
+    demoList.register('accordion', DEMOS, OVERVIEW);
   }
 }
