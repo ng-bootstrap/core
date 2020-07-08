@@ -5,21 +5,27 @@
     <button class="btn btn-outline-secondary mx-1" id="flex-left" (click)="setPosition('start')">Left</button>
     <button class="btn btn-outline-secondary mx-1" id="flex-center" (click)="setPosition('center')">Center</button>
     <button class="btn btn-outline-secondary mx-1" id="flex-right" (click)="setPosition('end')">Right</button>
+    <button class="btn btn-outline-secondary mx-1" id="gpu-on" (click)="toggleGpu(true)">Enable Gpu</button>
+    <button class="btn btn-outline-secondary mx-1" id="gpu-off" (click)="toggleGpu(false)">Disable Gpu</button>
   </div>
   <div class="d-flex {{flexPosition}}">
     <div class="d-flex flex-column">
-      <button id="btn-normal" type="button" container="body" triggers="click" class="btn btn-outline-secondary" placement="auto" [ngbTooltip]="content">
+      <button id="btn-normal" type="button" [useGpu]="useGpu" triggers="click" class="btn btn-outline-secondary" placement="auto" [ngbTooltip]="content">
         Normal tooltip
       </button>
 
-      <button id="btn-innerHtml" type="button" container="body" triggers="click" class="btn btn-outline-secondary" [placement]="['top', 'top-left', 'top-right']" [ngbTooltip]="tooltipHtml">
+      <button id="btn-innerHtml" type="button" [useGpu]="useGpu" triggers="click" class="btn btn-outline-secondary" [placement]="['top', 'top-left', 'top-right']" [ngbTooltip]="tooltipHtml">
           InnerHtml
       </button>
 
-      <button id="btn-body-off" type="button" container="body" triggers="click" class="btn btn-outline-secondary" placement="auto" [ngbTooltip]="content">
-        body off
+      <button id="btn-body" type="button" container="body" [useGpu]="useGpu" triggers="click" class="btn btn-outline-secondary" placement="auto" [ngbTooltip]="content">
+        Body container
       </button>
-      <button id="btn-default" type="button" container="body" triggers="click" class="btn btn-outline-secondary" placement="left left-top left-bottom" [ngbTooltip]="content">
+      <button id="btn-innerHtml-body" type="button" container="body" [useGpu]="useGpu" triggers="click" class="btn btn-outline-secondary" [placement]="['top', 'top-left', 'top-right']" [ngbTooltip]="tooltipHtml">
+        InnerHtml<br/>
+        Body container
+      </button>
+      <button id="btn-default" type="button" container="body" [useGpu]="useGpu" triggers="click" class="btn btn-outline-secondary" placement="left left-top left-bottom" [ngbTooltip]="content">
         Default placement
       </button>
 
@@ -27,7 +33,7 @@
     <ng-template #tooltipHtml><div [innerHtml]="content"></div></ng-template>
   </div>
   <div class="m-3">
-    <button id="btn-fixed" type="button" triggers="click" class="btn btn-outline-secondary position-fixed" [placement]="['top', 'top-left', 'top-right']" [ngbTooltip]="tooltipHtml" [ngStyle]="{'left': fixedPositionLeft, 'right': fixedPositionRight}">
+    <button id="btn-fixed" type="button" [useGpu]="useGpu" triggers="click" class="btn btn-outline-secondary position-fixed" [placement]="['top', 'top-left', 'top-right']" [ngbTooltip]="tooltipHtml" [ngStyle]="{'left': fixedPositionLeft, 'right': fixedPositionRight}">
       Fixed
     </button>
   </div>

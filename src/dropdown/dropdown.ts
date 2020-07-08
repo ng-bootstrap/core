@@ -177,6 +177,13 @@ export class NgbDropdown implements AfterContentInit, OnDestroy {
   @Input() placement: PlacementArray;
 
   /**
+   * Specify if the GPU must be used for the placement
+   *
+   * If true, translate will be used, otherwise it's top and left
+   */
+  @Input() useGpu = true;
+
+  /**
   * A selector specifying the element the dropdown should be appended to.
   * Currently only supports "body".
   *
@@ -402,7 +409,7 @@ export class NgbDropdown implements AfterContentInit, OnDestroy {
           this.display === 'dynamic' ?
               positionElements(
                   this._anchor.anchorEl, this._bodyContainer || this._menuElement.nativeElement, this.placement,
-                  this.container === 'body') :
+                  this.container === 'body', undefined, this.useGpu) :
               this._getFirstPlacement(this.placement));
     }
   }

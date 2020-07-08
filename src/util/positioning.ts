@@ -92,8 +92,9 @@ export class Positioning {
   /*
     Return false if the element to position is outside the viewport
   */
-  positionElements(hostElement: HTMLElement, targetElement: HTMLElement, placement: string, appendToBody?: boolean):
-      boolean {
+  positionElements(
+      hostElement: HTMLElement, targetElement: HTMLElement, placement: string, appendToBody?: boolean,
+      useGpu = true): boolean {
     const[placementPrimary = 'top', placementSecondary = 'center'] = placement.split('-');
 
     const hostElPosition = appendToBody ? this.offset(hostElement, false) : this.position(hostElement, false);
@@ -103,6 +104,21 @@ export class Positioning {
     const marginBottom = parseFloat(targetElStyles.marginBottom);
     const marginLeft = parseFloat(targetElStyles.marginLeft);
     const marginRight = parseFloat(targetElStyles.marginRight);
+
+    if (!useGpu) {
+      const style = targetElement.style;
+
+      // Unfreeze
+      style.width = '';
+      style.height = '';
+      style.top = '0';
+      style.left = '0';
+
+      // Freeze dimensions as it has impact on the placement,
+      // It should be done for each iteration because of the arrow position, which change the popup dimension
+      style.width = targetElement.offsetWidth + 'px';
+      style.height = targetElement.offsetHeight + 'px';
+    }
 
     let topPosition = 0;
     let leftPosition = 0;
@@ -145,8 +161,13 @@ export class Positioning {
     }
 
     /// The translate3d/gpu acceleration render a blurry text on chrome, the next line is commented until a browser fix
-    // targetElement.style.transform = `translate3d(${Math.round(leftPosition)}px, ${Math.floor(topPosition)}px, 0px)`;
-    targetElement.style.transform = `translate(${Math.round(leftPosition)}px, ${Math.round(topPosition)}px)`;
+    const[top, left] = [Math.round(topPosition) + 'px', Math.round(leftPosition) + 'px'];
+    if (useGpu) {
+      targetElement.style.transform = `translate(${left}, ${top})`;
+    } else {
+      targetElement.style.top = top;
+      targetElement.style.left = left;
+    }
 
     // Check if the targetElement is inside the viewport
     const targetElBCR = targetElement.getBoundingClientRect();
@@ -174,7 +195,7 @@ export const positionService = new Positioning();
  * */
 export function positionElements(
     hostElement: HTMLElement, targetElement: HTMLElement, placement: string | Placement | PlacementArray,
-    appendToBody?: boolean, baseClass?: string): Placement |
+    appendToBody?: boolean, baseClass?: string, useGpu = true): Placement |
     null {
   let placementVals: Array<Placement> =
       Array.isArray(placement) ? placement : placement.split(placementSeparator) as Array<Placement>;
@@ -216,19 +237,23 @@ export function positionElements(
 
   // coordinates where to position
 
-  // Required for transform:
+  // Required for positioning:
   const style = targetElement.style;
   style.position = 'absolute';
-  style.top = '0';
-  style.left = '0';
-  style['will-change'] = 'transform';
+  if (useGpu) {
+    style.top = '0';
+    style.left = '0';
+    style['will-change'] = 'transform';
+  } else {
+    style['will-change'] = 'width, height, top, left';
+  }
 
   let testPlacement: Placement | null = null;
   let isInViewport = false;
   for (testPlacement of placementVals) {
     let addedClasses = addClassesToTarget(testPlacement);
 
-    if (positionService.positionElements(hostElement, targetElement, testPlacement, appendToBody)) {
+    if (positionService.positionElements(hostElement, targetElement, testPlacement, appendToBody, useGpu)) {
       isInViewport = true;
       break;
     }
@@ -243,7 +268,12 @@ export function positionElements(
     // If nothing match, the first placement is the default one
     testPlacement = placementVals[0];
     addClassesToTarget(testPlacement);
-    positionService.positionElements(hostElement, targetElement, testPlacement, appendToBody);
+    positionService.positionElements(hostElement, targetElement, testPlacement, appendToBody, useGpu);
+  }
+
+  if (!useGpu) {
+    // style.width = '';
+    // style.height = '';
   }
 
   return testPlacement;

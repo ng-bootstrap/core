@@ -106,6 +106,13 @@ export class NgbPopover implements OnInit, OnDestroy, OnChanges {
   @Input() placement: PlacementArray;
 
   /**
+   * Specify if the GPU must be used for the placement
+   *
+   * If true, translate will be used, otherwise it's top and left
+   */
+  @Input() useGpu = true;
+
+  /**
    * Specifies events that should trigger the tooltip.
    *
    * Supports a space separated list of event names.
@@ -193,7 +200,7 @@ export class NgbPopover implements OnInit, OnDestroy, OnChanges {
       if (this._windowRef) {
         positionElements(
             this._elementRef.nativeElement, this._windowRef.location.nativeElement, this.placement,
-            this.container === 'body', 'bs-popover');
+            this.container === 'body', 'bs-popover', this.useGpu);
       }
     });
   }

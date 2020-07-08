@@ -207,6 +207,13 @@ export class NgbInputDatepicker implements OnChanges,
   @Input() restoreFocus: true | string | HTMLElement;
 
   /**
+   * Specify if the GPU must be used for the placement
+   *
+   * If true, translate will be used, otherwise it's top and left
+   */
+  @Input() useGpu = true;
+
+  /**
    * If `true`, weekdays will be displayed.
    */
   @Input() showWeekdays: boolean;
@@ -525,6 +532,8 @@ export class NgbInputDatepicker implements OnChanges,
       throw new Error('ngbDatepicker could not find element declared in [positionTarget] to position against.');
     }
 
-    positionElements(hostElement, this._cRef.location.nativeElement, this.placement, this.container === 'body');
+    positionElements(
+        hostElement, this._cRef.location.nativeElement, this.placement, this.container === 'body', undefined,
+        this.useGpu);
   }
 }

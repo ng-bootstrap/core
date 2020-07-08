@@ -176,6 +176,13 @@ export class NgbTypeahead implements ControlValueAccessor,
   @Input() placement: PlacementArray = 'bottom-left';
 
   /**
+   * Specify if the GPU must be used for the placement
+   *
+   * If true, translate will be used, otherwise it's top and left
+   */
+  @Input() useGpu = true;
+
+  /**
    * An event emitted right before an item is selected from the result list.
    *
    * Event payload is of type [`NgbTypeaheadSelectItemEvent`](#/components/typeahead/api#NgbTypeaheadSelectItemEvent).
@@ -211,7 +218,7 @@ export class NgbTypeahead implements ControlValueAccessor,
       if (this.isPopupOpen()) {
         positionElements(
             this._elementRef.nativeElement, this._windowRef !.location.nativeElement, this.placement,
-            this.container === 'body');
+            this.container === 'body', undefined, this.useGpu);
       }
     });
   }

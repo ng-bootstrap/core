@@ -6,6 +6,7 @@ export class TooltipPositionComponent {
   content = 'Lorem ipsum dolor sit amet consectetur adipisicing elit.';
   fixedPositionLeft = '20px';
   fixedPositionRight = '';
+  useGpu = true;
 
   setPosition(position: 'start' | 'center' | 'end') {
     this.flexPosition = `justify-content-${position}`;
@@ -24,4 +25,6 @@ export class TooltipPositionComponent {
         break;
     }
   }
+
+  toggleGpu(isGpuEnable: boolean) { this.useGpu = isGpuEnable; }
 }

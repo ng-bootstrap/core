@@ -67,35 +67,47 @@ describe('Tooltip Position', () => {
 
   beforeAll(() => page = new TooltipPositionPage());
 
-  beforeEach(async() => await openUrl('tooltip/position'));
+  ['on', 'off'].forEach((gpuSelector: 'on' | 'off') => {
+    describe(`positioning tests when gpu is ${gpuSelector}`, () => {
+      beforeEach(async() => {
+        await openUrl('tooltip/position');
+        await page.getGpuButton(gpuSelector).click();
+      });
 
-  it(`should be well positionned on the left edge`, async() => {
-    await page.selectPosition('left');
-    await expectTooltipsPosition('normal', 'right');
-    await expectTooltipsPosition('innerHtml', 'top-left');
-    await expectTooltipsPosition('body-off', 'right');
-    await expectTooltipsPosition('fixed', 'top-left');
+      it(`should be well positionned on the left edge`, async() => {
+        await page.selectPosition('left');
+        await expectTooltipsPosition('normal', 'right');
+        await expectTooltipsPosition('innerHtml', 'top-left');
+        await expectTooltipsPosition('body', 'right');
+        await expectTooltipsPosition('innerHtml-body', 'top-left');
+        await expectTooltipsPosition('fixed', 'top-left');
+      });
+
+      it(`should be well positionned on the center`, async() => {
+        await page.selectPosition('center');
+        await expectTooltipsPosition('normal', 'top');
+        await expectTooltipsPosition('innerHtml', 'top');
+        await expectTooltipsPosition('body', 'top');
+        await expectTooltipsPosition('innerHtml-body', 'top');
+        await expectTooltipsPosition('fixed', 'top');
+      });
+
+      it(`should be well positionned on the right edge`, async() => {
+        await page.selectPosition('right');
+        await expectTooltipsPosition('normal', 'left');
+        await expectTooltipsPosition('innerHtml', 'top-right');
+        await expectTooltipsPosition('body', 'left');
+        await expectTooltipsPosition('innerHtml-body', 'top-right');
+        await expectTooltipsPosition('fixed', 'top-right');
+      });
+
+      it(`should be positionned at the first placement by default`, async() => {
+        await page.selectPosition('left');
+        await expectTooltipsPosition('default', 'left', ['left-bottom']);
+      });
+    });
+
   });
 
-  it(`should be well positionned on the center`, async() => {
-    await page.selectPosition('center');
-    await expectTooltipsPosition('normal', 'top');
-    await expectTooltipsPosition('innerHtml', 'top');
-    await expectTooltipsPosition('body-off', 'top');
-    await expectTooltipsPosition('fixed', 'top');
-  });
-
-  it(`should be well positionned on the right edge`, async() => {
-    await page.selectPosition('right');
-    await expectTooltipsPosition('normal', 'left');
-    await expectTooltipsPosition('innerHtml', 'top-right');
-    await expectTooltipsPosition('body-off', 'left');
-    await expectTooltipsPosition('fixed', 'top-right');
-  });
-
-  it(`should be positionned at the first placement by default`, async() => {
-    await page.selectPosition('left');
-    await expectTooltipsPosition('default', 'left', ['left-bottom']);
-  });
 
 });
