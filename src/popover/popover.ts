@@ -193,7 +193,7 @@ export class NgbPopover implements OnInit, OnDestroy, OnChanges {
       if (this._windowRef) {
         positionElements(
             this._elementRef.nativeElement, this._windowRef.location.nativeElement, this.placement,
-            this.container === 'body', 'bs-popover');
+            this.container === 'body', 'bs-popover', this.hidden);
       }
     });
   }

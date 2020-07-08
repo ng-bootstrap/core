@@ -211,7 +211,7 @@ export class NgbTypeahead implements ControlValueAccessor,
       if (this.isPopupOpen()) {
         positionElements(
             this._elementRef.nativeElement, this._windowRef !.location.nativeElement, this.placement,
-            this.container === 'body');
+            this.container === 'body', undefined, this._closed$);
       }
     });
   }

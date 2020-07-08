@@ -525,6 +525,8 @@ export class NgbInputDatepicker implements OnChanges,
       throw new Error('ngbDatepicker could not find element declared in [positionTarget] to position against.');
     }
 
-    positionElements(hostElement, this._cRef.location.nativeElement, this.placement, this.container === 'body');
+    positionElements(
+        hostElement, this._cRef.location.nativeElement, this.placement, this.container === 'body', undefined,
+        this.closed);
   }
 }

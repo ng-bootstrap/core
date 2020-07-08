@@ -1,3 +1,6 @@
+import {Observable} from 'rxjs';
+import {take} from 'rxjs/operators';
+
 // previous version:
 // https://github.com/angular-ui/bootstrap/blob/07c31d0731f7cb068a1932b8e01d2312b796b4ec/src/position/position.js
 export class Positioning {
@@ -92,11 +95,9 @@ export class Positioning {
   /*
     Return false if the element to position is outside the viewport
   */
-  positionElements(hostElement: HTMLElement, targetElement: HTMLElement, placement: string, appendToBody?: boolean):
-      boolean {
+  positionElements(hostElPosition: any, targetElement: HTMLElement, placement: string, clientRectsCache?): boolean {
     const[placementPrimary = 'top', placementSecondary = 'center'] = placement.split('-');
 
-    const hostElPosition = appendToBody ? this.offset(hostElement, false) : this.position(hostElement, false);
     const targetElStyles = this.getAllStyles(targetElement);
 
     const marginTop = parseFloat(targetElStyles.marginTop);
@@ -149,7 +150,21 @@ export class Positioning {
     targetElement.style.transform = `translate(${Math.round(leftPosition)}px, ${Math.round(topPosition)}px)`;
 
     // Check if the targetElement is inside the viewport
-    const targetElBCR = targetElement.getBoundingClientRect();
+    let targetElBCR;
+    if (clientRectsCache) {
+      targetElBCR = clientRectsCache[placement];
+      if (!targetElBCR) {
+        const targetElBCRTemp = targetElement.getBoundingClientRect();
+        targetElBCR = clientRectsCache[placement] = {
+          top: targetElBCRTemp.top,
+          left: targetElBCRTemp.left,
+          bottom: targetElBCRTemp.bottom,
+          right: targetElBCRTemp.right
+        };
+      }
+    } else {
+      targetElBCR = targetElement.getBoundingClientRect();
+    }
     const html = document.documentElement;
     const windowHeight = window.innerHeight || html.clientHeight;
     const windowWidth = window.innerWidth || html.clientWidth;
@@ -161,6 +176,7 @@ export class Positioning {
 
 const placementSeparator = /\s+/;
 export const positionService = new Positioning();
+const cache = new Map();
 
 /*
  * Accept the placement array and applies the appropriate placement dependent on the viewport.
@@ -174,8 +190,18 @@ export const positionService = new Positioning();
  * */
 export function positionElements(
     hostElement: HTMLElement, targetElement: HTMLElement, placement: string | Placement | PlacementArray,
-    appendToBody?: boolean, baseClass?: string): Placement |
+    appendToBody?: boolean, baseClass?: string, closed$?: Observable<any>): Placement |
     null {
+  let clientRectsCache;
+  if (closed$) {
+    clientRectsCache = cache.get(targetElement);
+    if (!clientRectsCache) {
+      clientRectsCache = {};
+      cache.set(targetElement, clientRectsCache);
+      closed$.pipe(take(1)).subscribe(() => { cache.delete(targetElement); });
+    }
+  }
+
   let placementVals: Array<Placement> =
       Array.isArray(placement) ? placement : placement.split(placementSeparator) as Array<Placement>;
 
@@ -214,8 +240,6 @@ export function positionElements(
     });
   }
 
-  // coordinates where to position
-
   // Required for transform:
   const style = targetElement.style;
   style.position = 'absolute';
@@ -225,10 +249,12 @@ export function positionElements(
 
   let testPlacement: Placement | null = null;
   let isInViewport = false;
+  const hostElPosition =
+      appendToBody ? positionService.offset(hostElement, false) : positionService.position(hostElement, false);
   for (testPlacement of placementVals) {
     let addedClasses = addClassesToTarget(testPlacement);
 
-    if (positionService.positionElements(hostElement, targetElement, testPlacement, appendToBody)) {
+    if (positionService.positionElements(hostElPosition, targetElement, testPlacement, clientRectsCache)) {
       isInViewport = true;
       break;
     }
@@ -243,7 +269,7 @@ export function positionElements(
     // If nothing match, the first placement is the default one
     testPlacement = placementVals[0];
     addClassesToTarget(testPlacement);
-    positionService.positionElements(hostElement, targetElement, testPlacement, appendToBody);
+    positionService.positionElements(hostElPosition, targetElement, testPlacement, clientRectsCache);
   }
 
   return testPlacement;
