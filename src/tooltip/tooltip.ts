@@ -26,10 +26,12 @@ import {DOCUMENT} from '@angular/common';
 
 import {listenToTriggers} from '../util/triggers';
 import {ngbAutoClose} from '../util/autoclose';
+import {ngbWindowResize} from '../util/resize';
 import {positionElements, PlacementArray} from '../util/positioning';
 import {PopupService} from '../util/popup';
 
 import {NgbTooltipConfig} from './tooltip-config';
+import {take} from 'rxjs/operators';
 
 let nextId = 0;
 
@@ -138,7 +140,6 @@ export class NgbTooltip implements OnInit, OnDestroy, OnChanges {
   private _popupService: PopupService<NgbTooltipWindow>;
   private _windowRef: ComponentRef<NgbTooltipWindow>| null = null;
   private _unregisterListenersFn;
-  private _zoneSubscription: any;
 
   constructor(
       private _elementRef: ElementRef<HTMLElement>, private _renderer: Renderer2, injector: Injector,
@@ -155,14 +156,6 @@ export class NgbTooltip implements OnInit, OnDestroy, OnChanges {
     this.closeDelay = config.closeDelay;
     this._popupService = new PopupService<NgbTooltipWindow>(
         NgbTooltipWindow, injector, viewContainerRef, _renderer, componentFactoryResolver, applicationRef);
-
-    this._zoneSubscription = _ngZone.onStable.subscribe(() => {
-      if (this._windowRef) {
-        positionElements(
-            this._elementRef.nativeElement, this._windowRef.location.nativeElement, this.placement,
-            this.container === 'body', 'bs-tooltip');
-      }
-    });
   }
 
   /**
@@ -196,7 +189,10 @@ export class NgbTooltip implements OnInit, OnDestroy, OnChanges {
 
       if (this.container === 'body') {
         this._document.querySelector(this.container).appendChild(this._windowRef.location.nativeElement);
+        ngbWindowResize(this._ngZone, () => this.position(), this.hidden);
       }
+
+      this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => this.position());
 
       // We need to detect changes, because we don't know where .open() might be called from.
       // Ex. opening tooltip from one of lifecycle hooks that run after the CD
@@ -270,6 +266,16 @@ export class NgbTooltip implements OnInit, OnDestroy, OnChanges {
     if (this._unregisterListenersFn) {
       this._unregisterListenersFn();
     }
-    this._zoneSubscription.unsubscribe();
+  }
+
+  /**
+   * Trigger a repositioning of the tooltip
+   */
+  position() {
+    if (this._windowRef) {
+      positionElements(
+          this._elementRef.nativeElement, this._windowRef.location.nativeElement, this.placement,
+          this.container === 'body', 'bs-tooltip');
+    }
   }
 }

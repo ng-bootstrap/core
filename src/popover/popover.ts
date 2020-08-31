@@ -26,10 +26,12 @@ import {DOCUMENT} from '@angular/common';
 
 import {listenToTriggers} from '../util/triggers';
 import {ngbAutoClose} from '../util/autoclose';
+import {ngbWindowResize} from '../util/resize';
 import {positionElements, PlacementArray} from '../util/positioning';
 import {PopupService} from '../util/popup';
 
 import {NgbPopoverConfig} from './popover-config';
+import {take} from 'rxjs/operators';
 
 let nextId = 0;
 
@@ -162,7 +164,6 @@ export class NgbPopover implements OnInit, OnDestroy, OnChanges {
   private _popupService: PopupService<NgbPopoverWindow>;
   private _windowRef: ComponentRef<NgbPopoverWindow>| null = null;
   private _unregisterListenersFn;
-  private _zoneSubscription: any;
   private _isDisabled(): boolean {
     if (this.disablePopover) {
       return true;
@@ -188,14 +189,6 @@ export class NgbPopover implements OnInit, OnDestroy, OnChanges {
     this.closeDelay = config.closeDelay;
     this._popupService = new PopupService<NgbPopoverWindow>(
         NgbPopoverWindow, injector, viewContainerRef, _renderer, componentFactoryResolver, applicationRef);
-
-    this._zoneSubscription = _ngZone.onStable.subscribe(() => {
-      if (this._windowRef) {
-        positionElements(
-            this._elementRef.nativeElement, this._windowRef.location.nativeElement, this.placement,
-            this.container === 'body', 'bs-popover');
-      }
-    });
   }
 
   /**
@@ -216,7 +209,10 @@ export class NgbPopover implements OnInit, OnDestroy, OnChanges {
 
       if (this.container === 'body') {
         this._document.querySelector(this.container).appendChild(this._windowRef.location.nativeElement);
+        ngbWindowResize(this._ngZone, () => this.position(), this.hidden);
       }
+
+      this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => this.position());
 
       // We need to detect changes, because we don't know where .open() might be called from.
       // Ex. opening popover from one of lifecycle hooks that run after the CD
@@ -293,6 +289,16 @@ export class NgbPopover implements OnInit, OnDestroy, OnChanges {
     if (this._unregisterListenersFn) {
       this._unregisterListenersFn();
     }
-    this._zoneSubscription.unsubscribe();
+  }
+
+  /**
+   * Trigger a repositioning of the popover
+   */
+  position() {
+    if (this._windowRef) {
+      positionElements(
+          this._elementRef.nativeElement, this._windowRef.location.nativeElement, this.placement,
+          this.container === 'body', 'bs-popover');
+    }
   }
 }
