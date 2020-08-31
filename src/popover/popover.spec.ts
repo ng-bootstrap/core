@@ -1,4 +1,4 @@
-import {TestBed, ComponentFixture, inject} from '@angular/core/testing';
+import {TestBed, ComponentFixture, inject, fakeAsync, tick} from '@angular/core/testing';
 import {createGenericTestComponent, triggerEvent} from '../test/common';
 
 import {By} from '@angular/platform-browser';
@@ -662,6 +662,58 @@ describe('ngb-popover', () => {
       fixture.detectChanges();
       expect(getWindow(fixture.nativeElement)).toBeNull();
     });
+  });
+
+  describe('stays open when hovered or focused', () => {
+    beforeEach(() => { TestBed.configureTestingModule({declarations: [TestComponent], imports: [NgbPopoverModule]}); });
+
+    it('stays open when hovered with mouseleave close trigger', fakeAsync(() => {
+         const fixture = createTestComponent(`<div ngbPopover="Great tip!" triggers="mouseenter:mouseleave"></div>`);
+         const directive = fixture.debugElement.query(By.directive(NgbPopover));
+
+         triggerEvent(directive, 'mouseenter');
+         fixture.detectChanges();
+         expect(getWindow(fixture.nativeElement)).not.toBeNull();
+
+         triggerEvent(directive, 'mouseleave');
+         triggerEvent(getWindow(fixture.nativeElement), 'mouseenter');
+         fixture.detectChanges();
+         expect(getWindow(fixture.nativeElement)).not.toBeNull();
+
+         triggerEvent(getWindow(fixture.nativeElement), 'mouseleave');
+         triggerEvent(directive, 'mouseenter');
+         fixture.detectChanges();
+         expect(getWindow(fixture.nativeElement)).not.toBeNull();
+
+         triggerEvent(directive, 'mouseleave');
+         fixture.detectChanges();
+         tick(200);  // Artificially wait for some 200ms
+         expect(getWindow(fixture.nativeElement)).toBeNull();
+       }));
+
+    it('stays open when focused with focusout close trigger', fakeAsync(() => {
+         const fixture = createTestComponent(`<div ngbPopover="Great tip!" triggers="focusin:focusout"></div>`);
+         const directive = fixture.debugElement.query(By.directive(NgbPopover));
+
+         triggerEvent(directive, 'focusin');
+         fixture.detectChanges();
+         expect(getWindow(fixture.nativeElement)).not.toBeNull();
+
+         triggerEvent(directive, 'focusout');
+         triggerEvent(getWindow(fixture.nativeElement), 'focusin');
+         fixture.detectChanges();
+         expect(getWindow(fixture.nativeElement)).not.toBeNull();
+
+         triggerEvent(getWindow(fixture.nativeElement), 'focusout');
+         triggerEvent(directive, 'focusin');
+         fixture.detectChanges();
+         expect(getWindow(fixture.nativeElement)).not.toBeNull();
+
+         triggerEvent(directive, 'focusout');
+         fixture.detectChanges();
+         tick(200);  // Artificially wait for some 200ms
+         expect(getWindow(fixture.nativeElement)).toBeNull();
+       }));
   });
 
   describe('Custom config', () => {

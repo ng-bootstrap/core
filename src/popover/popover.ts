@@ -20,11 +20,14 @@ import {
   SimpleChanges,
   ViewEncapsulation,
   ChangeDetectorRef,
-  ApplicationRef
+  ApplicationRef,
+  HostBinding
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
+import {Subscription, Subject} from 'rxjs';
+import {switchMap, filter} from 'rxjs/operators';
 
-import {listenToTriggers} from '../util/triggers';
+import {parseTriggers, observeTriggers, triggerDelay} from '../util/triggers';
 import {ngbAutoClose} from '../util/autoclose';
 import {positionElements, PlacementArray} from '../util/positioning';
 import {PopupService} from '../util/popup';
@@ -47,13 +50,23 @@ let nextId = 0;
     <div class="popover-body"><ng-content></ng-content></div>`,
   styleUrls: ['./popover.scss']
 })
-export class NgbPopoverWindow {
+export class NgbPopoverWindow implements OnInit {
   @Input() title: undefined | string | TemplateRef<any>;
   @Input() id: string;
   @Input() popoverClass: string;
   @Input() context: any;
+  @HostBinding('attr.tabIndex') tabIndex = -1;
+  @Output() inited = new EventEmitter<HTMLElement>();
+
+  set focusable(value: boolean) { this.tabIndex = value ? 0 : -1; }
+
+  get focusable() { return this.tabIndex !== -1; }
+
+  constructor(private _elementRef: ElementRef) {}
 
   isTitleTemplate() { return this.title instanceof TemplateRef; }
+
+  ngOnInit() { this.inited.next(this._elementRef.nativeElement); }
 }
 
 /**
@@ -149,6 +162,21 @@ export class NgbPopover implements OnInit, OnDestroy, OnChanges {
   @Input() closeDelay: number;
 
   /**
+   * The delay before the popover is closed on mouseleave.  Only takes effect if "mouseleave" is among the close
+   * triggers.
+   *
+   * @since *Unreleased*
+   */
+  @Input() mouseleaveCloseDelay: number;
+
+  /**
+   * The delay before the popover is closed on focusout.  Only takes effect if "focusout" is among the close triggers.
+   *
+   * @since *Unreleased*
+   */
+  @Input() focusoutCloseDelay: number;
+
+  /**
    * An event emitted when the popover is shown. Contains no payload.
    */
   @Output() shown = new EventEmitter<void>();
@@ -161,8 +189,8 @@ export class NgbPopover implements OnInit, OnDestroy, OnChanges {
   private _ngbPopoverWindowId = `ngb-popover-${nextId++}`;
   private _popupService: PopupService<NgbPopoverWindow>;
   private _windowRef: ComponentRef<NgbPopoverWindow>| null = null;
-  private _unregisterListenersFn;
-  private _zoneSubscription: any;
+  private _triggerEvents$$ = new Subject();
+  private _subscriptions = new Subscription();
   private _isDisabled(): boolean {
     if (this.disablePopover) {
       return true;
@@ -186,16 +214,18 @@ export class NgbPopover implements OnInit, OnDestroy, OnChanges {
     this.popoverClass = config.popoverClass;
     this.openDelay = config.openDelay;
     this.closeDelay = config.closeDelay;
+    this.mouseleaveCloseDelay = config.mouseleaveCloseDelay;
+    this.focusoutCloseDelay = config.focusoutCloseDelay;
     this._popupService = new PopupService<NgbPopoverWindow>(
         NgbPopoverWindow, injector, viewContainerRef, _renderer, componentFactoryResolver, applicationRef);
 
-    this._zoneSubscription = _ngZone.onStable.subscribe(() => {
+    this._subscriptions.add(_ngZone.onStable.subscribe(() => {
       if (this._windowRef) {
         positionElements(
             this._elementRef.nativeElement, this._windowRef.location.nativeElement, this.placement,
             this.container === 'body', 'bs-popover');
       }
-    });
+    }));
   }
 
   /**
@@ -211,6 +241,17 @@ export class NgbPopover implements OnInit, OnDestroy, OnChanges {
       this._windowRef.instance.context = context;
       this._windowRef.instance.popoverClass = this.popoverClass;
       this._windowRef.instance.id = this._ngbPopoverWindowId;
+
+      // Make the popover window focuseable to track focusin and focusout events
+      const parsedTriggers = parseTriggers(this.triggers);
+      if (parsedTriggers.some(trigger => trigger.close === 'focusout')) {
+        this._windowRef.instance.focusable = true;
+      }
+
+      // Subscribe to trigger events on the popover
+      this._subscriptions.add(
+          this._windowRef.instance.inited.pipe(switchMap(nativeElement => this.observeTriggers(nativeElement, true)))
+              .subscribe(this._triggerEvents$$));
 
       this._renderer.setAttribute(this._elementRef.nativeElement, 'aria-describedby', this._ngbPopoverWindowId);
 
@@ -271,9 +312,18 @@ export class NgbPopover implements OnInit, OnDestroy, OnChanges {
   isOpen(): boolean { return this._windowRef != null; }
 
   ngOnInit() {
-    this._unregisterListenersFn = listenToTriggers(
-        this._renderer, this._elementRef.nativeElement, this.triggers, this.isOpen.bind(this), this.open.bind(this),
-        this.close.bind(this), +this.openDelay, +this.closeDelay);
+    // Subscribe to trigger events
+    this._subscriptions.add(
+        this.observeTriggers(this._elementRef.nativeElement, false).subscribe(this._triggerEvents$$));
+
+    // React to trigger events by opening and closing the popover
+    this._subscriptions.add(
+        this._triggerEvents$$
+            .pipe(
+                triggerDelay(
+                    +this.openDelay, +this.closeDelay, +this.mouseleaveCloseDelay, +this.focusoutCloseDelay,
+                    this.isOpen.bind(this)))
+            .subscribe(open => (open ? this.open() : this.close())));
   }
 
   ngOnChanges({ngbPopover, popoverTitle, disablePopover, popoverClass}: SimpleChanges) {
@@ -288,11 +338,15 @@ export class NgbPopover implements OnInit, OnDestroy, OnChanges {
 
   ngOnDestroy() {
     this.close();
-    // This check is needed as it might happen that ngOnDestroy is called before ngOnInit
-    // under certain conditions, see: https://github.com/ng-bootstrap/ng-bootstrap/issues/2199
-    if (this._unregisterListenersFn) {
-      this._unregisterListenersFn();
-    }
-    this._zoneSubscription.unsubscribe();
+    this._triggerEvents$$.complete();
+    this._subscriptions.unsubscribe();
+  }
+
+  private observeTriggers(nativeElement: HTMLElement, isPopover: boolean) {
+    const parsedTriggers = parseTriggers(this.triggers);
+    return observeTriggers(this._renderer, nativeElement, parsedTriggers, this.isOpen.bind(this))
+        .pipe(
+            // Do not handle popover clicks here because it is the realm of [autoClose]
+            isPopover ? filter(event => event.type !== 'click') : observable => observable);
   }
 }

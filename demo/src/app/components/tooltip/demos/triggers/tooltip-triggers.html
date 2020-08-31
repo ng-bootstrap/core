@@ -2,9 +2,37 @@
   You can easily override open and close triggers by specifying event names (separated by <code>:</code>) in the <code>triggers</code> property.
 </p>
 
-<button type="button" class="btn btn-outline-secondary" ngbTooltip="You see, I show up on click!" triggers="click:blur">
+<button type="button" class="btn btn-outline-secondary mr-2" ngbTooltip="You see, I show up on click!" triggers="click:blur">
   Click me!
 </button>
+
+<button type="button" class="btn btn-outline-secondary mr-2" ngbTooltip="You see, I show up on hover!" triggers="mouseenter:mouseleave">
+  Hover over me!
+</button>
+
+<button type="button" class="btn btn-outline-secondary mr-2" ngbTooltip="You see, I show up on focus!" triggers="focusin:focusout">
+  Focus me!
+</button>
+
+<hr>
+<p>
+  Note that <code>mouseleave</code> close trigger will not close the tooltip when mouse cursor is over it.
+  Similarly, the <code>focusout</code> trigger will not close the tooltip when it is focused.
+  Use the buttons below to see it in action.
+</p>
+
+<button type="button" class="btn btn-outline-secondary mr-2" ngbTooltip="Try to select and copy this text.  The tooltip is still open." triggers="mouseenter:mouseleave" autoClose="outside">
+  Hover over me!
+</button>
+
+<ng-template #popLink>Click the link to <a href="https://ng-bootstrap.github.io/" target="_blank">ng-bootstrap homepage</a>.  The tooltip is still open.</ng-template>
+<button type="button" class="btn btn-outline-secondary mr-2" [ngbTooltip]="popLink" triggers="focusin:focusout" autoClose="outside">
+  Focus me!
+</button>
+
+<p class="mt-2">
+  <small><strong>NB</strong>: These buttons use <code>autoClose="outside"</code> to enable clicks inside the tooltip.</small>
+</p>
 
 <hr>
 <p>

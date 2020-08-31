@@ -17,4 +17,6 @@ export class NgbTooltipConfig {
   tooltipClass: string;
   openDelay = 0;
   closeDelay = 0;
+  focusoutCloseDelay = 10;
+  mouseleaveCloseDelay = 100;
 }

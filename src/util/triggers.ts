@@ -1,4 +1,4 @@
-import {Observable, merge} from 'rxjs';
+import {Observable, merge, of} from 'rxjs';
 import {share, filter, delay, map} from 'rxjs/operators';
 import {Renderer2} from '@angular/core';
 
@@ -42,13 +42,30 @@ export function parseTriggers(triggers: string, aliases = DEFAULT_ALIASES): Trig
   return parsedTriggers;
 }
 
+export interface TriggerEvent {
+  /**
+   * Event type such as "mouseleave".
+   */
+  type: string;
+
+  /**
+   * If true, the popoover or tooltip should react to this event by opening, if false -- by closing.
+   */
+  open: boolean;
+}
+
 export function observeTriggers(
-    renderer: Renderer2, nativeElement: HTMLElement, triggers: Trigger[], isOpenedFn: () => boolean) {
-  return new Observable<boolean>(subscriber => {
+    renderer: Renderer2, nativeElement: HTMLElement, triggers: Trigger[],
+    isOpenedFn: () => boolean): Observable<TriggerEvent> {
+  if (triggers.length === 1 && triggers[0].isManual()) {
+    return of();
+  }
+
+  return new Observable<TriggerEvent>(subscriber => {
     const listeners: Function[] = [];
-    const openFn = () => subscriber.next(true);
-    const closeFn = () => subscriber.next(false);
-    const toggleFn = () => subscriber.next(!isOpenedFn());
+    const openFn = (event: Event) => subscriber.next({type: event.type, open: true});
+    const closeFn = (event: Event) => subscriber.next({type: event.type, open: false});
+    const toggleFn = (event: Event) => subscriber.next({type: event.type, open: !isOpenedFn()});
 
     triggers.forEach((trigger: Trigger) => {
       if (trigger.open === trigger.close) {
@@ -66,11 +83,13 @@ export function observeTriggers(
 
 const delayOrNoop = <T>(time: number) => time > 0 ? delay<T>(time) : (a: Observable<T>) => a;
 
-export function triggerDelay(openDelay: number, closeDelay: number, isOpenedFn: () => boolean) {
-  return (input$: Observable<boolean>) => {
+export function triggerDelay(
+    openDelay: number, closeDelay: number, mouseleaveCloseDelay: number, focusoutCloseDelay: number,
+    isOpenedFn: () => boolean) {
+  return (input$: Observable<TriggerEvent>) => {
     let pending: {open: boolean} | null = null;
     const filteredInput$ = input$.pipe(
-        map(open => ({open})), filter(event => {
+        filter(event => {
           const currentlyOpen = isOpenedFn();
           if (currentlyOpen !== event.open && (!pending || pending.open === currentlyOpen)) {
             pending = event;
@@ -83,8 +102,16 @@ export function triggerDelay(openDelay: number, closeDelay: number, isOpenedFn: 
         }),
         share());
     const delayedOpen$ = filteredInput$.pipe(filter(event => event.open), delayOrNoop(openDelay));
-    const delayedClose$ = filteredInput$.pipe(filter(event => !event.open), delayOrNoop(closeDelay));
-    return merge(delayedOpen$, delayedClose$)
+    const delayedCloseMouseleave$ = filteredInput$.pipe(
+        filter(event => event.type === 'mouseleave' && !event.open),
+        delayOrNoop(Math.max(mouseleaveCloseDelay, closeDelay)), );
+    const delayedCloseFocusout$ = filteredInput$.pipe(
+        filter(event => event.type === 'focusout' && !event.open),
+        delayOrNoop(Math.max(focusoutCloseDelay, closeDelay)), );
+    const delayedClose$ = filteredInput$.pipe(
+        filter(event => !event.open && event.type !== 'mouseleave' && event.type !== 'focusout'),
+        delayOrNoop(closeDelay));
+    return merge(delayedOpen$, delayedCloseMouseleave$, delayedCloseFocusout$, delayedClose$)
         .pipe(
             filter(event => {
               if (event === pending) {
@@ -99,16 +126,17 @@ export function triggerDelay(openDelay: number, closeDelay: number, isOpenedFn: 
 
 export function listenToTriggers(
     renderer: Renderer2, nativeElement: HTMLElement, triggers: string, isOpenedFn: () => boolean, openFn: Function,
-    closeFn: Function, openDelay = 0, closeDelay = 0) {
+    closeFn: Function, openDelay = 0, closeDelay = 0, mouseleaveCloseDelay = 0, focusoutCloseDelay = 0) {
   const parsedTriggers = parseTriggers(triggers);
 
   if (parsedTriggers.length === 1 && parsedTriggers[0].isManual()) {
     return () => {};
   }
 
-  const subscription = observeTriggers(renderer, nativeElement, parsedTriggers, isOpenedFn)
-                           .pipe(triggerDelay(openDelay, closeDelay, isOpenedFn))
-                           .subscribe(open => (open ? openFn() : closeFn()));
+  const subscription =
+      observeTriggers(renderer, nativeElement, parsedTriggers, isOpenedFn)
+          .pipe(triggerDelay(openDelay, closeDelay, mouseleaveCloseDelay, focusoutCloseDelay, isOpenedFn))
+          .subscribe(open => (open ? openFn() : closeFn()));
 
   return () => subscription.unsubscribe();
 }

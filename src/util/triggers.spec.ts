@@ -1,6 +1,6 @@
 import {fakeAsync, tick} from '@angular/core/testing';
 import {Subject, Subscription, Observable} from 'rxjs';
-import {parseTriggers, triggerDelay} from './triggers';
+import {parseTriggers, triggerDelay, TriggerEvent} from './triggers';
 
 describe('triggers', () => {
 
@@ -89,7 +89,7 @@ describe('triggers', () => {
   });
 
   describe('triggerDelay', () => {
-    let subject$: Subject<boolean>;
+    let subject$: Subject<TriggerEvent>;
     let delayed$: Observable<boolean>;
     let open: boolean;
     let subscription: Subscription | null = null;
@@ -98,7 +98,7 @@ describe('triggers', () => {
     beforeEach(() => {
       subject$ = new Subject();
       spy = jasmine.createSpy('listener', (newValue) => open = newValue).and.callThrough();
-      delayed$ = subject$.asObservable().pipe(triggerDelay(5000, 1000, () => open));
+      delayed$ = subject$.asObservable().pipe(triggerDelay(5000, 1000, 0, 0, () => open));
       subscription = delayed$.subscribe(spy);
     });
 
@@ -111,7 +111,7 @@ describe('triggers', () => {
 
     it('delays open', fakeAsync(() => {
          open = false;
-         subject$.next(true);
+         subject$.next({type: 'click', open: true});
          tick(4999);
          expect(spy).not.toHaveBeenCalled();
          tick(2);
@@ -122,7 +122,7 @@ describe('triggers', () => {
 
     it('cancels open if it is already done through another way', fakeAsync(() => {
          open = false;
-         subject$.next(true);
+         subject$.next({type: 'click', open: true});
          tick(4999);
          expect(spy).not.toHaveBeenCalled();
          open = true;
@@ -134,7 +134,7 @@ describe('triggers', () => {
 
     it('delays close', fakeAsync(() => {
          open = true;
-         subject$.next(false);
+         subject$.next({type: 'click', open: false});
          tick(999);
          expect(spy).not.toHaveBeenCalled();
          tick(2);
@@ -145,7 +145,7 @@ describe('triggers', () => {
 
     it('cancels close if it is already done through another way', fakeAsync(() => {
          open = true;
-         subject$.next(false);
+         subject$.next({type: 'click', open: false});
          tick(999);
          expect(spy).not.toHaveBeenCalled();
          open = false;
@@ -157,11 +157,11 @@ describe('triggers', () => {
 
     it('ignores extra open during openDelay', fakeAsync(() => {
          open = false;
-         subject$.next(true);
+         subject$.next({type: 'click', open: true});
          tick(200);
-         subject$.next(true);
+         subject$.next({type: 'click', open: true});
          tick(100);
-         subject$.next(true);
+         subject$.next({type: 'click', open: true});
          tick(200);
          tick(4499);
          expect(spy).not.toHaveBeenCalled();
@@ -173,11 +173,11 @@ describe('triggers', () => {
 
     it('ignores extra close during closeDelay', fakeAsync(() => {
          open = true;
-         subject$.next(false);
+         subject$.next({type: 'click', open: false});
          tick(200);
-         subject$.next(false);
+         subject$.next({type: 'click', open: false});
          tick(100);
-         subject$.next(false);
+         subject$.next({type: 'click', open: false});
          tick(200);
          tick(499);
          expect(spy).not.toHaveBeenCalled();
@@ -189,28 +189,28 @@ describe('triggers', () => {
 
     it('cancels open when receiving close during openDelay', fakeAsync(() => {
          open = false;
-         subject$.next(true);
+         subject$.next({type: 'click', open: true});
          tick(4999);
-         subject$.next(false);
+         subject$.next({type: 'click', open: false});
          tick(100000);
          expect(spy).not.toHaveBeenCalled();
        }));
 
     it('cancels close when receiving open during closeDelay', fakeAsync(() => {
          open = true;
-         subject$.next(false);
+         subject$.next({type: 'click', open: false});
          tick(999);
-         subject$.next(true);
+         subject$.next({type: 'click', open: true});
          tick(100000);
          expect(spy).not.toHaveBeenCalled();
        }));
 
     it('closes during openDelay if opened through another way', fakeAsync(() => {
          open = false;
-         subject$.next(true);
+         subject$.next({type: 'click', open: true});
          tick(4999);
          open = true;
-         subject$.next(false);
+         subject$.next({type: 'click', open: false});
          tick(999);
          expect(spy).not.toHaveBeenCalled();
          tick(2);
@@ -221,10 +221,10 @@ describe('triggers', () => {
 
     it('opens during closeDelay if closed through another way', fakeAsync(() => {
          open = true;
-         subject$.next(false);
+         subject$.next({type: 'click', open: false});
          tick(999);
          open = false;
-         subject$.next(true);
+         subject$.next({type: 'click', open: true});
          tick(4999);
          expect(spy).not.toHaveBeenCalled();
          tick(2);

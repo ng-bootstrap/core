@@ -17,4 +17,6 @@ export class NgbPopoverConfig {
   popoverClass: string;
   openDelay = 0;
   closeDelay = 0;
+  focusoutCloseDelay = 10;
+  mouseleaveCloseDelay = 100;
 }

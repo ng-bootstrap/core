@@ -33,4 +33,8 @@ ngb-tooltip-window {
     top: auto;
     bottom: 0.4rem;
   }
+
+  &:focus {
+    outline: none;
+  }
 }

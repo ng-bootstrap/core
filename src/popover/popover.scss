@@ -35,4 +35,8 @@ ngb-popover-window {
     top: auto;
     bottom: 0.7em;
   }
+
+  &:focus {
+    outline: none;
+  }
 }

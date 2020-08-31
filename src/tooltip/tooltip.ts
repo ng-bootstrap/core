@@ -20,11 +20,14 @@ import {
   ChangeDetectorRef,
   ApplicationRef,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
+  HostBinding
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
+import {Subject, Subscription} from 'rxjs';
+import {switchMap, filter} from 'rxjs/operators';
 
-import {listenToTriggers} from '../util/triggers';
+import {parseTriggers, observeTriggers, triggerDelay} from '../util/triggers';
 import {ngbAutoClose} from '../util/autoclose';
 import {positionElements, PlacementArray} from '../util/positioning';
 import {PopupService} from '../util/popup';
@@ -41,9 +44,19 @@ let nextId = 0;
   template: `<div class="arrow"></div><div class="tooltip-inner"><ng-content></ng-content></div>`,
   styleUrls: ['./tooltip.scss']
 })
-export class NgbTooltipWindow {
+export class NgbTooltipWindow implements OnInit {
   @Input() id: string;
   @Input() tooltipClass: string;
+  @HostBinding('attr.tabIndex') tabIndex = -1;
+  @Output() inited = new EventEmitter<HTMLElement>();
+
+  set focusable(value: boolean) { this.tabIndex = value ? 0 : -1; }
+
+  get focusable() { return this.tabIndex !== -1; }
+
+  constructor(private _elementRef: ElementRef) {}
+
+  ngOnInit() { this.inited.next(this._elementRef.nativeElement); }
 }
 
 /**
@@ -125,6 +138,21 @@ export class NgbTooltip implements OnInit, OnDestroy, OnChanges {
   @Input() closeDelay: number;
 
   /**
+   * The delay before the tooltip is closed on mouseleave.  Only takes effect if "mouseleave" is among the close
+   * triggers.
+   *
+   * @since *Unreleased*
+   */
+  @Input() mouseleaveCloseDelay: number;
+
+  /**
+   * The delay before the tooltip is closed on focusout.  Only takes effect if "focusout" is among the close triggers.
+   *
+   * @since *Unreleased*
+   */
+  @Input() focusoutCloseDelay: number;
+
+  /**
    * An event emitted when the tooltip is shown. Contains no payload.
    */
   @Output() shown = new EventEmitter();
@@ -137,8 +165,8 @@ export class NgbTooltip implements OnInit, OnDestroy, OnChanges {
   private _ngbTooltipWindowId = `ngb-tooltip-${nextId++}`;
   private _popupService: PopupService<NgbTooltipWindow>;
   private _windowRef: ComponentRef<NgbTooltipWindow>| null = null;
-  private _unregisterListenersFn;
-  private _zoneSubscription: any;
+  private _triggerEvents$$ = new Subject();
+  private _subscriptions = new Subscription();
 
   constructor(
       private _elementRef: ElementRef<HTMLElement>, private _renderer: Renderer2, injector: Injector,
@@ -153,16 +181,18 @@ export class NgbTooltip implements OnInit, OnDestroy, OnChanges {
     this.tooltipClass = config.tooltipClass;
     this.openDelay = config.openDelay;
     this.closeDelay = config.closeDelay;
+    this.mouseleaveCloseDelay = config.mouseleaveCloseDelay;
+    this.focusoutCloseDelay = config.focusoutCloseDelay;
     this._popupService = new PopupService<NgbTooltipWindow>(
         NgbTooltipWindow, injector, viewContainerRef, _renderer, componentFactoryResolver, applicationRef);
 
-    this._zoneSubscription = _ngZone.onStable.subscribe(() => {
+    this._subscriptions.add(_ngZone.onStable.subscribe(() => {
       if (this._windowRef) {
         positionElements(
             this._elementRef.nativeElement, this._windowRef.location.nativeElement, this.placement,
             this.container === 'body', 'bs-tooltip');
       }
-    });
+    }));
   }
 
   /**
@@ -191,6 +221,17 @@ export class NgbTooltip implements OnInit, OnDestroy, OnChanges {
       this._windowRef = this._popupService.open(this._ngbTooltip, context);
       this._windowRef.instance.tooltipClass = this.tooltipClass;
       this._windowRef.instance.id = this._ngbTooltipWindowId;
+
+      // Make the tooltip window focuseable to track focusin and focusout events
+      const parsedTriggers = parseTriggers(this.triggers);
+      if (parsedTriggers.some(trigger => trigger.close === 'focusout')) {
+        this._windowRef.instance.focusable = true;
+      }
+
+      // Subscribe to trigger events on the popover
+      this._subscriptions.add(
+          this._windowRef.instance.inited.pipe(switchMap(nativeElement => this.observeEvents(nativeElement, true)))
+              .subscribe(this._triggerEvents$$));
 
       this._renderer.setAttribute(this._elementRef.nativeElement, 'aria-describedby', this._ngbTooltipWindowId);
 
@@ -252,9 +293,17 @@ export class NgbTooltip implements OnInit, OnDestroy, OnChanges {
   isOpen(): boolean { return this._windowRef != null; }
 
   ngOnInit() {
-    this._unregisterListenersFn = listenToTriggers(
-        this._renderer, this._elementRef.nativeElement, this.triggers, this.isOpen.bind(this), this.open.bind(this),
-        this.close.bind(this), +this.openDelay, +this.closeDelay);
+    // Subscribe to trigger events
+    this._subscriptions.add(this.observeEvents(this._elementRef.nativeElement, false).subscribe(this._triggerEvents$$));
+
+    // React to trigger events by opening and closing the popover
+    this._subscriptions.add(
+        this._triggerEvents$$
+            .pipe(
+                triggerDelay(
+                    +this.openDelay, +this.closeDelay, +this.mouseleaveCloseDelay, +this.focusoutCloseDelay,
+                    this.isOpen.bind(this)))
+            .subscribe(open => (open ? this.open() : this.close())));
   }
 
   ngOnChanges({tooltipClass}: SimpleChanges) {
@@ -265,11 +314,15 @@ export class NgbTooltip implements OnInit, OnDestroy, OnChanges {
 
   ngOnDestroy() {
     this.close();
-    // This check is needed as it might happen that ngOnDestroy is called before ngOnInit
-    // under certain conditions, see: https://github.com/ng-bootstrap/ng-bootstrap/issues/2199
-    if (this._unregisterListenersFn) {
-      this._unregisterListenersFn();
-    }
-    this._zoneSubscription.unsubscribe();
+    this._triggerEvents$$.complete();
+    this._subscriptions.unsubscribe();
+  }
+
+  private observeEvents(nativeElement: HTMLElement, isPopover: boolean) {
+    const parsedTriggers = parseTriggers(this.triggers);
+    return observeTriggers(this._renderer, nativeElement, parsedTriggers, this.isOpen.bind(this))
+        .pipe(
+            // Do not handle popover clicks here because it is the realm of [autoClose]
+            isPopover ? filter(event => event.type !== 'click') : observable => observable);
   }
 }
