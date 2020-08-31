@@ -1,0 +1,11 @@
+<p>
+  You can choose a dynamic target with manual triggers. This is useful when adding tooltips
+  to dynamic html content.
+</p>
+
+<ng-template #popContent let-text="text" let-href="href"><a [attr.href]="href" target="_blank">open {{text}} in a new window</a></ng-template>
+
+<p [ngbPopover]="popContent" autoClose="outside" triggers="manual" #paragraphElement>
+  Add tooltips to dynamic html that contains links like <a data-description="Angular Framework" href="https://angular.io">angular</a> or <a data-description="Angular Bootstrap Components" href="https://ng-bootstrap.github.io">ng-bootstrap</a>
+</p>
+

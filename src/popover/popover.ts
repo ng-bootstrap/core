@@ -114,6 +114,12 @@ export class NgbPopover implements OnInit, OnDestroy, OnChanges {
   @Input() triggers: string;
 
   /**
+   * Specifies the target element for the popover. If empty, uses host element.
+   * Only works with manual trigger.
+   */
+  @Input() target: HTMLElement;
+
+  /**
    * A selector specifying the element the popover should be appended to.
    *
    * Currently only supports `body`.
@@ -192,7 +198,7 @@ export class NgbPopover implements OnInit, OnDestroy, OnChanges {
     this._zoneSubscription = _ngZone.onStable.subscribe(() => {
       if (this._windowRef) {
         positionElements(
-            this._elementRef.nativeElement, this._windowRef.location.nativeElement, this.placement,
+            this.target || this._elementRef.nativeElement, this._windowRef.location.nativeElement, this.placement,
             this.container === 'body', 'bs-popover');
       }
     });
@@ -212,7 +218,8 @@ export class NgbPopover implements OnInit, OnDestroy, OnChanges {
       this._windowRef.instance.popoverClass = this.popoverClass;
       this._windowRef.instance.id = this._ngbPopoverWindowId;
 
-      this._renderer.setAttribute(this._elementRef.nativeElement, 'aria-describedby', this._ngbPopoverWindowId);
+      this._renderer.setAttribute(
+          this.target || this._elementRef.nativeElement, 'aria-describedby', this._ngbPopoverWindowId);
 
       if (this.container === 'body') {
         this._document.querySelector(this.container).appendChild(this._windowRef.location.nativeElement);
@@ -244,7 +251,7 @@ export class NgbPopover implements OnInit, OnDestroy, OnChanges {
    */
   close(): void {
     if (this._windowRef) {
-      this._renderer.removeAttribute(this._elementRef.nativeElement, 'aria-describedby');
+      this._renderer.removeAttribute(this.target || this._elementRef.nativeElement, 'aria-describedby');
       this._popupService.close();
       this._windowRef = null;
       this.hidden.emit();
