@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../node_modules/assistive-webdriver/config-schema.json",
+  "nvda": {
+    "vmSettings": {
+      "type": "virtualbox",
+      "vm": "win10-chromium-nvda",
+      "snapshot": "nvda"
+    },
+    "screenReader": true
+  }
+}

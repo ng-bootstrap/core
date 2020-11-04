@@ -1,0 +1,54 @@
+name: awd
+on: [push, pull_request]
+jobs:
+  test-e2e:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set Node.js version
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            yarn-
+      - run: yarn --frozen-lockfile
+      - run: ./create-vm.sh
+        working-directory: ./e2e-app/awd/win10-chromium-nvda
+        timeout-minutes: 45
+        continue-on-error: true
+        name: "Create VM (1)"
+        id: createVM1
+      - run: |
+          killall vagrant ruby || true
+          vagrant destroy -f
+          ./create-vm.sh
+        if: steps.createVM1.outcome == 'failure'
+        working-directory: ./e2e-app/awd/win10-chromium-nvda
+        timeout-minutes: 45
+        continue-on-error: true
+        name: "Create VM (2)"
+        id: createVM2
+      - run: |
+          killall vagrant ruby || true
+          vagrant destroy -f
+          ./create-vm.sh
+        if: steps.createVM2.outcome == 'failure'
+        working-directory: ./e2e-app/awd/win10-chromium-nvda
+        timeout-minutes: 45
+        name: "Create VM (3)"
+      - run: vboxwebsrv -A null --logfile vboxwebsrv.log &
+      - run: |
+          yarn awd:start --log-level debug --pid-file assistive-webdriver.pid &> assistive-webdriver.log &
+          while ! nc -z 127.0.0.1 3000; do sleep 1; done
+      - run: yarn awd:test
+      - run: cat assistive-webdriver.log
+        if: ${{ always() }}
+      - run: cat vboxwebsrv.log
+        if: ${{ always() }}

@@ -4,6 +4,7 @@
   <div class="form-group form-inline">
     <div class="input-group">
       <input class="form-control" name="dp" placeholder="yyyy-mm-dd" #d="ngbDatepicker" ngbDatepicker [(ngModel)]="model"
+              aria-label="my date"
              [disabled]="disabled" [minDate]="{year: 2000, month: 1, day: 1}" [maxDate]="{year: 2100, month: 1, day: 1}"
              [startDate]="startDate">
       <div class="input-group-append">

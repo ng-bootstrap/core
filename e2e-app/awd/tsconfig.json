@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "outDir": "../out-tsc/e2e-app-e2e-awd",
+    "module": "commonjs",
+    "types": ["jasmine", "node"]
+  },
+  "include": ["**/*.ts", "../src/**/*.e2e-awd-spec.ts"]
+}
