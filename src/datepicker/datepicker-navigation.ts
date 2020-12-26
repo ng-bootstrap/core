@@ -31,7 +31,7 @@ import {NgbDatepickerI18n} from './datepicker-i18n';
       </div>
       <div class="ngb-dp-arrow" *ngIf="i !== months.length - 1"></div>
     </ng-template>
-    <div class="ngb-dp-arrow right">
+    <div class="ngb-dp-arrow right-arrow">
       <button type="button" class="btn btn-link ngb-dp-arrow-btn" (click)="onClickNext($event)" [disabled]="nextDisabled"
               i18n-aria-label="@@ngb.datepicker.next-month" aria-label="Next month"
               i18n-title="@@ngb.datepicker.next-month" title="Next month">
