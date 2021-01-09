@@ -397,12 +397,12 @@ ngb-datepicker.rtl ngb-datepicker-navigation-select select.custom-select {
   background-position: left 0.25rem center;
 }
 
-ngb-datepicker.rtl .ngb-dp-arrow.right .ngb-dp-navigation-chevron {
+ngb-datepicker.rtl .ngb-dp-arrow-next .ngb-dp-navigation-chevron {
   transform: rotate(-135deg);
   margin: 0 0 0 0.25rem;
 }
 
-ngb-datepicker.rtl .ngb-dp-navigation-chevron {
+ngb-datepicker.rtl .ngb-dp-arrow-prev .ngb-dp-navigation-chevron {
   transform: rotate(45deg);
   margin: 0 0.25rem 0 0;
 }

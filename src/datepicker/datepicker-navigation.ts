@@ -9,7 +9,7 @@ import {NgbDatepickerI18n} from './datepicker-i18n';
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['./datepicker-navigation.scss'],
   template: `
-    <div class="ngb-dp-arrow">
+    <div class="ngb-dp-arrow-prev">
       <button type="button" class="btn btn-link ngb-dp-arrow-btn" (click)="onClickPrev($event)" [disabled]="prevDisabled"
               i18n-aria-label="@@ngb.datepicker.previous-month" aria-label="Previous month"
               i18n-title="@@ngb.datepicker.previous-month" title="Previous month">
@@ -31,7 +31,7 @@ import {NgbDatepickerI18n} from './datepicker-i18n';
       </div>
       <div class="ngb-dp-arrow" *ngIf="i !== months.length - 1"></div>
     </ng-template>
-    <div class="ngb-dp-arrow right-arrow">
+    <div class="ngb-dp-arrow-next right">
       <button type="button" class="btn btn-link ngb-dp-arrow-btn" (click)="onClickNext($event)" [disabled]="nextDisabled"
               i18n-aria-label="@@ngb.datepicker.next-month" aria-label="Next month"
               i18n-title="@@ngb.datepicker.next-month" title="Next month">
