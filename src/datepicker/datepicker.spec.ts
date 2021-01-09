@@ -803,9 +803,10 @@ describe('ngb-datepicker', () => {
     });
 
     it('should switch to current month using navigateTo() without arguments', () => {
-      const fixture = createTestComponent(
-          `<ngb-datepicker #dp [startDate]="date" [minDate]="minDate" [maxDate]="maxDate"></ngb-datepicker>
-       <button id="btn"(click)="dp.navigateTo()"></button>`);
+      const fixture = createTestComponent(`
+        <ngb-datepicker #dp [startDate]="date"></ngb-datepicker>
+        <button id="btn" (click)="dp.navigateTo()"></button>
+      `);
 
       const button = fixture.nativeElement.querySelector('button#btn');
       button.click();

@@ -1,3 +1,13 @@
+## [8.0.1](https://github.com/ng-bootstrap/ng-bootstrap/compare/8.0.0...8.0.1) (2021-01-05)
+
+
+### Bug Fixes
+
+* **nav:** correctly work with conditional nav items ([#3894](https://github.com/ng-bootstrap/ng-bootstrap/issues/3894)) ([1f466ed](https://github.com/ng-bootstrap/ng-bootstrap/commit/1f466edaa222812a15d233ab6a604ece68e3a58b)), closes [#3892](https://github.com/ng-bootstrap/ng-bootstrap/issues/3892)
+* **popover,tooltip:** run transition inside angular zone ([#3909](https://github.com/ng-bootstrap/ng-bootstrap/issues/3909)) ([a2d3a44](https://github.com/ng-bootstrap/ng-bootstrap/commit/a2d3a449dbd3295c71683c72fdf24e01d5d9edb5)), closes [#3896](https://github.com/ng-bootstrap/ng-bootstrap/issues/3896)
+
+
+
 # [8.0.0](https://github.com/ng-bootstrap/ng-bootstrap/compare/8.0.0-beta.1...8.0.0) (2020-11-06)
 
 This is a major release introducing animations to all standard Bootstrap components inside ng-bootstrap. Please read the [animations documentation](https://ng-bootstrap.github.io/#/animations), you'll find some examples and how to opt-out if necessary.

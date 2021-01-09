@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Directive,
@@ -42,6 +43,7 @@ export class NgbNavPane {
   selector: '[ngbNavOutlet]',
   host: {'[class.tab-content]': 'true'},
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ng-template ngFor let-item [ngForOf]="nav.items">
       <div ngbNavPane *ngIf="item.isPanelInDom() || isPanelTransitioning(item)" [item]="item" [nav]="nav" [role]="paneRole">
@@ -88,8 +90,11 @@ export class NgbNavOutlet implements AfterViewInit {
       if (this._activePane) {
         ngbRunTransition(this._activePane.elRef.nativeElement, ngbNavFadeOutTransition, options).subscribe(() => {
           const activeItem = this._activePane ?.item;
-
           this._activePane = this._getPaneForItem(nextItem);
+
+          // mark for check when transition finishes as outlet or parent containers might be OnPush
+          // without this the panes that have "faded out" will stay in DOM
+          this._cd.markForCheck();
 
           // fading in
           if (this._activePane) {

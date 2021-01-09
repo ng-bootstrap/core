@@ -39,10 +39,10 @@ export class PopupService<T> {
 
     const {nativeElement} = this._windowRef.location;
     const onStable$ = this._ngZone.onStable.asObservable().pipe(take(1));
-    const transition$ = onStable$.pipe(
-        mergeMap(
-            () => ngbRunTransition(
-                nativeElement, ({classList}) => classList.add('show'), {animation, runningTransition: 'continue'})));
+    const transition$ = onStable$.pipe(mergeMap(() => this._ngZone.run(() => {
+      return ngbRunTransition(
+          nativeElement, ({classList}) => classList.add('show'), {animation, runningTransition: 'continue'});
+    })));
 
     return {windowRef: this._windowRef, transition$};
   }
