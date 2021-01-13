@@ -43,7 +43,7 @@ let nextId = 0;
     'role': 'tooltip',
     '[id]': 'id'
   },
-  template: `<div class="arrow"></div><div class="tooltip-inner"><ng-content></ng-content></div>`,
+  template: `<div class="arrow" data-popper-arrow data-popper-placement="right"></div><div class="tooltip-inner"><ng-content></ng-content></div>`,
   styleUrls: ['./tooltip.scss']
 })
 export class NgbTooltipWindow {
@@ -151,8 +151,9 @@ export class NgbTooltip implements OnInit, OnDestroy, OnChanges {
   private _ngbTooltipWindowId = `ngb-tooltip-${nextId++}`;
   private _popupService: PopupService<NgbTooltipWindow>;
   private _windowRef: ComponentRef<NgbTooltipWindow>| null = null;
+  private _popperDestroy: Function = function() {};
   private _unregisterListenersFn;
-  private _zoneSubscription: any;
+  // private _zoneSubscription: any;
 
   constructor(
       private _elementRef: ElementRef<HTMLElement>, private _renderer: Renderer2, injector: Injector,
@@ -171,14 +172,6 @@ export class NgbTooltip implements OnInit, OnDestroy, OnChanges {
     this._popupService = new PopupService<NgbTooltipWindow>(
         NgbTooltipWindow, injector, viewContainerRef, _renderer, this._ngZone, componentFactoryResolver,
         applicationRef);
-
-    this._zoneSubscription = _ngZone.onStable.subscribe(() => {
-      if (this._windowRef) {
-        positionElements(
-            this._elementRef.nativeElement, this._windowRef.location.nativeElement, this.placement,
-            this.container === 'body', 'bs-tooltip');
-      }
-    });
   }
 
   /**
@@ -228,6 +221,12 @@ export class NgbTooltip implements OnInit, OnDestroy, OnChanges {
       // mark the parent component to be checked.
       this._windowRef.changeDetectorRef.markForCheck();
 
+      this._ngZone.runOutsideAngular(() => {
+        this._popperDestroy = positionElements(
+            this._elementRef.nativeElement, this._windowRef !.location.nativeElement, this.placement,
+            this.container === 'body', 'bs-tooltip');
+      });
+
       ngbAutoClose(
           this._ngZone, this._document, this.autoClose, () => this.close(), this.hidden,
           [this._windowRef.location.nativeElement]);
@@ -246,6 +245,7 @@ export class NgbTooltip implements OnInit, OnDestroy, OnChanges {
       this._renderer.removeAttribute(this._elementRef.nativeElement, 'aria-describedby');
       this._popupService.close(this.animation).subscribe(() => {
         this._windowRef = null;
+        this._popperDestroy();
         this.hidden.emit();
         this._changeDetector.markForCheck();
       });
@@ -289,6 +289,6 @@ export class NgbTooltip implements OnInit, OnDestroy, OnChanges {
     if (this._unregisterListenersFn) {
       this._unregisterListenersFn();
     }
-    this._zoneSubscription.unsubscribe();
+    // this._zoneSubscription.unsubscribe();
   }
 }

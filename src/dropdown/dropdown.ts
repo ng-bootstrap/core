@@ -63,6 +63,7 @@ export class NgbDropdownItem {
     '[class.dropdown-menu]': 'true',
     '[class.show]': 'dropdown.isOpen()',
     '[attr.x-placement]': 'placement',
+    '[attr.data-popper]': 'placement',
     '(keydown.ArrowUp)': 'dropdown.onKeyDown($event)',
     '(keydown.ArrowDown)': 'dropdown.onKeyDown($event)',
     '(keydown.Home)': 'dropdown.onKeyDown($event)',
@@ -409,11 +410,13 @@ export class NgbDropdown implements AfterContentInit, OnDestroy {
   private _positionMenu() {
     const menu = this._menu;
     if (this.isOpen() && menu) {
-      this._applyPlacementClasses(
-          this.display === 'dynamic' ? positionElements(
-                                           this._anchor.nativeElement, this._bodyContainer || this._menu.nativeElement,
-                                           this.placement, this.container === 'body') :
-                                       this._getFirstPlacement(this.placement));
+      if (this.display === 'dynamic') {
+        positionElements(
+            this._anchor.nativeElement, this._bodyContainer || this._menu.nativeElement, this.placement,
+            this.container === 'body');
+      } else {
+        this._applyPlacementClasses(this._getFirstPlacement(this.placement));
+      }
     }
   }
 
