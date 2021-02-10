@@ -40,7 +40,7 @@ describe('Datepicker Autoclose', () => {
 
         // escape
         await openDatepicker(`Opening datepicker for escape`);
-        await test.page.keyboard.press('Escape');
+        await test.keyboard.press('Escape');
         await expectDatepickerToBeClosed(`Datepicker should be closed on ESC`);
 
         // outside click

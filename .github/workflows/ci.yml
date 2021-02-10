@@ -43,3 +43,36 @@ jobs:
       - run: yarn saucelabs:ie
       - run: ./scripts/sauce_connect_teardown.sh
         if: ${{ always() }}
+  assistive-playwright:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set Node.js version
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: yarn-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            yarn-
+      - run: yarn --frozen-lockfile
+      - uses: nick-invision/retry@v2
+        name: "Create VM"
+        with:
+          timeout_minutes: 45
+          max_attempts: 5
+          command: cd ./playwright/assistive-playwright/win10-nvda && ./create-vm.sh --destroy-existing
+      - run: vboxwebsrv -A null --logfile vboxwebsrv.log &
+      - uses: nick-invision/retry@v2
+        name: "yarn assistive-playwright"
+        with:
+          timeout_minutes: 15
+          max_attempts: 10
+          command: yarn assistive-playwright
+      - run: cat vboxwebsrv.log
+        if: ${{ always() }}
