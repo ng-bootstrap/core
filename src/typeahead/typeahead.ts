@@ -112,6 +112,11 @@ export class NgbTypeahead implements ControlValueAccessor,
   @Input() focusFirst: boolean;
 
   /**
+   * If `true`, elements selected by enter
+   */
+  @Input() selectByEnter: boolean;
+
+  /**
    * The function that converts an item from the result list to a `string` to display in the `<input>` field.
    *
    * It is called when the user selects something in the popup or the model value changes, so the input needs to
@@ -202,6 +207,7 @@ export class NgbTypeahead implements ControlValueAccessor,
     this.container = config.container;
     this.editable = config.editable;
     this.focusFirst = config.focusFirst;
+    this.selectByEnter = config.selectByEnter;
     this.showHint = config.showHint;
     this.placement = config.placement;
 
@@ -389,8 +395,8 @@ export class NgbTypeahead implements ControlValueAccessor,
         this._closePopup();
       } else {
         this._openPopup();
-
         this._windowRef !.instance.focusFirst = this.focusFirst;
+        this._windowRef !.instance.selectByEnter = this.selectByEnter;
         this._windowRef !.instance.results = results;
         this._windowRef !.instance.term = this._elementRef.nativeElement.value;
         if (this.resultFormatter) {

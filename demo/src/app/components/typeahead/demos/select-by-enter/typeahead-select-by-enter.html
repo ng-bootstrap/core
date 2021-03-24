@@ -1,0 +1,15 @@
+<p>Prevents enter selection</p>
+
+<label for="typeahead-select-by-enter">Search for a state:</label>
+<input
+  id="typeahead-select-by-enter"
+  type="text"
+  class="form-control"
+  [(ngModel)]="model"
+  [ngbTypeahead]="search"
+  [focusFirst]="false"
+  [selectByEnter]="false"
+  #instance="ngbTypeahead"
+/>
+<hr>
+<pre>Model: {{ model | json }}</pre>

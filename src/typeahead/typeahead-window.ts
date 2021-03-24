@@ -58,6 +58,11 @@ export class NgbTypeaheadWindow implements OnInit {
   @Input() focusFirst = true;
 
   /**
+   * Flag indicating if row selections by enter
+   */
+  @Input() selectByEnter = true;
+
+  /**
    * Typeahead match results to be displayed
    */
   @Input() results;
@@ -97,6 +102,9 @@ export class NgbTypeaheadWindow implements OnInit {
   getActive() { return this.results[this.activeIdx]; }
 
   markActive(activeIdx: number) {
+    if (!this.selectByEnter) {
+      return;
+    }
     this.activeIdx = activeIdx;
     this._activeChanged();
   }

@@ -7,6 +7,7 @@ describe('ngb-typeahead-config', () => {
     expect(config.container).toBeUndefined();
     expect(config.editable).toBeTruthy();
     expect(config.focusFirst).toBeTruthy();
+    expect(config.selectByEnter).toBeTruthy();
     expect(config.showHint).toBeFalsy();
   });
 });

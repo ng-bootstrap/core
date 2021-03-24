@@ -128,6 +128,19 @@ describe('ngb-typeahead-window', () => {
       fixture.detectChanges();
       expectResults(fixture.nativeElement, ['bar', '+baz']);
     });
+
+    it('should change not active row on mouseenter', () => {
+      const fixture = createTestComponent(
+          `<ngb-typeahead-window [results]="results" [selectByEnter]="false" [term]="term"></ngb-typeahead-window>`);
+      const links = getWindowLinks(fixture.debugElement);
+
+      expectResults(fixture.nativeElement, ['+bar', 'baz']);
+
+      links[1].triggerEventHandler('mouseenter', {});
+      fixture.detectChanges();
+
+      expectResults(fixture.nativeElement, ['+bar', 'baz']);
+    });
   });
 
   describe('result selection', () => {
