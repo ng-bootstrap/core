@@ -1,7 +1,6 @@
 {
   "$schema": "../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../dist/ng-bootstrap",
-  "deleteDestPath": false,
   "lib": {
     "flatModuleFile": "ng-bootstrap",
     "entryFile": "./index.ts",

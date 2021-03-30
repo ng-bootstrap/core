@@ -1,0 +1,40 @@
+<h3>Dropdown focus tests</h3>
+
+<form>
+  <div class="form-group form-inline">
+
+    <input type="text" class="form-control mr-1" style="width: 100px" placeholder="before" id="before" />
+
+    <div class="input-group">
+      <div ngbDropdown class="d-inline-block mr-3" [container]="container">
+        <button class="btn btn-outline-secondary" id="dropdown" ngbDropdownToggle>Choose and option</button>
+        <div ngbDropdownMenu aria-labelledby="dropdown">
+
+          <ng-template [ngIf]="withItems">
+            <button ngbDropdownItem id="item-1">One</button>
+            <hr>
+            <button ngbDropdownItem disabled>Disabled</button>
+            <button class="dropdown-item">Not arrow-focusable</button>
+            <hr>
+            <button ngbDropdownItem id="item-2">Two</button>
+          </ng-template>
+
+          <ng-template [ngIf]="!withItems">
+            <button class="dropdown-item">One</button>
+            <button class="dropdown-item">Two</button>
+          </ng-template>
+
+        </div>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-outline-secondary mr-1" id="container-inline" (click)="container = undefined">Append inline</button>
+    <button type="button" class="btn btn-outline-secondary mr-1" id="container-body" (click)="container = 'body'">Append to body</button>
+    <button type="button" class="btn btn-outline-secondary mr-1" id="items-true" (click)="withItems = true">With items</button>
+    <button type="button" class="btn btn-outline-secondary mr-1" id="items-false" (click)="withItems = false">Without items</button>
+
+    <span class="ml-3">container is {{ container ? container : 'inline' }}</span>
+
+  </div>
+
+</form>

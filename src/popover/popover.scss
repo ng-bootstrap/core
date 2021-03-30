@@ -1,0 +1,38 @@
+
+$arrow-size: 1rem;
+
+ngb-popover-window {
+  &.bs-popover-top > .arrow,
+  &.bs-popover-bottom > .arrow {
+    left: 50%;
+    margin-left: -$arrow-size / 2;
+  }
+
+  &.bs-popover-top-left > .arrow,
+  &.bs-popover-bottom-left > .arrow {
+    left: 2em;
+  }
+
+  &.bs-popover-top-right > .arrow,
+  &.bs-popover-bottom-right > .arrow {
+    left: auto;
+    right: 2em;
+  }
+
+  &.bs-popover-left > .arrow,
+  &.bs-popover-right > .arrow {
+    top: 50%;
+    margin-top: -$arrow-size / 2;
+  }
+
+  &.bs-popover-left-top > .arrow,
+  &.bs-popover-right-top > .arrow {
+    top: 0.7em;
+  }
+
+  &.bs-popover-left-bottom > .arrow,
+  &.bs-popover-right-bottom > .arrow {
+    top: auto;
+    bottom: 0.7em;
+  }
+}

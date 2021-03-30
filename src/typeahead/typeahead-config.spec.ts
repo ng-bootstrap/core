@@ -1,6 +1,6 @@
 import {NgbTypeaheadConfig} from './typeahead-config';
 
-describe('ngb-typehead-config', () => {
+describe('ngb-typeahead-config', () => {
   it('should have sensible default values', () => {
     const config = new NgbTypeaheadConfig();
 

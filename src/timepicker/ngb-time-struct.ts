@@ -1,19 +1,19 @@
 /**
- * Interface of the model of the NgbTimepicker directive
+ * An interface for the time model used by the timepicker.
  */
 export interface NgbTimeStruct {
   /**
-   * The hour, going from 0 to 23
+   * The hour in the `[0, 23]` range.
    */
   hour: number;
 
   /**
-   * The minute, going from 0 to 59
+   * The minute in the `[0, 59]` range.
    */
   minute: number;
 
   /**
-   * The second, going from 0 to 59
+   * The second in the `[0, 59]` range.
    */
   second: number;
 }

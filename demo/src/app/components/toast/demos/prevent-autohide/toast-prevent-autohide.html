@@ -1,0 +1,24 @@
+<p>
+  In this demo, you can show a toast by clicking the button below. It will hide itself after a 5 seconds delay unless you simply hover it with your mouse.
+</p>
+<button class="btn btn-primary" (click)="show = true">
+  Click me to show a toast
+</button>
+<hr *ngIf="show">
+<ngb-toast
+  *ngIf="show"
+  header="Autohide can be cancelled"
+  [delay]="5000"
+  [autohide]="autohide"
+  (mouseenter)="autohide = false"
+  (mouseleave)="autohide = true"
+  (hide)="show = false; autohide = true"
+  [class.bg-warning]="!autohide"
+>
+  <div *ngIf="autohide">
+    Try to mouse hover me.
+  </div>
+  <div *ngIf="!autohide">
+    I will remain visible until you leave again.
+  </div>
+</ngb-toast>

@@ -1,47 +1,145 @@
 <header class="navbar navbar-expand navbar-dark px-4 flex-column flex-md-row">
-
-  <a class="navbar-brand mr-2 mr-md-0" routerLink="/" aria-label="NG Bootstrap" (click)="navbarCollapsed = true">
-    <svg class="align-middle" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="36" height="36" viewBox="0 0 512 512">
+  <a
+    class="navbar-brand mr-md-2 mr-0"
+    routerLink="/"
+    aria-label="NG Bootstrap"
+    (click)="navbarCollapsed = true"
+  >
+    <svg
+      class="align-middle"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      width="36"
+      height="36"
+      viewBox="0 0 512 512"
+    >
       <defs>
         <linearGradient id="a">
           <stop offset="0" stop-color="#0143a3" />
           <stop offset="1" stop-color="#0273d4" />
         </linearGradient>
-        <linearGradient xlink:href="#a" id="b" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1.33396 0 0 1.33396 404.049 -265.9)"
-          x1="-111" y1="967.862" x2="-110.5" y2="617.362" />
+        <linearGradient
+          xlink:href="#a"
+          id="b"
+          gradientUnits="userSpaceOnUse"
+          gradientTransform="matrix(1.33396 0 0 1.33396 404.049 -265.9)"
+          x1="-111"
+          y1="967.862"
+          x2="-110.5"
+          y2="617.362"
+        />
       </defs>
-      <path d="M255.71 558.533l207.07 81.226-20.02 272.853-185.907 113.26-187.05-114.404L50.356 640.33z" fill="url(#b)" fill-rule="evenodd"
-        transform="translate(0 -540.362)" stroke="#fff" stroke-width="20" />
-        <path d="M255.142 18.01l1.716 467.404 185.675-113.635 19.725-272.724z" fill-rule="evenodd" fill-opacity=".098"/>
-      <path d="M220.151 247.738v77.444h45.872q23.078 0 34.12-9.485 11.186-9.628 11.186-29.308 0-19.82-11.185-29.165-11.043-9.486-34.12-9.486H220.15zm0-86.93v63.71h42.333q20.953 0 31.147-7.786 10.336-7.929 10.336-24.069 0-15.998-10.336-23.927-10.194-7.928-31.147-7.928H220.15zm-28.6-23.503h73.056q32.705 0 50.403 13.592 17.697 13.592 17.697 38.651 0 19.397-9.06 30.865-9.062 11.468-26.618 14.3 21.096 4.53 32.705 18.971 11.751 14.3 11.751 35.82 0 28.316-19.255 43.749-19.254 15.432-54.791 15.432h-75.887v-211.38z"
-        fill="#fff" />
+      <path
+        d="M255.71 558.533l207.07 81.226-20.02 272.853-185.907 113.26-187.05-114.404L50.356 640.33z"
+        fill="url(#b)"
+        fill-rule="evenodd"
+        transform="translate(0 -540.362)"
+        stroke="#fff"
+        stroke-width="20"
+      />
+      <path
+        d="M255.142 18.01l1.716 467.404 185.675-113.635 19.725-272.724z"
+        fill-rule="evenodd"
+        fill-opacity=".098"
+      />
+      <path
+        d="M220.151 247.738v77.444h45.872q23.078 0 34.12-9.485 11.186-9.628 11.186-29.308 0-19.82-11.185-29.165-11.043-9.486-34.12-9.486H220.15zm0-86.93v63.71h42.333q20.953 0 31.147-7.786 10.336-7.929 10.336-24.069 0-15.998-10.336-23.927-10.194-7.928-31.147-7.928H220.15zm-28.6-23.503h73.056q32.705 0 50.403 13.592 17.697 13.592 17.697 38.651 0 19.397-9.06 30.865-9.062 11.468-26.618 14.3 21.096 4.53 32.705 18.971 11.751 14.3 11.751 35.82 0 28.316-19.255 43.749-19.254 15.432-54.791 15.432h-75.887v-211.38z"
+        fill="#fff"
+      />
     </svg>
-    <span class="ml-2 d-xl-none d-lg-none d-md-none d-inline">ng-bootstrap</span>
+    <span class="ml-2 d-xl-none d-lg-none d-md-none d-inline"
+      >ng-bootstrap</span
+    >
   </a>
 
   <div class="navbar-nav-scroll">
     <ul class="navbar-nav flex-row">
       <li class="nav-item" [routerLinkActive]="['active']">
-        <a class="nav-link" [routerLink]="['/getting-started']" (click)="navbarCollapsed = true">Getting Started</a>
+        <a
+          class="nav-link"
+          [routerLink]="['/home']"
+          (click)="navbarCollapsed = true"
+          >Home</a
+        >
       </li>
       <li class="nav-item" [routerLinkActive]="['active']">
-        <a class="nav-link" [routerLink]="['/components']" (click)="navbarCollapsed = true">Components</a>
+        <a
+          class="nav-link"
+          [routerLink]="['/getting-started']"
+          (click)="navbarCollapsed = true"
+          >Getting Started</a
+        >
+      </li>
+      <li class="nav-item" [routerLinkActive]="['active']">
+        <a
+          class="nav-link"
+          [routerLink]="['/guides']"
+          (click)="navbarCollapsed = true"
+          >Guides</a
+        >
+      </li>
+      <li class="nav-item" [routerLinkActive]="['active']">
+        <a
+          class="nav-link"
+          [routerLink]="['/components']"
+          (click)="navbarCollapsed = true"
+          >Components</a
+        >
       </li>
     </ul>
   </div>
 
-  <ul class="social-buttons navbar-nav flex-row ml-md-auto d-none d-lg-flex align-items-center">
-    <a class="github-button" href="https://github.com/ng-bootstrap/ng-bootstrap" rel="noopener" target="_blank" data-size="large" data-show-count="true"
-        data-count-aria-label="# stargazers on GitHub" aria-label="Star ng-bootstrap/ng-bootstrap on GitHub">Star</a>
-    <a href="https://twitter.com/intent/tweet?button_hashtag=ngbootstrap" rel="noopener" class="twitter-hashtag-button" data-size="large" data-text="I&#39;m checking out ng-bootstrap, THE Angular UI framework for Bootstrap CSS"
-        data-url="https://ng-bootstrap.github.io" data-show-count="true">Tweet #ngbootstrap</a>
+  <ul
+    class="social-buttons navbar-nav flex-row ml-md-auto d-none d-md-flex align-items-center"
+  >
+    <li>
+      <a
+        href="https://www.npmjs.com/package/@ng-bootstrap/ng-bootstrap"
+        rel="nofollow noopener noreferrer"
+        target="_blank"
+        [title]="downloadCount + ' downloads over the last 30 days on Npm'"
+        class="d-flex flex-column align-items-center"
+      >
+        <!-- hide the text from a screen reader so that it uses title attribute for the announcement and navigation  -->
+        <span aria-hidden="true">{{ downloadCount }}</span>
+        <svg viewBox="0 0 780 250" width="40" height="13">
+          <path
+            d="M240,250h100v-50h100V0H240V250z M340,50h50v100h-50V50z M480,0v200h100V50h50v150h50V50h50v150h50V0H480z M0,200h100V50h50v150h50V0H0V200z"
+          ></path>
+        </svg>
+      </a>
+    </li>
+    <li class="ml-3">
+      <a
+        href="https://github.com/ng-bootstrap/ng-bootstrap"
+        rel="nofollow noopener noreferrer"
+        target="_blank"
+        title="Open ng-bootstrap/ng-bootstrap on GitHub"
+        ><svg:svg aria-hidden="true" ngbdIcon="github"></svg:svg
+      ></a>
+    </li>
+    <li class="ml-3">
+      <a
+        href="https://twitter.com/intent/tweet?text=I&#39;m+checking+out+&#23;ng-bootstrap,+THE+Angular+UI+framework+for+Bootstrap+CSS&url=https%3A%2F%2Fng-bootstrap.github.io%2F&hashtags=ng-bootstrap,angular,bootstrap"
+        rel="nofollow noopener noreferrer"
+        target="_blank"
+        title="Tweet #ngbootstrap"
+        ><svg:svg aria-hidden="true" ngbdIcon="twitter"></svg:svg
+      ></a>
+    </li>
   </ul>
 
-  <button class="navbar-toggler navbar-toggler-right" type="button" (click)="navbarCollapsed = !navbarCollapsed" [attr.aria-expanded]="!navbarCollapsed"
-    aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+  <button
+    class="navbar-toggler navbar-toggler-right"
+    type="button"
+    (click)="navbarCollapsed = !navbarCollapsed"
+    [attr.aria-expanded]="!navbarCollapsed"
+    aria-controls="navbarContent"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
     <span class="navbar-toggler-icon"></span>
   </button>
-
 </header>
 
 <div>
@@ -50,25 +148,45 @@
 
 <footer class="footer bg-light">
   <div class="container-fluid p-3 p-md-5">
-    <p>Designed and built by the
-      <a href="https://github.com/orgs/ng-bootstrap/people" rel="noopener" target="_blank">ng-bootstrap team
-      </a> with the help of our
-      <a href="https://github.com/ng-bootstrap/ng-bootstrap/graphs/contributors" rel="noopener" target="_blank">contributors</a>.</p>
-    <p>Code licensed under
-      <a href="https://raw.githubusercontent.com/ng-bootstrap/ng-bootstrap/master/LICENSE" rel="noopener" target="_blank">MIT license conditions.</a>
+    <p>
+      Designed and built by the
+      <a
+        href="https://github.com/orgs/ng-bootstrap/people"
+        rel="noopener"
+        target="_blank"
+        >ng-bootstrap team
+      </a>
+      with the help of our
+      <a
+        href="https://github.com/ng-bootstrap/ng-bootstrap/graphs/contributors"
+        rel="noopener"
+        target="_blank"
+        >contributors</a
+      >.
+    </p>
+    <p>
+      Code licensed under
+      <a
+        href="https://raw.githubusercontent.com/ng-bootstrap/ng-bootstrap/master/LICENSE"
+        rel="noopener"
+        target="_blank"
+        >MIT license conditions.</a
+      >
     </p>
     <p>
       Documentation licensed under
-      <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC BY 3.0</a>. Design and content of the documentation site heavily inspired by the
-      <a href="https://getbootstrap.com/" rel="noopener"
-        target="_blank">original Bootstrap design</a>.</p>
-    <p>Icons made by
-      <a href="http://www.flaticon.com/authors/eucalyp" rel="noopener" target="_blank">Eucalyp</a>,
-      <a href="http://www.flaticon.com/authors/freepik" rel="noopener" target="_blank">Freepik</a>,
-      <a href="http://www.flaticon.com/authors/nikita-golubev" rel="noopener" target="_blank">Nikita Golubev</a> and
-      <a href="http://www.flaticon.com/authors/pixel-perfect" rel="noopener" target="_blank">Pixel perfect</a>
-      from
-      <a href="http://www.flaticon.com" rel="noopener" target="_blank">www.flaticon.com</a>
+      <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank"
+        >CC BY 3.0</a
+      >. Design and content of the documentation site heavily inspired by the
+      <a href="https://getbootstrap.com/" rel="noopener" target="_blank"
+        >original Bootstrap design</a
+      >.
+    </p>
+    <p>
+      Icons made by
+      <a href="https://iconmonstr.com/" rel="noopener" target="_blank"
+        >Iconmonstr</a
+      >
     </p>
   </div>
 </footer>

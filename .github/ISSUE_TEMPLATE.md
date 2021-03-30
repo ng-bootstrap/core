@@ -4,13 +4,15 @@ existing issues (both open and closed) prior to opening any new issue and ensure
 
 ### Bug description:
 
-### Link to minimally-working plunker that reproduces the issue:
 
-You can fork a plunker from one of our [demos](https://ng-bootstrap.github.io/#/components) and use it as a starting point.
-Please note that we can _not_ act on bug reports without a minimal reproduction scenario in plunker. Here is why:
+### Link to minimally-working StackBlitz that reproduces the issue:
+
+You can fork a StackBlitz from one of our [demos](https://ng-bootstrap.github.io/#/components) and use it as a starting point.
+
+Please note that we can _not_ act on bug reports without a _minimal_ reproduction scenario in a StackBlitz. Here is why:
 https://github.com/ng-bootstrap/ng-bootstrap#you-think-youve-found-a-bug
 
-### Version of Angular, ng-bootstrap, and Bootstrap:
+### Versions of Angular, ng-bootstrap and Bootstrap:
 
 Angular:
 

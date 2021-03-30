@@ -1,0 +1,16 @@
+<h3>
+    Tooltip focus tests
+    <span class="ml-1 badge {{d1.isOpen() ? 'badge-success' : 'badge-danger'}}" id="open-status">{{d1.isOpen() ? 'open' : 'closed'}}</span>
+</h3>
+<form id="default">
+  <div class="d-flex">
+    <div class="flex-row">
+        <button id="btn-before" type="button" class="btn btn-outline-secondary ml-2">Button Before</button>
+        <button #d1="ngbTooltip" ngbTooltip="Tooltip Content" id="btn-tooltip" type="button"
+                container="body" triggers="focus" class="btn btn-outline-secondary ml-2">
+          Tooltip
+        </button>
+        <button id="btn-after" type="button" class="btn btn-outline-secondary ml-2">Button After</button>
+    </div>
+  </div>
+</form>

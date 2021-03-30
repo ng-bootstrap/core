@@ -1,52 +1,48 @@
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
-  Output,
-  EventEmitter,
-  OnInit,
-  TemplateRef,
-  OnChanges,
-  SimpleChanges,
+  ChangeDetectorRef,
+  Component,
   ContentChild,
+  EventEmitter,
   forwardRef,
-  ChangeDetectorRef
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  TemplateRef,
+  ViewEncapsulation
 } from '@angular/core';
 import {NgbRatingConfig} from './rating-config';
-import {toString, getValueInRange} from '../util/util';
+import {getValueInRange} from '../util/util';
 import {Key} from '../util/key';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
 /**
- * Context for the custom star display template
+ * The context for the custom star display template defined in the `starTemplate`.
  */
 export interface StarTemplateContext {
   /**
-   * Star fill percentage. An integer value between 0 and 100
+   * The star fill percentage, an integer in the `[0, 100]` range.
    */
   fill: number;
 
   /**
-   * Index of the star.
+   * Index of the star, starts with `0`.
    */
   index: number;
 }
 
-const NGB_RATING_VALUE_ACCESSOR = {
-  provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => NgbRating),
-  multi: true
-};
-
 /**
- * Rating directive that will take care of visualising a star rating bar.
+ * A directive that helps visualising and interacting with a star rating bar.
  */
 @Component({
   selector: 'ngb-rating',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
   host: {
     'class': 'd-inline-flex',
-    'tabindex': '0',
+    '[tabindex]': 'disabled ? -1 : 0',
     'role': 'slider',
     'aria-valuemin': '0',
     '[attr.aria-valuemax]': 'max',
@@ -61,12 +57,13 @@ const NGB_RATING_VALUE_ACCESSOR = {
     <ng-template #t let-fill="fill">{{ fill === 100 ? '&#9733;' : '&#9734;' }}</ng-template>
     <ng-template ngFor [ngForOf]="contexts" let-index="index">
       <span class="sr-only">({{ index < nextRate ? '*' : ' ' }})</span>
-      <span (mouseenter)="enter(index + 1)" (click)="handleClick(index + 1)" [style.cursor]="readonly || disabled ? 'default' : 'pointer'">
-        <ng-template [ngTemplateOutlet]="starTemplate || t" [ngTemplateOutletContext]="contexts[index]"></ng-template>
+      <span (mouseenter)="enter(index + 1)" (click)="handleClick(index + 1)" [style.cursor]="isInteractive() ? 'pointer' : 'default'">
+        <ng-template [ngTemplateOutlet]="starTemplate || starTemplateFromContent || t" [ngTemplateOutletContext]="contexts[index]">
+        </ng-template>
       </span>
     </ng-template>
   `,
-  providers: [NGB_RATING_VALUE_ACCESSOR]
+  providers: [{provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgbRating), multi: true}]
 })
 export class NgbRating implements ControlValueAccessor,
     OnInit, OnChanges {
@@ -76,46 +73,51 @@ export class NgbRating implements ControlValueAccessor,
 
 
   /**
-   * Maximal rating that can be given using this widget.
+   * The maximal rating that can be given.
    */
   @Input() max: number;
 
   /**
-   * Current rating. Can be a decimal value like 3.75
+   * The current rating. Could be a decimal value like `3.75`.
    */
   @Input() rate: number;
 
   /**
-   * A flag indicating if rating can be updated.
+   * If `true`, the rating can't be changed.
    */
   @Input() readonly: boolean;
 
   /**
-   * A flag indicating if rating can be reset to 0 on mouse click
+   * If `true`, the rating can be reset to `0` by mouse clicking currently set rating.
    */
   @Input() resettable: boolean;
 
   /**
-   * A template to override star display.
-   * Alternatively put a <ng-template> as the only child of <ngb-rating> element
+   * The template to override the way each star is displayed.
+   *
+   * Alternatively put an `<ng-template>` as the only child of your `<ngb-rating>` element
    */
-  @Input() @ContentChild(TemplateRef) starTemplate: TemplateRef<StarTemplateContext>;
+  @Input() starTemplate: TemplateRef<StarTemplateContext>;
+  @ContentChild(TemplateRef, {static: false}) starTemplateFromContent: TemplateRef<StarTemplateContext>;
 
   /**
-   * An event fired when a user is hovering over a given rating.
-   * Event's payload equals to the rating being hovered over.
+   * An event emitted when the user is hovering over a given rating.
+   *
+   * Event payload equals to the rating being hovered over.
    */
   @Output() hover = new EventEmitter<number>();
 
   /**
-   * An event fired when a user stops hovering over a given rating.
-   * Event's payload equals to the rating of the last item being hovered over.
+   * An event emitted when the user stops hovering over a given rating.
+   *
+   * Event payload equals to the rating of the last item being hovered over.
    */
   @Output() leave = new EventEmitter<number>();
 
   /**
-   * An event fired when a user selects a new rating.
-   * Event's payload equals to the newly selected rating.
+   * An event emitted when the user selects a new rating.
+   *
+   * Event payload equals to the newly selected rating.
    */
   @Output() rateChange = new EventEmitter<number>(true);
 
@@ -129,8 +131,10 @@ export class NgbRating implements ControlValueAccessor,
 
   ariaValueText() { return `${this.nextRate} out of ${this.max}`; }
 
+  isInteractive(): boolean { return !this.readonly && !this.disabled; }
+
   enter(value: number): void {
-    if (!this.readonly && !this.disabled) {
+    if (this.isInteractive()) {
       this._updateState(value);
     }
     this.hover.emit(value);
@@ -138,29 +142,35 @@ export class NgbRating implements ControlValueAccessor,
 
   handleBlur() { this.onTouched(); }
 
-  handleClick(value: number) { this.update(this.resettable && this.rate === value ? 0 : value); }
+  handleClick(value: number) {
+    if (this.isInteractive()) {
+      this.update(this.resettable && this.rate === value ? 0 : value);
+    }
+  }
 
   handleKeyDown(event: KeyboardEvent) {
-    if (Key[toString(event.which)]) {
-      event.preventDefault();
-
-      switch (event.which) {
-        case Key.ArrowDown:
-        case Key.ArrowLeft:
-          this.update(this.rate - 1);
-          break;
-        case Key.ArrowUp:
-        case Key.ArrowRight:
-          this.update(this.rate + 1);
-          break;
-        case Key.Home:
-          this.update(0);
-          break;
-        case Key.End:
-          this.update(this.max);
-          break;
-      }
+    // tslint:disable-next-line:deprecation
+    switch (event.which) {
+      case Key.ArrowDown:
+      case Key.ArrowLeft:
+        this.update(this.rate - 1);
+        break;
+      case Key.ArrowUp:
+      case Key.ArrowRight:
+        this.update(this.rate + 1);
+        break;
+      case Key.Home:
+        this.update(0);
+        break;
+      case Key.End:
+        this.update(this.max);
+        break;
+      default:
+        return;
     }
+
+    // note 'return' in default case
+    event.preventDefault();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -187,7 +197,7 @@ export class NgbRating implements ControlValueAccessor,
 
   update(value: number, internalChange = true): void {
     const newRate = getValueInRange(value, this.max, 0);
-    if (!this.readonly && !this.disabled && this.rate !== newRate) {
+    if (this.isInteractive() && this.rate !== newRate) {
       this.rate = newRate;
       this.rateChange.emit(this.rate);
     }
@@ -203,21 +213,9 @@ export class NgbRating implements ControlValueAccessor,
     this._changeDetectorRef.markForCheck();
   }
 
-  private _getFillValue(index: number): number {
-    const diff = this.nextRate - index;
-
-    if (diff >= 1) {
-      return 100;
-    }
-    if (diff < 1 && diff > 0) {
-      return Number.parseInt((diff * 100).toFixed(2));
-    }
-
-    return 0;
-  }
-
   private _updateState(nextValue: number) {
     this.nextRate = nextValue;
-    this.contexts.forEach((context, index) => context.fill = this._getFillValue(index));
+    this.contexts.forEach(
+        (context, index) => context.fill = Math.round(getValueInRange(nextValue - index, 1, 0) * 100));
   }
 }

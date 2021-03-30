@@ -1,0 +1,28 @@
+<h3>Typeahead validation tests</h3>
+
+<form>
+  <div class="form-group form-inline">
+    <div class="input-group mr-2">
+        <label for="first" class="mr-2">Before</label>
+        <input id="first">
+    </div>
+    <div class="input-group mr-2">
+      <label for="typeahead" class="mr-2">Typeahead</label>
+      <input
+        id="typeahead"
+        name="typeahead"
+        type="text"
+        class="form-control"
+        [formControl]="field"
+        [ngbTypeahead]="search"
+        (focus)="focus$.next($event.target.value)"
+        (click)="click$.next($event.target.value)"
+        #instance="ngbTypeahead"
+      />
+    </div>
+    <div class="input-group mr-2">
+        <label for="last" class="mr-2">After</label>
+        <input id="last">
+    </div>
+  </div>
+</form>

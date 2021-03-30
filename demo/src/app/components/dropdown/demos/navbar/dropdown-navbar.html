@@ -1,0 +1,69 @@
+<p>
+  By design, dropdowns are always positioned dynamically via
+  <a routerLink="/positioning" fragment="dropdown">placement</a>
+  except when used inside navbar elements. To gracefully display them properly on small screens, they are
+  rendered in the html as block elements.
+</p>
+<p>
+  In order to align a dropdown in a navbar to the right while still keeping correct behavior when the navbar is
+  collapsed, the CSS class <code>dropdown-menu-right</code> must be added to the dropdown menu.
+  The second dropdown in this example illustrates it.
+</p>
+<p>
+  If completely custom placement of a dropdown in a navbar is needed, then it is only possible if the
+  <code>display</code> property is explicitlyset to "dynamic".
+  The third dropdown in this example illustrates this.
+</p>
+<p>
+  Beware however that this breaks the positioning of the dropdown when the navbar is
+  expanded on small displays. You can see the difference between the behavior of the first dropdowns
+  (with a static display) and the last one (with a dynamic display) if you use this demo on a small resolution.
+</p>
+<p>
+  To have dynamic positioning along with correct behavior on smaller displays, the value of the <code>display</code>
+  property should be dynamically set based on the screen resolution. This is left as an exercise to the reader.
+</p>
+
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+  <span class="navbar-brand">Dropdowns in navbar</span>
+  <button class="navbar-toggler" type="button" aria-controls="navbarContent" [attr.aria-expanded]="!collapsed" aria-label="Toggle navigation" (click)="collapsed = !collapsed">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="navbar-collapse" [class.collapse]="collapsed" id="navbarContent">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item" ngbDropdown>
+        <a class="nav-link" tabindex="0" ngbDropdownToggle id="navbarDropdown1" role="button">
+          Static
+        </a>
+        <div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu">
+          <a ngbDropdownItem href="#" (click)="$event.preventDefault()">Action</a>
+          <a ngbDropdownItem href="#" (click)="$event.preventDefault()">Another action</a>
+          <a ngbDropdownItem href="#" (click)="$event.preventDefault()">Something else here</a>
+        </div>
+      </li>
+
+      <li class="nav-item" ngbDropdown>
+        <a class="nav-link" tabindex="0" ngbDropdownToggle id="navbarDropdown2" role="button">
+          Static right
+        </a>
+        <div ngbDropdownMenu aria-labelledby="navbarDropdown2" class="dropdown-menu dropdown-menu-right">
+          <a ngbDropdownItem href="#" (click)="$event.preventDefault()">Action</a>
+          <a ngbDropdownItem href="#" (click)="$event.preventDefault()">Another action</a>
+          <a ngbDropdownItem href="#" (click)="$event.preventDefault()">Something else here</a>
+        </div>
+      </li>
+
+      <li class="nav-item" ngbDropdown display="dynamic" placement="bottom-right">
+        <a class="nav-link" tabindex="0" ngbDropdownToggle id="navbarDropdown3" role="button">
+          Dynamic
+        </a>
+        <div ngbDropdownMenu aria-labelledby="navbarDropdown3" class="dropdown-menu">
+          <a ngbDropdownItem href="#" (click)="$event.preventDefault()">Action</a>
+          <a ngbDropdownItem href="#" (click)="$event.preventDefault()">Another action</a>
+          <a ngbDropdownItem href="#" (click)="$event.preventDefault()">Something else here</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>

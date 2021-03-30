@@ -4,20 +4,21 @@
       <div class="col-6 mx-auto col-md-6">
         <img width="512" height="512" class="img-fluid mb-3 mb-md-0" src="img/logo-stack.png" alt="ng-bootstrap logo"/>
       </div>
-      <div class="col-md-6 text-center text-md-left">
+      <div class="col-lg-6 text-center text-lg-left">
         <h1>Bootstrap widgets</h1>
         <h3 class="text-secondary">The angular way</h3>
         <p class="lead">
           Angular widgets built from the ground up using only Bootstrap&nbsp;4 CSS with APIs designed for the Angular ecosystem.
         </p>
         <p class="lead">No dependencies on 3rd party JavaScript.</p>
-        <div class="d-flex flex-column flex-md-row mb-3">
+        <ngbd-code class="mb-3" [snippet]="installation"></ngbd-code>
+        <div class="d-flex flex-column align-items-lg-center flex-lg-row my-4">
           <a
-          class="btn btn-lg btn-outline-primary mb-3 mb-md-0 mr-md-3"
+          class="btn btn-lg btn-outline-primary mb-3 mb-lg-0 mr-lg-3"
           routerLink="/components">Demo</a>
           <a
           class="btn btn-lg btn-outline-secondary"
-          routerLink="/getting-started">Installation</a>
+          routerLink="/getting-started">Get started now</a>
         </div>
         <p class="text-muted mb-4">Currently at v{{version}}</p>
       </div>
@@ -27,17 +28,27 @@
 
 <div class="masthead-followup">
   <div class="row m-0 border border-white">
-    <div class="col-12 col-md-4 p-3 p-md-5 bg-light border border-white">
-      <img src="/img/cpu.svg" class="float-right float-md-none ml-4 ml-md-0 mb-4" alt="Native widgets icon (computer chip)">
+    <div class="col-12 col-md-4 p-3 p-md-5 bg-light border border-white d-flex flex-column align-items-center align-items-md-start">
+      <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" class="mb-4 text-secondary"
+        width="72" height="72" fill="currentColor" viewBox="30 25 190 210">
+        <g>
+          <polygon points="108,135.4 125,135.4 125,135.4 125,135.4 142,135.4 125,94.5 	"/>
+          <path d="M125,30L125,30L125,30L31.9,63.2l14.2,123.1L125,230l0,0l0,0l78.9-43.7l14.2-123.1L125,30z M183.1,182.6h-21.7h0
+            l-11.7-29.2H125h0h0h-24.7l-11.7,29.2h0H66.9h0L125,52.1l0,0l0,0l0,0l0,0L183.1,182.6L183.1,182.6z"/>
+        </g>
+      </svg>
       <h3>Native</h3>
       <p>
         As simple as Angular &amp; Bootstrap CSS. Nothing else. If you know Angular, you also know ng-bootstrap.
       </p>
-      <a class="btn btn-outline-primary" routerLink='/getting-started'>Get started now</a>
     </div>
 
-    <div class="col-12 col-md-4 p-3 p-md-5 bg-light border border-white">
-      <img src="/img/browser.svg" class="float-right float-md-none ml-4 ml-md-0 mb-4" alt="UI Widgets icon">
+    <div class="col-12 col-md-4 p-3 p-md-5 bg-light border border-white d-flex flex-column align-items-center align-items-md-start">
+        <svg
+        fill="currentColor"
+        class="mb-4 text-secondary" alt="UI Widgets icon"
+        xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 24 24"><path d="M19 2c1.654 0 3 1.346 3 3v14c0 1.654-1.346 3-3 3h-14c-1.654 0-3-1.346-3-3v-14c0-1.654 1.346-3 3-3h14zm5 3c0-2.761-2.238-5-5-5h-14c-2.762 0-5 2.239-5 5v14c0 2.761 2.238 5 5 5h14c2.762 0 5-2.239 5-5v-14zm-7.5 9c1.379 0 2.5 1.122 2.5 2.5s-1.121 2.5-2.5 2.5h-9c-1.379 0-2.5-1.122-2.5-2.5s1.121-2.5 2.5-2.5h9zm0-1h-9c-1.933 0-3.5 1.567-3.5 3.5s1.567 3.5 3.5 3.5h9c1.933 0 3.5-1.567 3.5-3.5s-1.567-3.5-3.5-3.5zm-1 2c-.828 0-1.5.671-1.5 1.5s.672 1.5 1.5 1.5 1.5-.671 1.5-1.5-.672-1.5-1.5-1.5zm1-11h-9c-1.933 0-3.5 1.567-3.5 3.5s1.567 3.5 3.5 3.5h9c1.933 0 3.5-1.567 3.5-3.5s-1.567-3.5-3.5-3.5zm-8 5c-.828 0-1.5-.671-1.5-1.5s.672-1.5 1.5-1.5 1.5.671 1.5 1.5-.672 1.5-1.5 1.5z"/></svg>
+
       <h3>Widgets</h3>
       <p>
         All the Bootstrap widgets you know like
@@ -45,7 +56,7 @@
         <a routerLink="/components/modal">modal</a>,
         <a routerLink="/components/popover">popover</a>,
         <a routerLink="/components/tooltip">tooltip</a>,
-        <a routerLink="/components/tabs">tabs</a> plus some additional goodies like
+        <a routerLink="/components/tabset">tabset</a> plus some additional goodies like
         <a routerLink="/components/datepicker">datepicker</a>,
         <a routerLink="/components/rating">rating</a> and
         <a routerLink="/components/typeahead">typeahead</a>.
@@ -53,18 +64,25 @@
       <a class="btn btn-outline-primary" routerLink='/components'>See all widgets</a>
     </div>
 
-    <div class="col-12 col-md-4 p-3 p-md-5 bg-light border border-white">
-      <img src="/img/test.svg" class="float-right float-md-none ml-4 ml-md-0 mb-4" alt="Quality icon">
+    <div class="col-12 col-md-4 p-3 p-md-5 bg-light border border-white d-flex flex-column align-items-center align-items-md-start">
+      <svg
+        fill="currentColor"
+        class="mb-4 text-secondary" alt="Quality icon"
+        xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 24 24"><path d="M14.969 13.547l.031.191c0 .193-.096.379-.264.496-.538.372-.467.278-.67.885-.084.253-.33.424-.605.424h-.002c-.664-.002-.549-.038-1.083.338-.112.08-.244.119-.376.119s-.264-.039-.376-.118c-.534-.376-.419-.34-1.083-.338h-.002c-.275 0-.521-.171-.605-.424-.203-.607-.133-.513-.669-.885-.169-.118-.265-.304-.265-.497l.031-.19c.207-.604.208-.488 0-1.094l-.031-.191c0-.193.096-.379.265-.497.536-.372.466-.277.669-.885.084-.253.33-.424.605-.424h.002c.662.002.544.041 1.083-.338.112-.08.244-.119.376-.119s.264.039.376.118c.534.376.419.34 1.083.338h.002c.275 0 .521.171.605.424.203.607.132.513.67.885.168.118.264.304.264.497l-.031.191c-.207.604-.208.488 0 1.094zm-1.469-1.198l-.465-.464-1.41 1.446-.66-.627-.465.464 1.125 1.091 1.875-1.91zm8.5-4.349v14h-20v-14h20zm2-2h-24v18h24v-18zm-5 11h-14v1h14v-1zm0 2h-14v1h14v-1zm-7-19c-.828 0-1.5.671-1.5 1.5s.672 1.5 1.5 1.5 1.5-.671 1.5-1.5-.672-1.5-1.5-1.5zm-4.74 5l2.771-1.979c-.206-.267-.36-.574-.446-.91l-4.045 2.889h1.72zm11.2 0l-4.044-2.889c-.086.336-.24.643-.446.91l2.77 1.979h1.72z"/></svg>
       <h3>Quality</h3>
       <p>
-        All code is tested with almost 100% coverage, all changes are meticulously reviewed. We are not cutting corners.
+        <a href="https://codecov.io/gh/ng-bootstrap/ng-bootstrap" rel="noopener" target="_blank">All code is tested with almost 100% coverage</a>, all changes are meticulously reviewed. We are not cutting corners.
       </p>
     </div>
 
     <div class="w-100"></div>
 
-    <div class="col-12 col-md-4 p-3 p-md-5 bg-light border border-white">
-      <img src="/img/escalator.svg" class="float-right float-md-none ml-4 ml-md-0 mb-4" alt="Accessible icon (escalator)">
+    <div class="col-12 col-md-4 p-3 p-md-5 bg-light border border-white d-flex flex-column align-items-center align-items-md-start">
+      <svg
+        fill="currentColor"
+        class="mb-4 text-secondary" alt="Accessible icon (escalator)"
+        width="72" height="72" viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M12 0c6.623 0 12 5.377 12 12s-5.377 12-12 12-12-5.377-12-12 5.377-12 12-12m0 2c5.52 0 10 4.481 10 10 0 5.52-4.48 10-10 10-5.519 0-10-4.48-10-10 0-5.519 4.481-10 10-10m0 1c4.967 0 9 4.033 9 9s-4.033 9-9 9-9-4.033-9-9 4.033-9 9-9m-.011 11.5c-.474.006-.765.448-.989.804-.483.767-1.005 1.58-1.455 2.264-.155.238-.325.43-.609.432-.285.002-.526-.343-.389-.632.366-.769 1.953-3.539 1.953-5.868 0-.806-.429-1-1-1h-2c-.276 0-.5-.224-.5-.5s.224-.5.5-.5h9c.276 0 .5.224.5.5s-.224.5-.5.5h-2c-.57 0-1 .194-1 1 0 2.329 1.587 5.099 1.953 5.868.137.289-.103.634-.389.632-.284-.002-.454-.194-.609-.432-.45-.684-.973-1.497-1.455-2.264-.226-.359-.52-.806-1-.804h-.011zm.011-8.5c.828 0 1.5.672 1.5 1.5s-.672 1.5-1.5 1.5-1.5-.672-1.5-1.5.672-1.5 1.5-1.5"/></svg>
       <h3>Accessible</h3>
       <p>
         All the widgets are accessible. We use proper HTML elements and required aria attributes.
@@ -72,16 +90,26 @@
       </p>
     </div>
 
-    <div class="col-12 col-md-4 p-3 p-md-5 bg-light border border-white">
-      <img src="/img/team.svg" class="float-right float-md-none ml-4 ml-md-0 mb-4" alt="Team icon">
+    <div class="col-12 col-md-4 p-3 p-md-5 bg-light border border-white d-flex flex-column align-items-center align-items-md-start">
+
+      <svg
+        fill="currentColor"
+        width="72" height="72" viewBox="0 0 24 24"
+        class="mb-4 text-secondary" alt="Team icon"
+        xmlns="http://www.w3.org/2000/svg"
+        fill-rule="evenodd" clip-rule="evenodd"><path d="M20.624 22.474l-1.624-.869-1.625.869.324-1.813-1.328-1.277 1.825-.252.804-1.658.804 1.658 1.825.252-1.329 1.277.324 1.813zm-7 0l-1.624-.869-1.625.869.325-1.813-1.329-1.277 1.825-.252.804-1.658.804 1.658 1.825.252-1.329 1.277.324 1.813zm-7 0l-1.624-.869-1.625.869.325-1.813-1.329-1.277 1.825-.252.804-1.658.804 1.658 1.825.252-1.329 1.277.324 1.813zm16.376-6.5h-22c-.552 0-1 .447-1 1v6c0 .553.448 1 1 1h22c.553 0 1-.447 1-1v-6c0-.553-.447-1-1-1zm-22.998-1h4.998c.008-1.214-.001-2.289 0-3.013.005-3.993 1.749-3.116 1.749-6.663 0-1.507-.983-2.324-2.248-2.324-1.869 0-3.169 1.787-1.399 5.129.581 1.099-.62 1.359-1.91 1.657-1.118.258-1.192 1.047-1.192 1.993l.002 3.221zm22.806-5.214c-1.29-.298-2.491-.558-1.91-1.657 1.77-3.342.47-5.129-1.399-5.129-1.265 0-2.248.817-2.248 2.324 0 3.324 1.719 2.704 1.749 6.676.008.972-.009 1.311 0 3h4.998l.002-3.221c0-.946-.074-1.735-1.192-1.993zm-4.811 5.214h-11.995l-.002-3.126c0-1.258.1-2.482 1.588-2.826 1.684-.389 3.344-.736 2.545-2.209-2.366-4.364-.674-6.839 1.866-6.839 2.491 0 4.226 2.383 1.866 6.839-.775 1.464.826 1.812 2.545 2.209 1.49.344 1.589 1.569 1.589 2.829l-.002 3.123z"/></svg>
       <h3>Team</h3>
       <p>
         We've created <a href="https://angular-ui.github.io/bootstrap/" rel="noopener" target="_blank">angular-ui/bootstrap</a> and have spent several years doing widget development. A number of team members are core Angular contributors.
       </p>
     </div>
 
-    <div class="col-12 col-md-4 p-3 p-md-5 bg-light border border-white">
-      <img src="/img/world.svg" class="float-right float-md-none ml-4 ml-md-0 mb-4" alt="Community icon">
+    <div class="col-12 col-md-4 p-3 p-md-5 bg-light border border-white d-flex flex-column align-items-center align-items-md-start">
+
+      <svg
+      fill="currentColor"
+      class="mb-4 text-secondary" alt="Community icon"
+      xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 24 24"><path d="M6.28 3c3.236.001 4.973 3.491 5.72 5.031.75-1.547 2.469-5.021 5.726-5.021 2.058 0 4.274 1.309 4.274 4.182 0 3.442-4.744 7.851-10 13-5.258-5.151-10-9.559-10-13 0-2.676 1.965-4.193 4.28-4.192zm.001-2c-3.183 0-6.281 2.187-6.281 6.192 0 4.661 5.57 9.427 12 15.808 6.43-6.381 12-11.147 12-15.808 0-4.011-3.097-6.182-6.274-6.182-2.204 0-4.446 1.042-5.726 3.238-1.285-2.206-3.522-3.248-5.719-3.248z"/></svg>
       <h3>Community</h3>
       <p>
         We give back to the community by contributing to projects we build upon (Angular, Bootstrap).

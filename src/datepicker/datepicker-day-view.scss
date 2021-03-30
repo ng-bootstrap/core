@@ -1,0 +1,12 @@
+[ngbDatepickerDayView] {
+  text-align: center;
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  border-radius: 0.25rem;
+  background: transparent;
+
+  &.outside {
+    opacity: 0.5;
+  }
+}

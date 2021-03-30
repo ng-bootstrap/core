@@ -16,5 +16,5 @@ export interface NgbModalOptions {
   /**
    * Size of a new modal window.
    */
-  size?: 'sm' | 'lg';
+  size?: 'sm' | 'lg' | 'xl' | string;
 }

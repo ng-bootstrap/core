@@ -32,5 +32,5 @@ export class NgbdTypeaheadConfig {
       distinctUntilChanged(),
       map(term => term.length < 2 ? []
         : states.filter(v => v.toLowerCase().startsWith(term.toLocaleLowerCase())).splice(0, 10))
-    );
+    )
 }

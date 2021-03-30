@@ -1,0 +1,50 @@
+<h3>Modal nesting tests</h3>
+
+<ng-template #t let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Modal with nested popups</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <!-- datepicker -->
+      <div class="form-group">
+        <label for="datepicker">Datepicker</label>
+        <div class="input-group">
+          <input id="datepicker" class="form-control" placeholder="yyyy-mm-dd" name="dp"
+                 ngbDatepicker #dp="ngbDatepicker" [startDate]="{year: 2018, month: 1}">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" id="datepicker-button" (click)="dp.toggle()" type="button">Open</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- dropdown -->
+      <div class="form-group">
+        <label for="dropdown">Typeahead</label>
+        <div class="input-group">
+          <div ngbDropdown class="d-inline-block">
+            <button class="btn btn-outline-primary" id="dropdown" ngbDropdownToggle>Toggle dropdown</button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+              <button ngbDropdownItem>Action - 1</button>
+              <button ngbDropdownItem>Another Action</button>
+              <button ngbDropdownItem>Something else is here</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- typeahead -->
+      <div class="form-group">
+        <label for="typeahead">Typeahead</label>
+        <div class="input-group">
+          <input id="typeahead" type="text" name="tphd" class="form-control" [ngbTypeahead]="search"/>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<button class="btn btn-outline-secondary ml-2" type="button" id="open-modal" (click)="openModal(t)">Open Modal</button>

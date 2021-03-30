@@ -1,6 +1,6 @@
 {
   "name": "@ng-bootstrap/ng-bootstrap",
-  "version": "3.1.0",
+  "version": "$NG_BOOTSTRAP_VERSION",
   "description": "Angular powered Bootstrap",
   "keywords": [
     "angular",
@@ -18,8 +18,10 @@
     "popover",
     "progressbar",
     "rating",
+    "table",
     "tabset",
     "timepicker",
+    "toast",
     "tooltip",
     "typeahead"
   ],
@@ -33,10 +35,15 @@
     "url": "https://github.com/ng-bootstrap/ng-bootstrap/issues"
   },
   "homepage": "https://github.com/ng-bootstrap/ng-bootstrap#readme",
+  "dependencies": {
+    "tslib": "^2.0.0"
+  },
   "peerDependencies": {
-    "@angular/common": "^6.1.0",
-    "@angular/core": "^6.1.0",
-    "@angular/forms": "^6.1.0",
-    "rxjs": "^6.0.0"
-  }
+    "@angular/common": "^11.0.0",
+    "@angular/core": "^11.0.0",
+    "@angular/forms": "^11.0.0",
+    "@angular/localize": "^11.0.0",
+    "rxjs": "^6.5.5"
+  },
+  "schematics": "./schematics/collection.json"
 }

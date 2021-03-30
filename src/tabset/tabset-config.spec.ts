@@ -1,3 +1,4 @@
+// tslint:disable:deprecation
 import {NgbTabsetConfig} from './tabset-config';
 
 describe('ngb-tabset-config', () => {
@@ -6,5 +7,6 @@ describe('ngb-tabset-config', () => {
 
     expect(config.type).toBe('tabs');
     expect(config.justify).toBe('start');
+    expect(config.orientation).toBe('horizontal');
   });
 });

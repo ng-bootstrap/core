@@ -1,0 +1,17 @@
+<p>
+  Umm al-Qura calendar is a type of Hijri calendars based on astronomical calculations and used
+  in Saudi Arabia for administrative purposes
+</p>
+
+<ngb-datepicker class="rtl" #dp [(ngModel)]="model" [firstDayOfWeek]="7">
+</ngb-datepicker>
+
+<hr/>
+
+<button class="btn btn-sm btn-outline-primary mr-2" (click)="selectToday();">Select Today</button>
+<button class="btn btn-sm btn-outline-primary mr-2" (click)="dp.navigateTo()">To current month</button>
+<button class="btn btn-sm btn-outline-primary mr-2" (click)="dp.navigateTo({year: 1434, month: 2})">To Saf. 1434</button>
+
+<hr/>
+
+<pre>Model: {{ model | json }}</pre>

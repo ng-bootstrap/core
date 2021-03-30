@@ -1,0 +1,50 @@
+<p>This is a more complete example with a service that simulates server calling:</p>
+
+<ul>
+  <li>an observable async service to fetch a list of countries</li>
+  <li>sorting, filtering and pagination</li>
+  <li>simulated delay and loading indicator</li>
+  <li>debouncing of search requests</li>
+</ul>
+
+<form>
+  <div class="form-group form-inline">
+      Full text search: <input class="form-control ml-2" type="text" name="searchTerm" [(ngModel)]="service.searchTerm"/>
+      <span class="ml-3" *ngIf="service.loading$ | async">Loading...</span>
+  </div>
+
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col" sortable="name" (sort)="onSort($event)">Country</th>
+      <th scope="col" sortable="area" (sort)="onSort($event)">Area</th>
+      <th scope="col" sortable="population" (sort)="onSort($event)">Population</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let country of countries$ | async">
+      <th scope="row">{{ country.id }}</th>
+      <td>
+        <img [src]="'https://upload.wikimedia.org/wikipedia/commons/' + country.flag" class="mr-2" style="width: 20px">
+        <ngb-highlight [result]="country.name" [term]="service.searchTerm"></ngb-highlight>
+      </td>
+      <td><ngb-highlight [result]="country.area | number" [term]="service.searchTerm"></ngb-highlight></td>
+      <td><ngb-highlight [result]="country.population | number" [term]="service.searchTerm"></ngb-highlight></td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="d-flex justify-content-between p-2">
+    <ngb-pagination
+      [collectionSize]="(total$ | async)!" [(page)]="service.page" [pageSize]="service.pageSize">
+    </ngb-pagination>
+
+    <select class="custom-select" style="width: auto" name="pageSize" [(ngModel)]="service.pageSize">
+      <option [ngValue]="2">2 items per page</option>
+      <option [ngValue]="4">4 items per page</option>
+      <option [ngValue]="6">6 items per page</option>
+    </select>
+  </div>
+
+</form>

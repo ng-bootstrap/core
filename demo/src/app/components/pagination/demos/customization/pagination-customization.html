@@ -1,0 +1,40 @@
+<p>A pagination with customized links:</p>
+<ngb-pagination [collectionSize]="70" [(page)]="page" aria-label="Custom pagination">
+  <ng-template ngbPaginationPrevious>Prev</ng-template>
+  <ng-template ngbPaginationNext>Next</ng-template>
+  <ng-template ngbPaginationNumber let-p>{{ getPageSymbol(p) }}</ng-template>
+</ngb-pagination>
+<hr>
+
+<p>A pagination with customized pages:</p>
+<ngb-pagination [collectionSize]="70" [(page)]="page" [boundaryLinks]="true">
+    <ng-template ngbPaginationPages let-page let-pages="pages">
+        <li class="ngb-custom-pages-item" *ngIf="pages.length > 0">
+            <div class="form-group d-flex flex-nowrap px-2">
+              <label
+                  id="paginationInputLabel"
+                  for="paginationInput"
+                  class="col-form-label mr-2 ml-1"
+              >Page</label>
+              <input #i
+                  type="text"
+                  inputmode="numeric"
+                  pattern="[0-9]*"
+                  class="form-control custom-pages-input"
+                  id="paginationInput"
+                  [value]="page"
+                  (keyup.enter)="selectPage(i.value)"
+                  (blur)="selectPage(i.value)"
+                  (input)="formatInput($any($event).target)"
+                  aria-labelledby="paginationInputLabel paginationDescription"
+                  style="width: 2.5rem"
+              />
+              <span id="paginationDescription" class="col-form-label text-nowrap px-2">
+                  of {{pages.length}}</span>
+            </div>
+        </li>
+    </ng-template>
+</ngb-pagination>
+<hr>
+
+<pre>Current page: {{page}}</pre>

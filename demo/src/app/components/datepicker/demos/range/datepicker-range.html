@@ -1,9 +1,9 @@
 <p>Example of the range selection</p>
 
-<ngb-datepicker #dp (select)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t">
+<ngb-datepicker #dp (dateSelect)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t" outsideDays="hidden">
 </ngb-datepicker>
 
-<ng-template #t let-date="date" let-focused="focused">
+<ng-template #t let-date let-focused="focused">
   <span class="custom-day"
         [class.focused]="focused"
         [class.range]="isRange(date)"

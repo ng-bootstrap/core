@@ -5,17 +5,12 @@ set -e -o pipefail
 # Setup environment
 cd `dirname $0`
 
-# Setup and start Sauce Connect for your TravisCI build
-# This script requires your .travis.yml to include the following two private env variables:
+# Setup and start Sauce Connect for your GitHub CI build
+# This script requires the following two private env variables:
 # SAUCE_USERNAME
 # SAUCE_ACCESS_KEY
-# Follow the steps at https://saucelabs.com/opensource/travis to set that up.
-#
-# Curl and run this script as part of your .travis.yml before_script section:
-# before_script:
-#   - curl https://gist.github.com/santiycr/5139565/raw/sauce_connect_setup.sh | bash
 
-CONNECT_URL="https://saucelabs.com/downloads/sc-4.4.12-linux.tar.gz"
+CONNECT_URL="https://saucelabs.com/downloads/sc-4.6.3-linux.tar.gz"
 CONNECT_DIR="/tmp/sauce-connect-$RANDOM"
 CONNECT_DOWNLOAD="sc-latest-linux.tar.gz"
 
@@ -35,9 +30,9 @@ SAUCE_ACCESS_KEY=`echo $SAUCE_ACCESS_KEY | rev`
 
 ARGS=""
 
-# Set tunnel-id only on Travis, to make local testing easier.
-if [ ! -z "$TRAVIS_JOB_NUMBER" ]; then
-  ARGS="$ARGS --tunnel-identifier $TRAVIS_JOB_NUMBER"
+# Set tunnel-id only on GitHub CI, to make local testing easier.
+if [ ! -z "$GITHUB_RUN_ID" ]; then
+  ARGS="$ARGS --tunnel-identifier $GITHUB_RUN_ID"
 fi
 if [ ! -z "$BROWSER_PROVIDER_READY_FILE" ]; then
   ARGS="$ARGS --readyfile $BROWSER_PROVIDER_READY_FILE"

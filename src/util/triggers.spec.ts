@@ -1,4 +1,6 @@
-import {parseTriggers} from './triggers';
+import {fakeAsync, tick} from '@angular/core/testing';
+import {Subject, Subscription, Observable} from 'rxjs';
+import {parseTriggers, triggerDelay} from './triggers';
 
 describe('triggers', () => {
 
@@ -67,8 +69,8 @@ describe('triggers', () => {
     });
 
     it('should ignore empty inputs', () => {
-      expect(parseTriggers(null).length).toBe(0);
-      expect(parseTriggers(undefined).length).toBe(0);
+      expect(parseTriggers(<any>null).length).toBe(0);
+      expect(parseTriggers(<any>undefined).length).toBe(0);
       expect(parseTriggers('').length).toBe(0);
     });
 
@@ -84,5 +86,151 @@ describe('triggers', () => {
       }).toThrow(`Triggers parse error: manual trigger can\'t be mixed with other triggers`);
     });
 
+  });
+
+  describe('triggerDelay', () => {
+    let subject$: Subject<boolean>;
+    let delayed$: Observable<boolean>;
+    let open: boolean;
+    let subscription: Subscription | null = null;
+    let spy: jasmine.Spy;
+
+    beforeEach(() => {
+      subject$ = new Subject();
+      spy = jasmine.createSpy('listener', (newValue) => open = newValue).and.callThrough();
+      delayed$ = subject$.asObservable().pipe(triggerDelay(5000, 1000, () => open));
+      subscription = delayed$.subscribe(spy);
+    });
+
+    afterEach(() => {
+      if (subscription) {
+        subscription.unsubscribe();
+        subscription = null;
+      }
+    });
+
+    it('delays open', fakeAsync(() => {
+         open = false;
+         subject$.next(true);
+         tick(4999);
+         expect(spy).not.toHaveBeenCalled();
+         tick(2);
+         expect(spy).toHaveBeenCalledWith(true);
+         tick(100000);
+         expect(spy.calls.count()).toBe(1);
+       }));
+
+    it('cancels open if it is already done through another way', fakeAsync(() => {
+         open = false;
+         subject$.next(true);
+         tick(4999);
+         expect(spy).not.toHaveBeenCalled();
+         open = true;
+         tick(2);
+         expect(spy).not.toHaveBeenCalled();
+         tick(100000);
+         expect(spy.calls.count()).toBe(0);
+       }));
+
+    it('delays close', fakeAsync(() => {
+         open = true;
+         subject$.next(false);
+         tick(999);
+         expect(spy).not.toHaveBeenCalled();
+         tick(2);
+         expect(spy).toHaveBeenCalledWith(false);
+         tick(100000);
+         expect(spy.calls.count()).toBe(1);
+       }));
+
+    it('cancels close if it is already done through another way', fakeAsync(() => {
+         open = true;
+         subject$.next(false);
+         tick(999);
+         expect(spy).not.toHaveBeenCalled();
+         open = false;
+         tick(2);
+         expect(spy).not.toHaveBeenCalled();
+         tick(100000);
+         expect(spy.calls.count()).toBe(0);
+       }));
+
+    it('ignores extra open during openDelay', fakeAsync(() => {
+         open = false;
+         subject$.next(true);
+         tick(200);
+         subject$.next(true);
+         tick(100);
+         subject$.next(true);
+         tick(200);
+         tick(4499);
+         expect(spy).not.toHaveBeenCalled();
+         tick(2);
+         expect(spy).toHaveBeenCalledWith(true);
+         tick(100000);
+         expect(spy.calls.count()).toBe(1);
+       }));
+
+    it('ignores extra close during closeDelay', fakeAsync(() => {
+         open = true;
+         subject$.next(false);
+         tick(200);
+         subject$.next(false);
+         tick(100);
+         subject$.next(false);
+         tick(200);
+         tick(499);
+         expect(spy).not.toHaveBeenCalled();
+         tick(2);
+         expect(spy).toHaveBeenCalledWith(false);
+         tick(100000);
+         expect(spy.calls.count()).toBe(1);
+       }));
+
+    it('cancels open when receiving close during openDelay', fakeAsync(() => {
+         open = false;
+         subject$.next(true);
+         tick(4999);
+         subject$.next(false);
+         tick(100000);
+         expect(spy).not.toHaveBeenCalled();
+       }));
+
+    it('cancels close when receiving open during closeDelay', fakeAsync(() => {
+         open = true;
+         subject$.next(false);
+         tick(999);
+         subject$.next(true);
+         tick(100000);
+         expect(spy).not.toHaveBeenCalled();
+       }));
+
+    it('closes during openDelay if opened through another way', fakeAsync(() => {
+         open = false;
+         subject$.next(true);
+         tick(4999);
+         open = true;
+         subject$.next(false);
+         tick(999);
+         expect(spy).not.toHaveBeenCalled();
+         tick(2);
+         expect(spy).toHaveBeenCalledWith(false);
+         tick(100000);
+         expect(spy.calls.count()).toBe(1);
+       }));
+
+    it('opens during closeDelay if closed through another way', fakeAsync(() => {
+         open = true;
+         subject$.next(false);
+         tick(999);
+         open = false;
+         subject$.next(true);
+         tick(4999);
+         expect(spy).not.toHaveBeenCalled();
+         tick(2);
+         expect(spy).toHaveBeenCalledWith(true);
+         tick(100000);
+         expect(spy.calls.count()).toBe(1);
+       }));
   });
 });

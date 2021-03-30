@@ -1,0 +1,27 @@
+<ngbd-page-wrapper pageTitle="Internationalization">
+  <ngb-alert type="warning" [dismissible]="false">
+    We're using standard Angular i18n in ng-bootstrap templates. Since Angular 9 (and ng-bootstrap 6) you have to
+    add the additional <code>@angular/localize</code> polyfill to your CLI project. See more details in
+    <a href="https://angular.io/guide/i18n#setting-up-localization-with-the-angular-cli" target="_blank">the official
+      documentation</a>.
+  </ngb-alert>
+
+  <p>
+    Some components contain static English text or symbols that you might want to internationalize. Some of them appear
+    on the screen, like for example the placeholders used in the timepicker input fields. Others appear in aria
+    attributes
+    used for accessibility.
+  </p>
+  <p>
+    Internationalizing the ng-bootstrap components is done the same way as for any of your components, using the
+    <a href="https://angular.io/guide/i18n#template-translations">process described in the Angular documentation</a>.
+    The only difference is that we already did the first phase of this process: marking static text messages in the
+    ng-bootstrap component templates for translation.
+  </p>
+  <p>
+    So, if you execute `ng xi18n` on your project, you will also find the ng-bootstrap messages to translate in the
+    generated messages file. All our messages are identified by an ID of the form <code>ngb.[widget].[message]</code>
+  </p>
+
+
+</ngbd-page-wrapper>

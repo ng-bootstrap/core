@@ -5,7 +5,6 @@ import { NgbdApiDocs, NgbdApiDocsBadge, NgbdApiDocsClass, NgbdApiDocsConfig } fr
 import { NgbdApiPage } from './api-page/api.component';
 import { NgbdWidgetDemoComponent } from './examples-page/demo.component';
 import { NgbdExamplesPage } from './examples-page/examples.component';
-import { NgbdFragment } from './fragment';
 import { NgbdOverviewDirective, NgbdOverviewSectionComponent } from './overview';
 
 export * from './demo-list';
@@ -17,7 +16,6 @@ export * from './demo-list';
     NgbdApiDocs,
     NgbdApiDocsClass,
     NgbdApiDocsConfig,
-    NgbdFragment,
     NgbdOverviewDirective,
     NgbdOverviewSectionComponent,
     NgbdExamplesPage,
@@ -29,11 +27,11 @@ export * from './demo-list';
     NgbdApiDocs,
     NgbdApiDocsClass,
     NgbdApiDocsConfig,
-    NgbdFragment,
     NgbdOverviewDirective,
     NgbdOverviewSectionComponent,
     NgbdExamplesPage,
-    NgbdApiPage
+    NgbdApiPage,
+    NgbdWidgetDemoComponent
   ]
 })
 export class NgbdComponentsSharedModule {}

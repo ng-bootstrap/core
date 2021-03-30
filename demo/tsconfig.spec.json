@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../out-tsc/demo-e2e",
+    "module": "commonjs",
+    "types": [
+      "jasmine",
+      "node"
+    ]
+  },
+  "include": [
+    "src/**/*.po.ts",
+    "src/**/*.e2e-spec.ts"
+  ]
+}

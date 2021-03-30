@@ -5,8 +5,8 @@ import {Live, ARIA_LIVE_DELAY} from './live';
 
 
 
-function getLiveElement(): Element | null {
-  return document.body.querySelector('#ngb-live');
+function getLiveElement(): HTMLElement {
+  return document.body.querySelector('#ngb-live') !as HTMLElement;
 }
 
 

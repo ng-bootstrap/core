@@ -1,4 +1,15 @@
-import {Component, Input, Output, EventEmitter, ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ChangeDetectionStrategy,
+  ViewEncapsulation,
+  AfterViewChecked,
+  ViewChild,
+  ElementRef,
+  Renderer2
+} from '@angular/core';
 import {NgbDate} from './ngb-date';
 import {toInteger} from '../util/util';
 import {NgbDatepickerI18n} from './datepicker-i18n';
@@ -6,38 +17,28 @@ import {NgbDatepickerI18n} from './datepicker-i18n';
 @Component({
   selector: 'ngb-datepicker-navigation-select',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: [`
-    :host>select {
-      display: flex;
-      display: -ms-flexbox;
-      -ms-flex: 1 1 auto;
-      width: 100%;
-      padding: 0 0.5rem;
-      font-size: 0.875rem;
-      height: 1.85rem;
-    }
-  `],
+  encapsulation: ViewEncapsulation.None,
+  styleUrls: ['./datepicker-navigation-select.scss'],
   template: `
-    <select
+    <select #month
       [disabled]="disabled"
       class="custom-select"
-      [value]="date?.month"
       i18n-aria-label="@@ngb.datepicker.select-month" aria-label="Select month"
       i18n-title="@@ngb.datepicker.select-month" title="Select month"
-      (change)="changeMonth($event.target.value)">
-        <option *ngFor="let m of months" [attr.aria-label]="i18n.getMonthFullName(m)" [value]="m">{{ i18n.getMonthShortName(m) }}</option>
-    </select><select
+      (change)="changeMonth($any($event).target.value)">
+        <option *ngFor="let m of months" [attr.aria-label]="i18n.getMonthFullName(m, date?.year)"
+                [value]="m">{{ i18n.getMonthShortName(m, date?.year) }}</option>
+    </select><select #year
       [disabled]="disabled"
       class="custom-select"
-      [value]="date?.year"
       i18n-aria-label="@@ngb.datepicker.select-year" aria-label="Select year"
       i18n-title="@@ngb.datepicker.select-year" title="Select year"
-      (change)="changeYear($event.target.value)">
+      (change)="changeYear($any($event).target.value)">
         <option *ngFor="let y of years" [value]="y">{{ i18n.getYearNumerals(y) }}</option>
     </select>
   `
 })
-export class NgbDatepickerNavigationSelect {
+export class NgbDatepickerNavigationSelect implements AfterViewChecked {
   @Input() date: NgbDate;
   @Input() disabled: boolean;
   @Input() months: number[];
@@ -45,9 +46,28 @@ export class NgbDatepickerNavigationSelect {
 
   @Output() select = new EventEmitter<NgbDate>();
 
-  constructor(public i18n: NgbDatepickerI18n) {}
+  @ViewChild('month', {static: true, read: ElementRef}) monthSelect: ElementRef;
+  @ViewChild('year', {static: true, read: ElementRef}) yearSelect: ElementRef;
+
+  private _month = -1;
+  private _year = -1;
+
+  constructor(public i18n: NgbDatepickerI18n, private _renderer: Renderer2) {}
 
   changeMonth(month: string) { this.select.emit(new NgbDate(this.date.year, toInteger(month), 1)); }
 
   changeYear(year: string) { this.select.emit(new NgbDate(toInteger(year), this.date.month, 1)); }
+
+  ngAfterViewChecked() {
+    if (this.date) {
+      if (this.date.month !== this._month) {
+        this._month = this.date.month;
+        this._renderer.setProperty(this.monthSelect.nativeElement, 'value', this._month);
+      }
+      if (this.date.year !== this._year) {
+        this._year = this.date.year;
+        this._renderer.setProperty(this.yearSelect.nativeElement, 'value', this._year);
+      }
+    }
+  }
 }

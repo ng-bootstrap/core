@@ -1,8 +1,7 @@
 <div class="api-doc-component" [class.deprecated]="apiDocs.deprecated">
   <h3>
     <a
-      class="title-fragment"
-      [routerLink]=""
+      routerLink="."
       fragment="{{apiDocs.className}}" ngbdFragment
       title="Anchor link to: {{apiDocs.className}}"
     >
@@ -23,7 +22,7 @@
   </h3>
   <ngbd-api-docs-badge [type]="apiDocs.type" [deprecated]="apiDocs.deprecated" [since]="apiDocs.since"></ngbd-api-docs-badge>
   <p *ngIf="apiDocs.deprecated">{{ apiDocs.deprecated.description }}</p>
-  <p class="lead">{{apiDocs.description}}</p>
+  <p class="lead" [innerHTML]="apiDocs.description"></p>
 
   <ng-template [ngIf]="apiDocs.properties && apiDocs.properties.length">
     <section>
@@ -38,7 +37,7 @@
           </td>
           <td class="content-cell">
             <p *ngIf="prop.deprecated">{{ prop.deprecated.description }}</p>
-            <p class="description">{{ prop.description }}</p>
+            <p class="description" [innerHTML]="prop.description"></p>
             <div class="meta">
               <div>
                 <i>Type: </i><code>{{ prop.type }}</code>
@@ -71,7 +70,7 @@
                     <small class="text-muted" title="Return type">=&gt; {{ method.returnType }}</small>
                 </p>
                 <p *ngIf="method.deprecated">{{ method.deprecated.description }}</p>
-                <p class="description">{{ method.description }}</p>
+                <p class="description" [innerHTML]="method.description"></p>
             </td>
           </tr>
         </tbody>

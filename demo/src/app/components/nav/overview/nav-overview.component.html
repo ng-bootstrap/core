@@ -1,0 +1,187 @@
+<h4>
+  <span class="badge badge-info">Since 5.2.0</span>
+</h4>
+
+<p>
+  Nav directives will help you to build navigation components. They're meant to replace existing
+  <a routerLink="../../tabset">Tabset</a> as a more flexible alternative.
+</p>
+
+
+<ngbd-overview-section [section]="sections['basic-usage']">
+  <p>
+    Nav includes <code>NgbNav</code>, <code>NgbNavItem</code>, <code>NgbNavLink</code>, <code>NgbNavContent</code>
+    directives and the <code>NgbNavOutlet</code> component.
+  </p>
+
+  <p>
+    These directives are fully based on the bootstrap markup leaving all DOM nodes available for you. They just
+    handle nav selection, accessibility and basic styling for you. You can always add additional classes and behavior on
+    top if necessary. Please refer to the
+    <a target="_blank" rel="noopener" href="https://getbootstrap.com/docs/{{bsVersion}}/components/navs/">bootstrap nav
+      documentation</a> for a complete set of classes you can use with navs.
+  </p>
+
+  <p>
+    The simplest nav would look something like a combination of styled links:
+  </p>
+
+  <ngb-alert type="secondary" [dismissible]="false">
+    <ul ngbNav #nav="ngbNav" class="nav-pills">
+      <li ngbNavItem>
+        <a ngbNavLink>First</a>
+        <ng-template ngbNavContent>Content for the first nav</ng-template>
+      </li>
+      <li ngbNavItem>
+        <a ngbNavLink>Second</a>
+        <ng-template ngbNavContent>Content for the second nav</ng-template>
+      </li>
+    </ul>
+  </ngb-alert>
+
+  <p>
+    and an optional outlet, where the content related to the active nav would be displayed:
+  </p>
+
+  <ngb-alert type="secondary" [dismissible]="false">
+    <div [ngbNavOutlet]="nav"></div>
+  </ngb-alert>
+
+  <p>
+    This example would look something along these lines (or better dive into one of the <a routerLink="../examples">working
+    demos</a>):
+  </p>
+
+  <ngbd-code [snippet]="BASIC"></ngbd-code>
+
+  <br>
+
+  <p>
+    We use <code>ng-templates</code> for the content, so by default only currently active content will be present in the
+    DOM tree. If you wish to keep even the non-active content in the DOM, take a look at the
+    <code>[destroyOnHide]</code> input and <a routerLink="../examples" fragment="keep-content">this demo</a>.
+  </p>
+
+  <h4>Selection / active nav</h4>
+
+  <p>
+    To select your navs programmatically, you have to give your nav items unique ids, so you could know and set
+    which one is currently active either using the <code>[(activeId)]="..."</code> binding or the imperative API
+    with<code>.select(id)</code>. If you don't provide any ids, they will be generated automatically. The only
+    limitation is that you can't have the <code>''</code> (empty string) as id, because <code>ngbNavItem</code>,
+    <code>ngbNavItem=""</code> and <code>[ngbNavItem]="''"</code> are indistinguishable.
+  </p>
+
+  <ngbd-code [snippet]="SELECTION"></ngbd-code>
+
+  <p>
+    It is also possible to select disabled navs with <code>[activeId]</code> and <code>.select()</code>.
+  </p>
+
+  <p>
+    When user clicks on a nav, the <code>NavChangeEvent</code> will be raised that can prevent nav selection.
+    This event won't be raised in case of programmatic nav selection. It is not possible to select disabled tabs
+    by clicking on them.
+  </p>
+
+</ngbd-overview-section>
+
+<ngbd-overview-section [section]="sections['customization']">
+
+  <ngb-alert type="warning" [dismissible]="false">
+    It is up to you to specify the nav type using bootstrap standard <code>.nav-tabs</code> or
+    <code>.nav-pills</code> classes. Otherwise active nav will not be highlighted,
+    <a target="_blank" rel="noopener"
+       href="https://getbootstrap.com/docs/{{bsVersion}}/components/navs/#available-styles">similarly to bootstrap</a>.
+  </ngb-alert>
+
+  <p>
+    As you have already seen in the first example, you can put <code>ngbNavOutlet</code> anywhere on the page. Also
+    both <code>ngbNavOutlet</code> and <code>ngbNavContent</code> are completely optional.
+  </p>
+
+  <p>
+    Apart from this please follow bootstrap recommendations on styling and accessibility and take a look at our
+    <a routerLink="../examples" fragment="markup">alternative markup</a>,
+    <a routerLink="../examples" fragment="dynamic">dynamic tabs</a> and
+    <a routerLink="../examples" fragment="custom-style">custom style</a>
+    demos.
+  </p>
+
+  <h4>Accessibility</h4>
+
+  <p>
+    By default nav sets <code>'tablist'</code>, <code>'tab'</code> and <code>'tabpanel'</code> roles on elements. If
+    you plan to use different ones (ex. if you're using a nav inside the navbar), you can tell it not to generate any
+    roles and add your own. Or you could simply override them by providing <code>role="myRole"</code> where necessary.
+  </p>
+
+  <ngbd-code [snippet]="ROLES"></ngbd-code>
+
+</ngbd-overview-section>
+
+
+<ngbd-overview-section [section]="sections['routing']">
+  <p>
+    Router integration is simple: just use standard <code>&lt;router-outlet&gt;</code> component instead of <code>ngbNavOutlet</code>
+    and add <code>[routerLink]</code> directives to nav links.
+  </p>
+
+  <p>
+    Ex. if you want to handle urls fragments like: <code>/some/url#one</code> and <code>/some/url#two</code> in your
+    component you'd have something like this:
+  </p>
+
+  <ngbd-code [snippet]="ROUTER_TS"></ngbd-code>
+
+  <p>
+    and in your template:
+  </p>
+
+  <ngbd-code [snippet]="ROUTER"></ngbd-code>
+
+</ngbd-overview-section>
+
+
+
+<ngbd-overview-section [section]="sections['keyboard-shortcuts']">
+
+  <ngbd-api-docs-badge [since]="{version: '6.1.0'}"></ngbd-api-docs-badge>
+
+  <p>
+    Keyboard support is not activated by default and can be turned on via the <code>[keyboard]</code> input.
+    Depending on the input value, we'll either focus or switch to a specific nav.
+  </p>
+
+  <p>
+    Please refer to the <a routerLink="../api" fragment="NgbNav">NgbNav API</a>
+  </p>
+
+  <table class="table mt-4">
+    <tbody>
+    <tr>
+      <td><code>Arrow(Left|Up)</code></td>
+      <td>
+        Moves focus or switches to the previous non-disabled nav.
+        Loops through navs and depends on nav orientation.
+      </td>
+    </tr>
+    <tr>
+      <td><code>Arrow(Right|Down)</code></td>
+      <td>
+        Moves focus or switches to the next non-disabled nav.
+        Loops through navs and depends on nav orientation.
+      </td>
+    </tr>
+    <tr>
+      <td><code>Home</code></td>
+      <td>Moves focus or switches to the first non-disabled nav</td>
+    </tr>
+    <tr>
+      <td><code>End</code></td>
+      <td>Moves focus or switches to the last non-disabled nav</td>
+    </tr>
+    </tbody>
+  </table>
+
+</ngbd-overview-section>

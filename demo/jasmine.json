@@ -1,0 +1,13 @@
+{
+  "spec_dir": "demo",
+  "spec_files": [
+    "**/*.e2e-spec.ts"
+  ],
+  "helpers": [
+    "../playwright/helpers/spec-reporter.js"
+  ],
+  "stopSpecOnExpectationFailure": true,
+  "defaultTimeoutInterval": 60000,
+  "showColors": true,
+  "random": false
+}

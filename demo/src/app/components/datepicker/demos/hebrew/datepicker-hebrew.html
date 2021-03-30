@@ -1,0 +1,24 @@
+<p>
+  The Hebrew or Jewish calendar is a lunisolar calendar.
+  In Israel it is used for religious purposes and frequently as an official calendar for civil purposes.
+</p>
+
+<ngb-datepicker class="hebrew rtl" #dp [(ngModel)]="model" [displayMonths]="1" [firstDayOfWeek]="7" [dayTemplate]="dt"
+[dayTemplateData]="dayTemplateData">
+</ngb-datepicker>
+
+<ng-template #dt let-date let-data="data" let-selected="selected" let-currentMonth="currentMonth">
+  <div class="hebrew-day" [class.outside]="date.month !== currentMonth" [class.selected]="selected">
+    <div class="gregorian-num">{{ data.gregorian.day + '/' + (data.gregorian.month) }}</div>
+    <div class="hebrew-num">{{ i18n.getDayNumerals(date) }}</div>
+  </div>
+</ng-template>
+
+<hr/>
+
+<button class="btn btn-sm btn-outline-primary mr-2" (click)="selectToday()">Select Today</button>
+<button class="btn btn-sm btn-outline-primary mr-2" (click)="dp.navigateTo()">To current month</button>
+
+<hr/>
+
+<pre>Model: {{ model | json }}</pre>

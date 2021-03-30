@@ -1,0 +1,125 @@
+<ngbd-page-wrapper pageTitle="Positioning">
+
+  <p>
+    Some of the components we have are designed to be opened inside of the popup:
+  </p>
+
+  <ul class="list-unstyled ml-4">
+    <li><code>Datepicker</code></li>
+    <li><code>Dropdown</code></li>
+    <li><code>Popover</code></li>
+    <li><code>Tooltip</code></li>
+    <li><code>Typeahead</code></li>
+  </ul>
+
+  <p>
+    When the popup is opened, it is positioned correctly next to the <code>target</code> element and fits in the
+    viewport. It is also possible to provide some options, ex. whether the popup should be opened to the
+    <code>top</code> or to the <code>bottom</code> of the <code>target</code> element.
+  </p>
+
+  <p>
+    For instance here the tooltip is always forced to be opened to the <code>right</code>, even if it won't fit in the
+    viewport.
+  </p>
+
+
+  <button class="btn btn-outline-primary mb-3" ngbTooltip="I'll always open to the right" placement="right">Hover me</button>
+
+  <ngbd-code lang="html" [snippet]="rightExample"></ngbd-code>
+
+  <br>
+
+  <p>
+    Bootstrap uses <code>popper.js</code> library for positioning. We decided not to have any dependencies on 3rd
+    party libraries, so we implement a subset of the same functionality ourselves. If something is missing or you
+    have a very specific use case - please open an issue on GitHub and we'll discuss.
+  </p>
+
+  <ngb-alert [dismissible]="false" type="warning">
+    Since version <code>4.1</code> we position the popup using <code>position: absolute; transform: translate(x,y);
+    </code> to match Bootstrap.
+    <br><br>
+    The position is calculated after popup opening when the zone is stable. At the moment we don't reposition the popup
+    on scrolling. It might be supported in future releases, please vote for issues.
+  </ngb-alert>
+
+  <ngbd-page-header title="API" fragment="api"></ngbd-page-header>
+
+  <p>
+    Components in question have two common inputs that help with positioning: <code>placement</code> and
+    <code>container</code>
+  </p>
+
+  <h4><code>Placement</code></h4>
+
+  <p>
+    Placement specifies where the popup should be positioned in the order of preference.
+  </p>
+
+  <ul>
+    <li>We go through the provided placements one-by-one an try to position the popup</li>
+    <li>If it doesn't fit, we try the next one</li>
+    <li>If no provided placements in fit the viewport, we use the first provided one</li>
+  </ul>
+
+  <p>
+    If no <code>placement</code> value is provided at all, each component has it's own default order of preference.
+    Check the component API docs to find out the default order, ex.
+    <a href="" routerLink="/components/tooltip/api" fragment="NgbTooltip">here is the tooltip's API</a>.
+  </p>
+
+  <ngbd-code lang="html" [snippet]="placement"></ngbd-code>
+
+  <br>
+
+  <p>
+    There also a special <code>"auto"</code> property, that is equal to <code>"top", "top-left", "top-right", "bottom",
+    "bottom-left", "bottom-right", "left", "left-top", "left-bottom", "right", "right-top", "right-bottom"</code>
+  </p>
+
+  <ngbd-code lang="html" [snippet]="auto"></ngbd-code>
+
+  <br>
+
+  <h4><code>Container</code></h4>
+
+  <p>
+    Container specifies where the popup will be physically attached to the DOM.
+  </p>
+
+  <p>
+    By default it is attached as a sibling of the <code>target</code> element and the only optional supported container
+    is <code>'body'</code>.
+  </p>
+
+  <ngbd-code lang="html" [snippet]="container"></ngbd-code>
+
+  <ngbd-page-header title="Dropdown" fragment="dropdown"></ngbd-page-header>
+
+  <p>
+    There are two things that make dropdown a bit special at the moment: it won't be positioned dynamically when inside
+    the navbar and the popup (dropdown menu) is always attached to the DOM.
+  </p>
+
+  <ol>
+    <li>
+      <p>
+        When dropdown is used inside the Bootstrap's <code>navbar</code>, it will not be positioned (to match
+        Bootstrap behaviour and work fine on mobile). You can override it by using the <code>display</code> input.
+      </p>
+
+      <ngbd-code lang="html" [snippet]="dropdown"></ngbd-code>
+
+      <br>
+    </li>
+    <li>
+      <p>
+        As <code>Dropdown</code> is not a component, but a set of directives, the dropdown menu popup is always attached
+        to the DOM even when not visible. Depending on the <code>container</code> input, the menu will always be
+        attached either to the body or to the dropdown element.
+      </p>
+    </li>
+  </ol>
+
+</ngbd-page-wrapper>

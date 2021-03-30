@@ -1,0 +1,23 @@
+<p>You can introduce custom directives for table headers to sort columns</p>
+
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col" sortable="name" (sort)="onSort($event)">Country</th>
+    <th scope="col" sortable="area" (sort)="onSort($event)">Area</th>
+    <th scope="col" sortable="population" (sort)="onSort($event)">Population</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let country of countries">
+    <th scope="row">{{ country.id }}</th>
+    <td>
+      <img [src]="'https://upload.wikimedia.org/wikipedia/commons/' + country.flag" class="mr-2" style="width: 20px">
+      {{ country.name }}
+    </td>
+    <td>{{ country.area | number }}</td>
+    <td>{{ country.population | number }}</td>
+  </tr>
+  </tbody>
+</table>

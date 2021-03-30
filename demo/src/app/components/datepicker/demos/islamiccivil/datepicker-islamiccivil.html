@@ -1,0 +1,17 @@
+<p>
+  The civil calendar is a type of Hijri calendars used in islamic countries.
+  It uses a fixed cycle of alternating 29- and 30-day months, with a leap day added to the last month of 11 out of every 30 years
+</p>
+
+<ngb-datepicker class="rtl" #dp [(ngModel)]="model" [firstDayOfWeek]="7">
+</ngb-datepicker>
+
+<hr/>
+
+<button class="btn btn-sm btn-outline-primary mr-2" (click)="selectToday();">Select Today</button>
+<button class="btn btn-sm btn-outline-primary mr-2" (click)="dp.navigateTo()">To current month</button>
+<button class="btn btn-sm btn-outline-primary mr-2" (click)="dp.navigateTo({year: 1434, month: 2})">To Saf. 1434</button>
+
+<hr/>
+
+<pre>Model: {{ model | json }}</pre>

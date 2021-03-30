@@ -13,9 +13,7 @@ header.navbar {
 
 .footer {
   padding: 3rem 0;
-  // margin-top: 3rem;
-  font-size: 85%;
-  // background-color: #f7f7f7;
+  font-size: 0.85rem;
   text-align: left;
 
   p {
@@ -24,24 +22,36 @@ header.navbar {
 
   a {
     font-weight: 500;
-    color: #55595c;
+    color: #000;
+    text-decoration: underline;
   }
 }
 
-.social-buttons > iframe {
-  margin-left: 0.75rem;
+.social-buttons {
+  font-size: x-small;
+  a {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  svg {
+    fill: currentColor;
+  }
 }
 
 .sidebar-collapsed {
   margin-left: -15px;
   margin-right: -15px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  cursor: pointer;
 }
 
 .sidebar {
   position: sticky;
   top: 1rem;
+  max-height: calc(100vh - 4rem);
+  margin-right: -1rem;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 header.title {
@@ -106,22 +116,36 @@ header.title {
 }
 
 .toc {
-  margin-left: -15px;
-  margin-right: -15px;
+  margin-left: 15px;
+//   margin-right: -15px;
+  font-size: 1.1rem;
 
   .toc-item {
     .toc-link {
-      display: block;
-      padding: 0.25rem 1.5rem;
+//       display: block;
+//       padding: 0.25rem 1.5rem;
       color: rgba(0, 0, 0, 0.65);
+
+      &.deprecated {
+        text-decoration: line-through !important;
+
+        &:first-child {
+          margin-top: 0.5rem;
+        }
+      }
     }
 
     .nav > li > a {
-      font-size: 90%;
+      font-size: 0.85em;
+      display: inline-block;
 
-      &:hover, &:focus {
+      &:hover,
+      &:focus {
         text-decoration: none;
-        color:#0275d8;
+        margin-left: -0.5rem;
+        padding: 0 0.5rem;
+        background-color: #f8f9fa;
+        border-radius: 3px;
       }
     }
 
@@ -130,13 +154,9 @@ header.title {
       color: rgba(0, 0, 0, 0.85);
     }
 
-    &.active {
-      margin-top: 2rem;
-
-      > .toc-link {
-        font-weight: 500;
-        color: rgba(0, 0, 0, 0.85);
-      }
+    &.active > .toc-link {
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.85);
     }
   }
 }
@@ -148,7 +168,7 @@ header.title {
   a {
     color: inherit;
     font-size: 90%;
-    padding: .25rem 1rem;
+    padding: 0.25rem 1rem;
   }
 
   a:hover {
@@ -179,8 +199,8 @@ header.title {
   }
 }
 
-
-div.api-doc-component, .overview {
+div.api-doc-component,
+.overview {
   margin-bottom: 3rem;
 
   h2,
@@ -188,7 +208,7 @@ div.api-doc-component, .overview {
     .github-link {
       transition: opacity 0.5s;
       opacity: 0.3;
-      margin-left: .5rem;
+      margin-left: 0.5rem;
     }
 
     &:hover {
@@ -201,7 +221,8 @@ div.api-doc-component, .overview {
     }
   }
 
-  section, ngbd-overview-section {
+  section,
+  ngbd-overview-section {
     margin-top: 3rem;
     h4 {
       margin-top: 2rem;
@@ -213,6 +234,18 @@ div.api-doc-component, .overview {
       margin-bottom: 1rem;
       > div {
         margin-bottom: 0.5rem;
+      }
+    }
+  }
+}
+
+ngbd-page-header {
+  margin-top: 3rem;
+
+  h2 {
+    &:hover {
+      & > .title-fragment {
+        opacity: 1;
       }
     }
   }
@@ -232,23 +265,38 @@ a.title-fragment {
   }
 }
 
+a.title-fragment:focus {
+  opacity: 1;
+}
+
 div.component-demo {
   margin-bottom: 3rem;
   h2 {
+    display: flex;
     margin-bottom: 1rem;
 
-    .plunker,
-    .stackblitz {
-      text-decoration: none;
-      opacity: 0.3;
-      transition: opacity 0.5s;
-      margin-left: 0.3rem;
+    span {
+      flex-grow: 1;
     }
+
+    .stackblitz,
+    .toggle-code {
+      display: flex;
+      align-items: center;
+      align-self: center;
+    }
+
+    .toggle-code svg {
+      vertical-align: middle;
+      fill: #28a745;
+    }
+
+    .stackblitz .stackblitz-icon {
+      height: 1.2rem;
+      margin-left: -0.5rem;
+    }
+
     &:hover {
-      .plunker,
-      .stackblitz {
-        opacity: 1;
-      }
       & > .title-fragment {
         opacity: 1;
       }
@@ -257,7 +305,6 @@ div.component-demo {
 
   .tabset-code {
     .nav {
-      margin: 0;
       padding: 0.5rem 1.25rem 0;
       font-size: 80%;
 
@@ -274,12 +321,31 @@ div.component-demo {
       }
     }
 
-    .tab-content {
-      overflow: hidden;
+    .nav.nav-pills {
+      border-right: 1px solid #dee2e6;
+      padding-left: 0.75rem;
+      padding-right: 0;
+
+      .nav-link.active {
+        color: #666;
+        background-color: #f5f5f5;
+        border: 1px solid #dee2e6;
+        border-right-color: #f5f5f5;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        margin-right: -1px;
+      }
+
+      & + .tab-content {
+        flex: 1;
+        overflow: hidden;
+      }
     }
 
     pre {
       margin: 0;
+      max-height: 500px;
+      overflow: auto;
     }
   }
 }
@@ -300,10 +366,21 @@ ngbd-api-docs-config {
   }
 }
 
+.overview {
+  .alert {
+    border-left-width: 5px;
+    border-radius: 0;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
+
 // override prism theme background color to inline it with bootstrap colors
-code[class*='language-'],
-pre[class*='language-'] {
+code[class*="language-"],
+pre[class*="language-"],
+ngb-alert {
   background-color: #f5f5f5; // same as bootstrap card header
+  border-radius: 3px;
 }
 
 span.token.tag {
@@ -328,6 +405,18 @@ ngb-datepicker.rtl .ngb-dp-arrow.right .ngb-dp-navigation-chevron {
 ngb-datepicker.rtl .ngb-dp-navigation-chevron {
   transform: rotate(45deg);
   margin: 0 0.25rem 0 0;
+}
+
+ngb-datepicker.hebrew {
+  .ngb-dp-day {
+    width: 2.75rem;
+    height: 2.75rem;
+    line-height: 1rem;
+  }
+
+  .ngb-dp-weekday {
+    width: 2.75rem;
+  }
 }
 
 ngb-carousel {

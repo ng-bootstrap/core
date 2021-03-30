@@ -1,8 +1,8 @@
 import {DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 
-function normalizeText(txt: string): string {
-  return txt.trim().replace(/\s+/g, ' ');
+function normalizeText(txt: string | null): string {
+  return txt != null ? txt.trim().replace(/\s+/g, ' ') : '';
 }
 
 export function getWindowLinks(element: DebugElement): DebugElement[] {

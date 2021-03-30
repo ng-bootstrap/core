@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>ng-bootstrap <%=componentName%> demo - <%=demoName%></title>
+  <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@<%=versions.bootstrap%>/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/<%=versions.prismjs%>/themes/prism.css" />
+  <style>
+    <%-styles%>
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid">
+
+    <hr>
+
+    <p>
+      This is a demo example forked from the <strong>ng-bootstrap</strong> project: Angular powered Bootstrap.
+      Visit <a href="https://ng-bootstrap.github.io/" target="_blank">https://ng-bootstrap.github.io</a> for more
+      widgets and demos.
+    </p>
+
+    <hr>
+    <<%=bootstrap.selector%>></<%=bootstrap.selector%>>
+  </div>
+</body>
+
+</html>

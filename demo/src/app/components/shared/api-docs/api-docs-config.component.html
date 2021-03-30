@@ -1,8 +1,7 @@
 <div (click)="trackSourceClick()" class="api-doc-component" [class.deprecated]="apiDocs.deprecated">
   <h3>
     <a
-      class="title-fragment"
-      [routerLink]=""
+      routerLink="."
       fragment="{{apiDocs.className}}"
       ngbdFragment
       title="Anchor link to: {{apiDocs.className}}"
@@ -23,7 +22,7 @@
   </h3>
   <ngbd-api-docs-badge type="Configuration" [deprecated]="apiDocs.deprecated" [since]="apiDocs.since"></ngbd-api-docs-badge>
   <p *ngIf="apiDocs.deprecated">{{ apiDocs.deprecated.description }}</p>
-  <p class="lead">{{apiDocs.description}}</p>
+  <p class="lead" [innerHTML]="apiDocs.description"></p>
 
   <ng-template [ngIf]="apiDocs.properties && apiDocs.properties.length">
     <section>
@@ -33,7 +32,7 @@
           <code class="pr-2">{{ property.name }}</code>&ngsp;
         </ng-template>
       </p>
-      <p class="mt-3">Documentation available in <a [routerLink]="" fragment="{{directiveName}}">{{ directiveName }}</a></p>
+      <p class="mt-3">Documentation available in <a routerLink="." fragment="{{directiveName}}">{{ directiveName }}</a></p>
     </section>
   </ng-template>
 </div>

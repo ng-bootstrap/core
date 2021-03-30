@@ -141,7 +141,10 @@ const MONTH_LENGTH = [
 ];
 
 function getDaysDiff(date1: Date, date2: Date): number {
-  const diff = Math.abs(date1.getTime() - date2.getTime());
+  // Ignores the time part in date1 and date2:
+  const time1 = Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate());
+  const time2 = Date.UTC(date2.getFullYear(), date2.getMonth(), date2.getDate());
+  const diff = Math.abs(time1 - time2);
   return Math.round(diff / ONE_DAY);
 }
 
@@ -176,6 +179,7 @@ export class NgbCalendarIslamicUmalqura extends NgbCalendarIslamicCivil {
           daysDiff = daysDiff - numOfDays;
         }
       }
+      return null as any;
     } else {
       return super.fromGregorian(gDate);
     }

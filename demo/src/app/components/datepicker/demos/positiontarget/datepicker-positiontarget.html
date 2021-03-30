@@ -1,0 +1,28 @@
+<p>This datepicker uses a custom position target and placement. Popup is positioned according to the toggle button instead of input which is default.</p>
+
+<form class="form-inline">
+  <div class="form-group">
+    <div class="input-group">
+      <input class="form-control" placeholder="yyyy-mm-dd"
+             name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker"
+             [placement]="placement" [positionTarget]="buttonEl">
+      <div class="input-group-append">
+        <button #buttonEl class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+      </div>
+    </div>
+  </div>
+</form>
+
+<hr/>
+
+<div class="row">
+  <div class="col-sm-3">
+    <label for="placement">Placement</label>
+    <select id="placement" class="custom-select form-control" [(ngModel)]="placement">
+      <option value="top">Top</option>
+      <option value="bottom">Bottom</option>
+      <option value="left">Left</option>
+      <option value="right">Right</option>
+    </select>
+  </div>
+</div>

@@ -1,104 +1,77 @@
-# NG Bootstrap - [Angular](http://angular.io/) directives specific to [Bootstrap 4](https://getbootstrap.com/)
+# NG Bootstrap - Angular powered Bootstrap widgets
 
 [![npm version](https://badge.fury.io/js/%40ng-bootstrap%2Fng-bootstrap.svg)](https://badge.fury.io/js/%40ng-bootstrap%2Fng-bootstrap)
-[![Build Status](https://travis-ci.org/ng-bootstrap/ng-bootstrap.svg?branch=master)](https://travis-ci.org/ng-bootstrap/ng-bootstrap)
+[![Build Status](https://github.com/ng-bootstrap/ng-bootstrap/workflows/ci/badge.svg?branch=master)](https://github.com/ng-bootstrap/ng-bootstrap/actions)
+[![codecov](https://codecov.io/gh/ng-bootstrap/ng-bootstrap/branch/master/graph/badge.svg)](https://codecov.io/gh/ng-bootstrap/ng-bootstrap)
 [![devDependency Status](https://david-dm.org/ng-bootstrap/ng-bootstrap/dev-status.svg?branch=master)](https://david-dm.org/ng-bootstrap/ng-bootstrap#info=devDependencies)
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/pkozlowski.svg)](https://saucelabs.com/u/pkozlowski)
 
-Welcome to the Angular version of the [Angular UI Bootstrap](https://github.com/angular-ui/bootstrap) library.
-This library is being built from scratch by the [ui-bootstrap team](https://github.com/angular-ui/bootstrap).
-We are using TypeScript and targeting the Bootstrap 4 CSS framework.
+[Angular](https://angular.io/) widgets built from the ground up using only [Bootstrap 4](https://getbootstrap.com/) CSS with APIs designed for the Angular ecosystem.
+No dependencies on 3rd party JavaScript.
 
-As with Bootstrap 4, this library is a work in progress. Please check out our list of
-[issues](https://github.com/ng-bootstrap/ng-bootstrap/issues) to see all the things we are implementing.
-Feel free to make comments there.
+Please check our [demo site](https://ng-bootstrap.github.io) and the list of
+[issues](https://github.com/ng-bootstrap/ng-bootstrap/issues) to see all the things we are working on. Feel free to make comments there.
+
 
 ## Table of Contents
 
 - [Demo](#demo)
 - [Dependencies](#dependencies)
 - [Installation](#installation)
-  - [SystemJS](#systemjs)
 - [Supported browsers](#supported-browsers)
-- [Contributing to the project](#contributing-to-the-project)
-- [Getting Help](#getting-help)
+- [Getting help](#getting-help)
 - [You think you've found a bug?](#you-think-youve-found-a-bug)
-- [Code of Conduct](#code-of-conduct)
+- [Contributing to the project](#contributing-to-the-project)
+- [Code of conduct](#code-of-conduct)
 
 ## Demo
 
-View all the directives in action at https://ng-bootstrap.github.io
+Please check all components we have in action at https://ng-bootstrap.github.io
 
 ## Dependencies
-The only two dependencies are [Angular](https://angular.io) and [Bootstrap 4](https://www.getbootstrap.com) CSS. 
-Here is the list of minimal required versions:
+
+The only two dependencies are [Angular](https://angular.io) and [Bootstrap 4](https://getbootstrap.com) CSS.
+The supported versions are:
 
 | ng-bootstrap | Angular | Bootstrap CSS |
 | ------------ | ------- | ------------- |
 | 1.x.x        | 5.0.2   | 4.0.0         |
 | 2.x.x        | 6.0.0   | 4.0.0         |
 | 3.x.x        | 6.1.0   | 4.0.0         |
+| 4.x.x        | 7.0.0   | 4.0.0         |
+| 5.x.x        | 8.0.0   | 4.3.1         |
+| 6.x.x        | 9.0.0   | 4.4.1         |
+| 7.x.x, 8.x.x | 10.0.0  | 4.5.0         |
+| 9.0.0        | 11.0.0  | 4.5.0         |
 
 ## Installation
-After installing the above dependencies, install `ng-bootstrap` via:
+
+We strongly recommend using [Angular CLI](https://cli.angular.io) for setting up a new project. If you have an Angular &ge; 9 CLI project, you could simply use our schematics to add ng-bootstrap library to it. 
+
+Just run the following:
+
 ```shell
-npm install --save @ng-bootstrap/ng-bootstrap
-```
-Once installed you need to import our main module:
-```js
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-
-@NgModule({
-  ...
-  imports: [NgbModule, ...],
-  ...
-})
-export class YourAppModule {
-}
+ng add @ng-bootstrap/ng-bootstrap
 ```
 
-Alternatively you could only import modules with components you need, ex. pagination and alert. 
-The resulting bundle will be smaller in this case.
+It will install ng-bootstrap for the default application specified in your `angular.json`.
+If you have multiple projects and you want to target a specific application, you could specify the `--project` option:
 
-```js
-import {NgbPaginationModule, NgbAlertModule} from '@ng-bootstrap/ng-bootstrap';
-
-@NgModule({
-  ...
-  imports: [NgbPaginationModule, NgbAlertModule, ...],
-  ...
-})
-export class YourAppModule {
-}
+```shell
+ng add @ng-bootstrap/ng-bootstrap --project myProject
 ```
 
-### SystemJS
-If you are using SystemJS, you should also adjust your configuration to point to the UMD bundle.
+If you prefer not to use schematics and install everything manually, please refer to the 
+[manual installation instructions](https://ng-bootstrap.github.io/#/getting-started#installation) on our website. 
 
-In your systemjs config file, `map` needs to tell the System loader where to look for `ng-bootstrap`:
-```js
-map: {
-  '@ng-bootstrap/ng-bootstrap': 'node_modules/@ng-bootstrap/ng-bootstrap/bundles/ng-bootstrap.js',
-}
-```
 ## Supported browsers
 
-We support the same browsers and versions supported by both Bootstrap 4 and Angular, whichever is _more_ restrictive.
-See [this](https://github.com/angular/angular/blob/master/README.md) for up-to-date Angular browser support.
+We support the same browsers and versions supported by both Bootstrap 4 and Angular, whichever is _more_ restrictive. See [Angular browser support](https://angular.io/guide/browser-support) and [Bootstrap browser support](https://getbootstrap.com/docs/4.5/getting-started/browsers-devices/#supported-browsers) for more details.
 
-* Chrome (45+)
-* Firefox (40+)
-* IE (10+) 
-* Edge (20+)
-* Safari (7+)
+Our code is automatically tested on all supported browsers.
 
-Also check [Bootstrap 4's notes](https://getbootstrap.com/docs/4.0/getting-started/browsers-devices/#supported-browsers) on browsers support.
 
-## Contributing to the project
-
-Please check the [CONTRIBUTING.md](CONTRIBUTING.md) doc for contribution guidelines.
-
-## Getting Help
+## Getting help
 
 Please, do not open issues for the general support questions as we want to keep GitHub issues for bug reports and feature requests. You've got much better chances of getting your question answered on [StackOverflow](http://stackoverflow.com/questions/tagged/ng-bootstrap) where maintainers are looking at questions tagged with `ng-bootstrap`.
 
@@ -109,21 +82,27 @@ StackOverflow is a much better place to ask questions since:
 
 To save your and our time we will be systematically closing all the issues that are requests for general support and redirecting people to StackOverflow.
 
+
 ## You think you've found a bug?
 
-Oh, we are ashamed and want to fix it ASAP! But before fixing a bug we need to reproduce and confirm it. In order to reproduce bugs we will systematically ask you to provide a _minimal_ reproduction scenario using http://plnkr.co. Having a live, reproducible scenario gives us wealth of important information without going back & forth to you with additional questions like:
-* version of Angular used
-* version of this library that you are using
-* 3rd-party libraries used, if any
-* and most importantly - a use-case that fails
+We want to fix it ASAP! But before fixing a bug we need to reproduce and confirm it.
 
-A minimal reproduce scenario using http://plnkr.co/ allows us to quickly confirm a bug (or point out coding problem) as well as confirm that we are fixing the right problem.
-The best part is that you do not need to create plunks from scratch - you can fork one from our [demo page](https://ng-bootstrap.github.io/#/components).
+We ask you to respect two things:
+* fill the GitHub issue template by providing the bug description and appropriate versions of Angular, ng-bootstrap and TypeScript
+* provide a use-case that fails with a **minimal reproduction scenario** using [StackBlitz](https://stackblitz.com) (you can start by forking one from our [demo page](https://ng-bootstrap.github.io/#/components))
 
-We will be insisting on a minimal reproduce scenario in order to save maintainers time and ultimately be able to fix more bugs. Interestingly, from our experience users often find coding problems themselves while preparing a minimal plunk. We understand that sometimes it might be hard to extract essentials bits of code from a larger code-base but we really need to isolate the problem before we can fix it.
+A minimal reproduction scenario allows us to quickly confirm a bug (or point out a coding problem) as well as confirm that we are fixing the right problem.
 
-Unfortunately we are not able to investigate / fix bugs without a minimal reproduce scenario using http://plnkr.co, so if we don't hear back from you we are going to close an issue that don't have enough info to be reproduced.
+Please note that **we will be insisting on a minimal reproduce scenario** in order to save maintainers time and ultimately be able to fix more bugs. We'll mark the issue as non-actionable without it and close if not heard from the reporter.
 
-## Code of Conduct
+Interestingly, from our experience users often find coding problems themselves while preparing a minimal StackBlitz. We understand that sometimes it might be hard to extract essentials bits of code from a larger code-base but we really need to isolate the problem before we can fix it.
+
+
+## Contributing to the project
+
+Please check the [DEVELOPER.md](DEVELOPER.md) for documentation on running the project locally and [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
+
+
+## Code of conduct
 
 Please take a moment and read our [Code of Conduct](CODE_OF_CONDUCT.md)

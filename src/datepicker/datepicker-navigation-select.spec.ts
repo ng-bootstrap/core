@@ -137,5 +137,5 @@ class TestComponent {
   ariaMonths = ['July', 'August', 'September'];
   years = [2015, 2016, 2017];
 
-  onSelect = () => {};
+  onSelect = (event) => {};
 }

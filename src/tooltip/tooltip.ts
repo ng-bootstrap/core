@@ -15,17 +15,19 @@ import {
   TemplateRef,
   ViewContainerRef,
   ComponentFactoryResolver,
-  NgZone
+  NgZone,
+  ViewEncapsulation,
+  ChangeDetectorRef,
+  ApplicationRef,
+  OnChanges,
+  SimpleChanges
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 
-import {fromEvent, race} from 'rxjs';
-import {filter, takeUntil} from 'rxjs/operators';
-
 import {listenToTriggers} from '../util/triggers';
-import {positionElements, Placement, PlacementArray} from '../util/positioning';
+import {ngbAutoClose} from '../util/autoclose';
+import {positionElements, PlacementArray} from '../util/positioning';
 import {PopupService} from '../util/popup';
-import {Key} from '../util/key';
 
 import {NgbTooltipConfig} from './tooltip-config';
 
@@ -34,150 +36,158 @@ let nextId = 0;
 @Component({
   selector: 'ngb-tooltip-window',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
   host: {
-    '[class]': '"tooltip show bs-tooltip-" + placement.split("-")[0]+" bs-tooltip-" + placement',
+    '[class]': '"tooltip" + (tooltipClass ? " " + tooltipClass : "")',
+    '[class.fade]': 'animation',
     'role': 'tooltip',
     '[id]': 'id'
   },
   template: `<div class="arrow"></div><div class="tooltip-inner"><ng-content></ng-content></div>`,
-  styles: [`
-    :host.bs-tooltip-top .arrow, :host.bs-tooltip-bottom .arrow {
-      left: calc(50% - 0.4rem);
-    }
-
-    :host.bs-tooltip-top-left .arrow, :host.bs-tooltip-bottom-left .arrow {
-      left: 1em;
-    }
-
-    :host.bs-tooltip-top-right .arrow, :host.bs-tooltip-bottom-right .arrow {
-      left: auto;
-      right: 0.8rem;
-    }
-
-    :host.bs-tooltip-left .arrow, :host.bs-tooltip-right .arrow {
-      top: calc(50% - 0.4rem);
-    }
-
-    :host.bs-tooltip-left-top .arrow, :host.bs-tooltip-right-top .arrow {
-      top: 0.4rem;
-    }
-
-    :host.bs-tooltip-left-bottom .arrow, :host.bs-tooltip-right-bottom .arrow {
-      top: auto;
-      bottom: 0.4rem;
-    }
-  `]
+  styleUrls: ['./tooltip.scss']
 })
 export class NgbTooltipWindow {
-  @Input() placement: Placement = 'top';
+  @Input() animation: boolean;
   @Input() id: string;
-
-  constructor(private _element: ElementRef<HTMLElement>, private _renderer: Renderer2) {}
-
-  applyPlacement(_placement: Placement) {
-    // remove the current placement classes
-    this._renderer.removeClass(this._element.nativeElement, 'bs-tooltip-' + this.placement.toString().split('-')[0]);
-    this._renderer.removeClass(this._element.nativeElement, 'bs-tooltip-' + this.placement.toString());
-
-    // set the new placement classes
-    this.placement = _placement;
-
-    // apply the new placement
-    this._renderer.addClass(this._element.nativeElement, 'bs-tooltip-' + this.placement.toString().split('-')[0]);
-    this._renderer.addClass(this._element.nativeElement, 'bs-tooltip-' + this.placement.toString());
-  }
-  /**
-   * Tells whether the event has been triggered from this component's subtree or not.
-   *
-   * @param event the event to check
-   *
-   * @return whether the event has been triggered from this component's subtree or not.
-   */
-  isEventFrom(event: Event): boolean { return this._element.nativeElement.contains(event.target as HTMLElement); }
+  @Input() tooltipClass: string;
 }
 
 /**
- * A lightweight, extensible directive for fancy tooltip creation.
+ * A lightweight and extensible directive for fancy tooltip creation.
  */
 @Directive({selector: '[ngbTooltip]', exportAs: 'ngbTooltip'})
-export class NgbTooltip implements OnInit, OnDestroy {
+export class NgbTooltip implements OnInit, OnDestroy, OnChanges {
+  static ngAcceptInputType_autoClose: boolean | string;
+
   /**
-   * Indicates whether the tooltip should be closed on Escape key and inside/outside clicks.
+   * If `true`, tooltip opening and closing will be animated.
    *
-   * - true (default): closes on both outside and inside clicks as well as Escape presses
-   * - false: disables the autoClose feature (NB: triggers still apply)
-   * - 'inside': closes on inside clicks as well as Escape presses
-   * - 'outside': closes on outside clicks (sometimes also achievable through triggers)
-   * as well as Escape presses
+   * @since 8.0.0
+   */
+  @Input() animation: boolean;
+
+  /**
+   * Indicates whether the tooltip should be closed on `Escape` key and inside/outside clicks:
+   *
+   * * `true` - closes on both outside and inside clicks as well as `Escape` presses
+   * * `false` - disables the autoClose feature (NB: triggers still apply)
+   * * `"inside"` - closes on inside clicks as well as Escape presses
+   * * `"outside"` - closes on outside clicks (sometimes also achievable through triggers)
+   * as well as `Escape` presses
    *
    * @since 3.0.0
    */
   @Input() autoClose: boolean | 'inside' | 'outside';
+
   /**
-    * Placement of a tooltip accepts:
-    *    "top", "top-left", "top-right", "bottom", "bottom-left", "bottom-right",
-    *    "left", "left-top", "left-bottom", "right", "right-top", "right-bottom"
-    * and array of above values.
-    */
+   * The preferred placement of the tooltip.
+   *
+   * Possible values are `"top"`, `"top-left"`, `"top-right"`, `"bottom"`, `"bottom-left"`,
+   * `"bottom-right"`, `"left"`, `"left-top"`, `"left-bottom"`, `"right"`, `"right-top"`,
+   * `"right-bottom"`
+   *
+   * Accepts an array of strings or a string with space separated possible values.
+   *
+   * The default order of preference is `"auto"` (same as the sequence above).
+   *
+   * Please see the [positioning overview](#/positioning) for more details.
+   */
   @Input() placement: PlacementArray;
+
   /**
-   * Specifies events that should trigger. Supports a space separated list of event names.
+   * Specifies events that should trigger the tooltip.
+   *
+   * Supports a space separated list of event names.
+   * For more details see the [triggers demo](#/components/tooltip/examples#triggers).
    */
   @Input() triggers: string;
+
   /**
    * A selector specifying the element the tooltip should be appended to.
-   * Currently only supports "body".
+   *
+   * Currently only supports `"body"`.
    */
   @Input() container: string;
+
   /**
-   * A flag indicating if a given tooltip is disabled and should not be displayed.
+   * If `true`, tooltip is disabled and won't be displayed.
    *
    * @since 1.1.0
    */
   @Input() disableTooltip: boolean;
+
   /**
-   * Emits an event when the tooltip is shown
+   * An optional class applied to the tooltip window element.
+   *
+   * @since 3.2.0
+   */
+  @Input() tooltipClass: string;
+
+  /**
+   * The opening delay in ms. Works only for "non-manual" opening triggers defined by the `triggers` input.
+   *
+   * @since 4.1.0
+   */
+  @Input() openDelay: number;
+
+  /**
+   * The closing delay in ms. Works only for "non-manual" opening triggers defined by the `triggers` input.
+   *
+   * @since 4.1.0
+   */
+  @Input() closeDelay: number;
+
+  /**
+   * An event emitted when the tooltip opening animation has finished. Contains no payload.
    */
   @Output() shown = new EventEmitter();
+
   /**
-   * Emits an event when the tooltip is hidden
+   * An event emitted when the tooltip closing animation has finished. Contains no payload.
    */
   @Output() hidden = new EventEmitter();
 
-  private _ngbTooltip: string | TemplateRef<any>;
+  private _ngbTooltip: string | TemplateRef<any>| null | undefined;
   private _ngbTooltipWindowId = `ngb-tooltip-${nextId++}`;
   private _popupService: PopupService<NgbTooltipWindow>;
-  private _windowRef: ComponentRef<NgbTooltipWindow>;
+  private _windowRef: ComponentRef<NgbTooltipWindow>| null = null;
   private _unregisterListenersFn;
   private _zoneSubscription: any;
 
   constructor(
       private _elementRef: ElementRef<HTMLElement>, private _renderer: Renderer2, injector: Injector,
       componentFactoryResolver: ComponentFactoryResolver, viewContainerRef: ViewContainerRef, config: NgbTooltipConfig,
-      private _ngZone: NgZone, @Inject(DOCUMENT) private _document: any) {
+      private _ngZone: NgZone, @Inject(DOCUMENT) private _document: any, private _changeDetector: ChangeDetectorRef,
+      applicationRef: ApplicationRef) {
+    this.animation = config.animation;
     this.autoClose = config.autoClose;
     this.placement = config.placement;
     this.triggers = config.triggers;
     this.container = config.container;
     this.disableTooltip = config.disableTooltip;
+    this.tooltipClass = config.tooltipClass;
+    this.openDelay = config.openDelay;
+    this.closeDelay = config.closeDelay;
     this._popupService = new PopupService<NgbTooltipWindow>(
-        NgbTooltipWindow, injector, viewContainerRef, _renderer, componentFactoryResolver);
+        NgbTooltipWindow, injector, viewContainerRef, _renderer, this._ngZone, componentFactoryResolver,
+        applicationRef);
 
     this._zoneSubscription = _ngZone.onStable.subscribe(() => {
       if (this._windowRef) {
-        this._windowRef.instance.applyPlacement(
-            positionElements(
-                this._elementRef.nativeElement, this._windowRef.location.nativeElement, this.placement,
-                this.container === 'body'));
+        positionElements(
+            this._elementRef.nativeElement, this._windowRef.location.nativeElement, this.placement,
+            this.container === 'body', 'bs-tooltip');
       }
     });
   }
 
   /**
-   * Content to be displayed as tooltip. If falsy, the tooltip won't open.
+   * The string content or a `TemplateRef` for the content to be displayed in the tooltip.
+   *
+   * If the content if falsy, the tooltip won't open.
    */
   @Input()
-  set ngbTooltip(value: string | TemplateRef<any>) {
+  set ngbTooltip(value: string | TemplateRef<any>| null | undefined) {
     this._ngbTooltip = value;
     if (!value && this._windowRef) {
       this.close();
@@ -187,12 +197,17 @@ export class NgbTooltip implements OnInit, OnDestroy {
   get ngbTooltip() { return this._ngbTooltip; }
 
   /**
-   * Opens an element’s tooltip. This is considered a “manual” triggering of the tooltip.
-   * The context is an optional value to be injected into the tooltip template when it is created.
+   * Opens the tooltip.
+   *
+   * This is considered to be a "manual" triggering.
+   * The `context` is an optional value to be injected into the tooltip template when it is created.
    */
   open(context?: any) {
     if (!this._windowRef && this._ngbTooltip && !this.disableTooltip) {
-      this._windowRef = this._popupService.open(this._ngbTooltip, context);
+      const {windowRef, transition$} = this._popupService.open(this._ngbTooltip, context, this.animation);
+      this._windowRef = windowRef;
+      this._windowRef.instance.animation = this.animation;
+      this._windowRef.instance.tooltipClass = this.tooltipClass;
       this._windowRef.instance.id = this._ngbTooltipWindowId;
 
       this._renderer.setAttribute(this._elementRef.nativeElement, 'aria-describedby', this._ngbTooltipWindowId);
@@ -201,57 +216,46 @@ export class NgbTooltip implements OnInit, OnDestroy {
         this._document.querySelector(this.container).appendChild(this._windowRef.location.nativeElement);
       }
 
-      this._windowRef.instance.placement = Array.isArray(this.placement) ? this.placement[0] : this.placement;
-
-      // apply styling to set basic css-classes on target element, before going for positioning
+      // We need to detect changes, because we don't know where .open() might be called from.
+      // Ex. opening tooltip from one of lifecycle hooks that run after the CD
+      // (say from ngAfterViewInit) will result in 'ExpressionHasChanged' exception
       this._windowRef.changeDetectorRef.detectChanges();
+
+      // We need to mark for check, because tooltip won't work inside the OnPush component.
+      // Ex. when we use expression like `{{ tooltip.isOpen() : 'opened' : 'closed' }}`
+      // inside the template of an OnPush component and we change the tooltip from
+      // open -> closed, the expression in question won't be updated unless we explicitly
+      // mark the parent component to be checked.
       this._windowRef.changeDetectorRef.markForCheck();
 
-      // position tooltip along the element
-      this._windowRef.instance.applyPlacement(
-          positionElements(
-              this._elementRef.nativeElement, this._windowRef.location.nativeElement, this.placement,
-              this.container === 'body'));
+      ngbAutoClose(
+          this._ngZone, this._document, this.autoClose, () => this.close(), this.hidden,
+          [this._windowRef.location.nativeElement]);
 
-      if (this.autoClose) {
-        this._ngZone.runOutsideAngular(() => {
-          // prevents automatic closing right after an opening by putting a guard for the time of one event handling
-          // pass
-          // use case: click event would reach an element opening the tooltip first, then reach the autoClose handler
-          // which would close it
-          let justOpened = true;
-          requestAnimationFrame(() => justOpened = false);
-
-          const escapes$ = fromEvent<KeyboardEvent>(this._document, 'keyup')
-                               .pipe(takeUntil(this.hidden), filter(event => event.which === Key.Escape));
-
-          const clicks$ = fromEvent<MouseEvent>(this._document, 'click')
-                              .pipe(
-                                  takeUntil(this.hidden), filter(() => !justOpened),
-                                  filter(event => this._shouldCloseFromClick(event)));
-
-          race<Event>([escapes$, clicks$]).subscribe(() => this._ngZone.run(() => this.close()));
-        });
-      }
-
-      this.shown.emit();
+      transition$.subscribe(() => this.shown.emit());
     }
   }
 
   /**
-   * Closes an element’s tooltip. This is considered a “manual” triggering of the tooltip.
+   * Closes the tooltip.
+   *
+   * This is considered to be a "manual" triggering of the tooltip.
    */
   close(): void {
     if (this._windowRef != null) {
       this._renderer.removeAttribute(this._elementRef.nativeElement, 'aria-describedby');
-      this._popupService.close();
-      this._windowRef = null;
-      this.hidden.emit();
+      this._popupService.close(this.animation).subscribe(() => {
+        this._windowRef = null;
+        this.hidden.emit();
+        this._changeDetector.markForCheck();
+      });
     }
   }
 
   /**
-   * Toggles an element’s tooltip. This is considered a “manual” triggering of the tooltip.
+   * Toggles the tooltip.
+   *
+   * This is considered to be a "manual" triggering of the tooltip.
    */
   toggle(): void {
     if (this._windowRef) {
@@ -262,14 +266,20 @@ export class NgbTooltip implements OnInit, OnDestroy {
   }
 
   /**
-   * Returns whether or not the tooltip is currently being shown
+   * Returns `true`, if the popover is currently shown.
    */
   isOpen(): boolean { return this._windowRef != null; }
 
   ngOnInit() {
     this._unregisterListenersFn = listenToTriggers(
-        this._renderer, this._elementRef.nativeElement, this.triggers, this.open.bind(this), this.close.bind(this),
-        this.toggle.bind(this));
+        this._renderer, this._elementRef.nativeElement, this.triggers, this.isOpen.bind(this), this.open.bind(this),
+        this.close.bind(this), +this.openDelay, +this.closeDelay);
+  }
+
+  ngOnChanges({tooltipClass}: SimpleChanges) {
+    if (tooltipClass && this.isOpen()) {
+      this._windowRef !.instance.tooltipClass = tooltipClass.currentValue;
+    }
   }
 
   ngOnDestroy() {
@@ -280,23 +290,5 @@ export class NgbTooltip implements OnInit, OnDestroy {
       this._unregisterListenersFn();
     }
     this._zoneSubscription.unsubscribe();
-  }
-
-  private _shouldCloseFromClick(event: MouseEvent) {
-    if (event.button !== 2) {
-      if (this.autoClose === true) {
-        return true;
-      } else if (this.autoClose === 'inside' && this._isEventFromTooltip(event)) {
-        return true;
-      } else if (this.autoClose === 'outside' && !this._isEventFromTooltip(event)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private _isEventFromTooltip(event: MouseEvent) {
-    const popup = this._windowRef.instance;
-    return popup ? popup.isEventFrom(event) : false;
   }
 }

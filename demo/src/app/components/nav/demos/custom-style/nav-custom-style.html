@@ -1,0 +1,46 @@
+<ul ngbNav #nav="ngbNav" [activeId]="2" class="nav-tabs justify-content-center">
+  <li [ngbNavItem]="1">
+    <a ngbNavLink>Simple</a>
+    <ng-template ngbNavContent>
+      <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth
+        master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro
+        keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat
+        salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="2">
+    <a ngbNavLink><b>Fancy</b> title</a>
+    <ng-template ngbNavContent>
+      <p>Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko
+        farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts
+        ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar
+        helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson
+        8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester
+        stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
+    </ng-template>
+  </li>
+  <li ngbDropdown class="nav-item">
+    <a href (click)="false" class="nav-link" ngbDropdownToggle>Dropdown</a>
+    <div ngbDropdownMenu>
+      <button ngbDropdownItem>Action</button>
+      <button ngbDropdownItem>Another action</button>
+      <button ngbDropdownItem>Something else here</button>
+      <div class="dropdown-divider"></div>
+      <button ngbDropdownItem>Separated link</button>
+    </div>
+  </li>
+  <li ngbNavItem [disabled]="true" class="ml-auto">
+    <a ngbNavLink>Disabled</a>
+    <ng-template ngbNavContent>
+      <p>Sed commodo, leo at suscipit dictum, quam est porttitor sapien, eget sodales nibh elit id diam. Nulla facilisi.
+        Donec egestas ligula vitae odio interdum aliquet. Duis lectus turpis, luctus eget tincidunt eu, congue et odio.
+        Duis pharetra et nisl at faucibus. Quisque luctus pulvinar arcu, et molestie lectus ultrices et. Sed diam urna,
+        egestas ut ipsum vel, volutpat volutpat neque. Praesent fringilla tortor arcu. Vivamus faucibus nisl enim, nec
+        tristique ipsum euismod facilisis. Morbi ut bibendum est, eu tincidunt odio. Orci varius natoque penatibus et
+        magnis dis parturient montes, nascetur ridiculus mus. Mauris aliquet odio ac lorem aliquet ultricies in eget
+        neque. Phasellus nec tortor vel tellus pulvinar feugiat.</p>
+    </ng-template>
+  </li>
+</ul>
+
+<div [ngbNavOutlet]="nav" class="mt-2"></div>

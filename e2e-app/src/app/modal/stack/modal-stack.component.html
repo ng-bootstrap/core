@@ -1,0 +1,25 @@
+<h3>Modal stack tests</h3>
+
+<ng-template #t let-modal>
+  <div id="modal" class="modal-header">
+    <h4 class="modal-title">Modal with nested popups</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- modal -->
+    <button id="open-inner-modal" class="btn btn-lg btn-outline-primary" (click)="openModal(t2)">Open stack modal</button>
+  </div>
+</ng-template>
+
+<ng-template #t2 let-modal>
+  <div id="stack-modal" class="modal-header">
+    <h4 class="modal-title">Stacked modal</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</ng-template>
+
+<button class="btn btn-outline-secondary ml-2" type="button" id="open-modal" (click)="openModal(t)">Open Modal</button>

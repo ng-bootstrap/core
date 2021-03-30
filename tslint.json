@@ -17,7 +17,8 @@
     "import-blacklist": [
       true,
       "rxjs/Rx",
-      "rxjs/index"
+      "rxjs/index",
+      "util"
     ],
     "indent": [
       true,

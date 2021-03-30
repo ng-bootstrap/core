@@ -1,0 +1,49 @@
+<h3>Modal focus tests</h3>
+
+
+<!-- Simple Modal -->
+<button class="btn btn-outline-secondary" type="button" id="open-modal-simple" (click)="openModal()">Simple Modal</button>
+
+<!-- Closeable Modal -->
+<ng-template #closeable let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Closeable modal</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+        <div class="input-group">
+          <input class="form-control">
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close()">Close</button>
+  </div>
+</ng-template>
+
+<button class="btn btn-outline-secondary ml-2" type="button" id="open-modal-template" (click)="openModal(closeable)">Template Modal</button>
+
+<!-- Modal with autofocus -->
+<ng-template #autofocus let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Autofocus modal</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>Close button should be focused</p>
+  </div>
+  <div class="modal-footer">
+    <button ngbAutofocus type="button" class="btn btn-outline-dark" (click)="modal.close()">Close</button>
+  </div>
+</ng-template>
+
+<button class="btn btn-outline-secondary ml-2" type="button" id="open-modal-autofocus" (click)="openModal(autofocus)">Autofocus Modal</button>
+
+<button class="btn btn-outline-secondary ml-2" type="button" id="open-modal-disable" (click)="openAndDisable()" [disabled]="disabledButton">Open and disabled</button>

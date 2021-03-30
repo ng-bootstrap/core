@@ -5,7 +5,7 @@ describe('ngb-calendar-gregorian', () => {
 
   const calendar = new NgbCalendarGregorian();
 
-  it('should return todays date', () => {
+  it('should return today\'s date', () => {
     const jsToday = new Date();
     const today = new NgbDate(jsToday.getFullYear(), jsToday.getMonth() + 1, jsToday.getDate());
 
@@ -43,34 +43,50 @@ describe('ngb-calendar-gregorian', () => {
   });
 
   it('should add months to date', () => {
-    expect(calendar.getNext(new NgbDate(2016, 7, 22), 'm')).toEqual(new NgbDate(2016, 8, 1));
+    expect(calendar.getNext(new NgbDate(2016, 7, 22), 'm')).toEqual(new NgbDate(2016, 8, 22));
     expect(calendar.getNext(new NgbDate(2016, 7, 1), 'm')).toEqual(new NgbDate(2016, 8, 1));
-    expect(calendar.getNext(new NgbDate(2016, 12, 22), 'm')).toEqual(new NgbDate(2017, 1, 1));
+    expect(calendar.getNext(new NgbDate(2016, 12, 22), 'm')).toEqual(new NgbDate(2017, 1, 22));
+    expect(calendar.getNext(new NgbDate(2016, 1, 29), 'm')).toEqual(new NgbDate(2016, 2, 29));
+    expect(calendar.getNext(new NgbDate(2016, 1, 30), 'm')).toEqual(new NgbDate(2016, 2, 29));
+    expect(calendar.getNext(new NgbDate(2016, 10, 30), 'm', 6)).toEqual(new NgbDate(2017, 4, 30));
+    expect(calendar.getNext(new NgbDate(2016, 10, 31), 'm', 6)).toEqual(new NgbDate(2017, 4, 30));
   });
 
   it('should subtract months from date', () => {
-    expect(calendar.getPrev(new NgbDate(2016, 7, 22), 'm')).toEqual(new NgbDate(2016, 6, 1));
+    expect(calendar.getPrev(new NgbDate(2016, 7, 22), 'm')).toEqual(new NgbDate(2016, 6, 22));
     expect(calendar.getPrev(new NgbDate(2016, 8, 1), 'm')).toEqual(new NgbDate(2016, 7, 1));
-    expect(calendar.getPrev(new NgbDate(2017, 1, 22), 'm')).toEqual(new NgbDate(2016, 12, 1));
+    expect(calendar.getPrev(new NgbDate(2017, 1, 22), 'm')).toEqual(new NgbDate(2016, 12, 22));
+    expect(calendar.getPrev(new NgbDate(2016, 3, 29), 'm')).toEqual(new NgbDate(2016, 2, 29));
+    expect(calendar.getPrev(new NgbDate(2016, 3, 30), 'm')).toEqual(new NgbDate(2016, 2, 29));
+    expect(calendar.getPrev(new NgbDate(2016, 10, 30), 'm', 4)).toEqual(new NgbDate(2016, 6, 30));
+    expect(calendar.getPrev(new NgbDate(2016, 10, 31), 'm', 4)).toEqual(new NgbDate(2016, 6, 30));
   });
 
   it('should add years to date', () => {
-    expect(calendar.getNext(new NgbDate(2016, 1, 22), 'y')).toEqual(new NgbDate(2017, 1, 1));
-    expect(calendar.getNext(new NgbDate(2017, 12, 22), 'y')).toEqual(new NgbDate(2018, 1, 1));
+    expect(calendar.getNext(new NgbDate(2016, 1, 22), 'y')).toEqual(new NgbDate(2017, 1, 22));
+    expect(calendar.getNext(new NgbDate(2017, 12, 22), 'y')).toEqual(new NgbDate(2018, 12, 22));
+    expect(calendar.getNext(new NgbDate(2016, 2, 29), 'y')).toEqual(new NgbDate(2017, 2, 28));
+    expect(calendar.getNext(new NgbDate(2016, 2, 28), 'y')).toEqual(new NgbDate(2017, 2, 28));
+    expect(calendar.getNext(new NgbDate(2016, 2, 29), 'y', 4)).toEqual(new NgbDate(2020, 2, 29));
+    expect(calendar.getNext(new NgbDate(2016, 2, 29), 'y', 3)).toEqual(new NgbDate(2019, 2, 28));
   });
 
   it('should subtract years from date', () => {
-    expect(calendar.getPrev(new NgbDate(2016, 12, 22), 'y')).toEqual(new NgbDate(2015, 1, 1));
-    expect(calendar.getPrev(new NgbDate(2017, 1, 22), 'y')).toEqual(new NgbDate(2016, 1, 1));
+    expect(calendar.getPrev(new NgbDate(2016, 12, 22), 'y')).toEqual(new NgbDate(2015, 12, 22));
+    expect(calendar.getPrev(new NgbDate(2017, 1, 22), 'y')).toEqual(new NgbDate(2016, 1, 22));
+    expect(calendar.getPrev(new NgbDate(2016, 2, 28), 'y')).toEqual(new NgbDate(2015, 2, 28));
+    expect(calendar.getPrev(new NgbDate(2016, 2, 29), 'y')).toEqual(new NgbDate(2015, 2, 28));
+    expect(calendar.getPrev(new NgbDate(2016, 2, 29), 'y', 4)).toEqual(new NgbDate(2012, 2, 29));
+    expect(calendar.getPrev(new NgbDate(2016, 2, 29), 'y', 3)).toEqual(new NgbDate(2013, 2, 28));
   });
 
   it('should properly recognize invalid javascript date', () => {
     expect(calendar.isValid(null)).toBeFalsy();
-    expect(calendar.isValid(undefined)).toBeFalsy();
+    expect(calendar.isValid(<any>undefined)).toBeFalsy();
     expect(calendar.isValid(<any>NaN)).toBeFalsy();
     expect(calendar.isValid(<any>new Date())).toBeFalsy();
-    expect(calendar.isValid(new NgbDate(null, null, null))).toBeFalsy();
-    expect(calendar.isValid(new NgbDate(undefined, undefined, undefined))).toBeFalsy();
+    expect(calendar.isValid(new NgbDate(<any>null, <any>null, <any>null))).toBeFalsy();
+    expect(calendar.isValid(new NgbDate(<any>undefined, <any>undefined, <any>undefined))).toBeFalsy();
     expect(calendar.isValid(new NgbDate(NaN, NaN, NaN))).toBeFalsy();
     expect(calendar.isValid(new NgbDate(<any>'2017', <any>'03', <any>'10'))).toBeFalsy();
   });
@@ -91,5 +107,7 @@ describe('ngb-calendar-gregorian', () => {
     expect(calendar.isValid(new NgbDate(275760, 9, 12))).toBeTruthy();
     expect(calendar.isValid(new NgbDate(2016, 8, 8))).toBeTruthy();
   });
+
+  it('should dates with year 0 as invalid', () => { expect(calendar.isValid(new NgbDate(0, 1, 1))).toBeFalsy(); });
 
 });

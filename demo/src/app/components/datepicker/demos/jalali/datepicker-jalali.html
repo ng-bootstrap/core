@@ -1,9 +1,9 @@
-<p>Persian calendar</p>
+<p>
+  The Jalali calendar is a solar calendar that was used in Persia.
+  Variants of it are still in use in Iran and Afghanistan
+</p>
 
-<ngb-datepicker #dp [(ngModel)]="model"
-                (navigate)="date = $event.next"
-                [firstDayOfWeek]="6">
-</ngb-datepicker>
+<ngb-datepicker #dp [(ngModel)]="model" [firstDayOfWeek]="6"></ngb-datepicker>
 
 <hr/>
 
@@ -13,5 +13,4 @@
 
 <hr/>
 
-<pre>Month: {{ date.month }}.{{ date.year }}</pre>
 <pre>Model: {{ model | json }}</pre>

@@ -1,0 +1,179 @@
+<ngbd-page-wrapper pageTitle="Animations">
+
+  <h4>
+    <span class="badge badge-info">Since 8.0.0</span>
+  </h4>
+
+  <p>
+    Animations are turned on by default and available on all standard bootstrap components.
+  </p>
+
+  <p>
+    They are implemented with CSS Transitions that use classes defined in Bootstrap specifications.
+    You could use your own theme or simply override default styles to customize them (ex. you
+    could change the transition duration). Same as with Bootstrap, all animations respect the
+    <a target="_blank" rel="noopener"
+       href="https://getbootstrap.com/docs/{{bsVersion}}/getting-started/accessibility/#reduced-motion">Reduced
+      Motion</a>
+    setting.
+  </p>
+
+  <p>
+    Playing with animations has been a lot of work, as we had to introduce asynchronous transitions and new APIs,
+    while keeping synchronous code without the animations. This is an important point, as it
+    allows to keep existing tests (unit and e2e tests) unchanged.
+  </p>
+
+  <ngbd-page-header title="How to setup" fragment="setup"></ngbd-page-header>
+
+  <p>
+    Animations are enabled by default. You can opt-out and disable them with a simple flag and everything will run
+    synchronously as before (ex. for unit tests). You can disable animations at different levels:
+  </p>
+
+  <p>
+    To turn off animations globally, inject <code>NgbConfig</code> at your application root and change the
+    <code>animation</code>
+    flag:
+  </p>
+
+  <ngbd-code [snippet]="config"></ngbd-code>
+
+  <p>
+    You can also choose to disable them by component type, by changing the component configuration:
+  </p>
+
+  <ngbd-code [snippet]="widgetConfig"></ngbd-code>
+
+  <p>
+    The last option is to activate/deactivate animations at the component instance ievel:
+  </p>
+
+  <ngbd-code lang="html" [snippet]="widget"></ngbd-code>
+
+  <ngbd-page-header title="Limitations" fragment="limitations"></ngbd-page-header>
+
+  <ol>
+    <li>
+      <p>
+        Animations don't work with structural directives like <code>ngIf</code> or <code>ngFor</code>.
+        Unfortunately Angular doesn't provide any APIs to delay DOM removal.
+      </p>
+      <p>
+        The most impacted widgets are Alert and Toast. For example, to animate alert closing, you
+        will need to use the imperative API, then toggle some flag at the animation end actually remove
+        the element from the DOM.
+      </p>
+
+      <ngbd-code [snippet]="alert"></ngbd-code>
+    </li>
+    <li>
+      <p>
+        The second limitation concerns
+        <a [routerLink]="['../components/nav/overview']"
+           fragment="routing" title="Router integration">the router integration with the Nav component</a>.
+        As the <code>router-outlet</code> is not directly connected to the Nav, no animation will run either.
+        Two workarounds are available:
+      </p>
+      <ul>
+        <li>Do it yourself <a href="https://angular.io/guide/route-animations">the Angular way</a></li>
+        <li>
+          Set the nav panels the usual way, and use the
+          <a href="https://angular.io/guide/router#accessing-query-parameters-and-fragments"><code>ActivatedRoute</code></a>
+          to initialise the active nav with the url information.
+        </li>
+      </ul>
+    </li>
+  </ol>
+
+  <ngbd-page-header title="Cheatsheet" fragment="cheatsheet"></ngbd-page-header>
+
+  <p>
+    You don't have anything special to do to handle animations apart from alert and toast.
+    But you have some new APIs available to be notified when transitions finish.
+    Here is a quick overview.
+  </p>
+
+  <h4>Accordion</h4>
+
+  <p>
+    New <code>(shown)</code> and <code>(hidden)</code> outputs at accordion and panel levels.
+    See <a routerLink="/components/accordion/api" fragment="NgbAccordion">API docs</a> for payload details.
+  </p>
+
+  <ngbd-code [snippet]="recipeAccordion"></ngbd-code>
+
+  <h4>Alert</h4>
+
+  <p>
+    New <code>(closed)</code> output that notifies that transition has finished.
+  </p>
+
+  <ngbd-code [snippet]="recipeAlertTpl"></ngbd-code>
+
+  <p>
+    New <code>.close()</code> method that triggers closing transition and returns an
+    observable to be notified when it is done.
+  </p>
+
+  <ngbd-code [snippet]="recipeAlertCmp"></ngbd-code>
+
+  <h4>Carousel</h4>
+
+  <p>
+    New <code>(slid)</code> output at both carousel and slide levels.
+    See <a routerLink="/components/carousel/api" fragment="NgbCarousel">API docs</a> for payload details.
+  </p>
+
+  <ngbd-code [snippet]="recipeCarousel"></ngbd-code>
+
+  <h4>Collapse</h4>
+
+  <p>
+    New <code>(shown)</code> and <code>(hidden)</code> outputs and a new <code>.toggle()</code>
+    method.
+  </p>
+
+  <ngbd-code [snippet]="recipeCollapse"></ngbd-code>
+
+  <h4>Modal</h4>
+
+  <p>
+    New <code>.shown</code> and <code>.hidden</code> observable APIs.
+  </p>
+
+  <ngbd-code [snippet]="recipeModal"></ngbd-code>
+
+  <h4>Nav</h4>
+
+  <p>
+    New <code>(shown)</code> and <code>(hidden)</code> outputs at nav and item levels.
+    See <a routerLink="/components/nav/api" fragment="NgbNav">API docs</a> for payload details.
+  </p>
+
+  <ngbd-code [snippet]="recipeNav"></ngbd-code>
+
+  <h4>Popover / Tooltip</h4>
+
+  <p>
+    They both have new <code>(shown)</code> and <code>(hidden)</code> outputs.
+  </p>
+
+  <ngbd-code [snippet]="recipePopoverTooltip"></ngbd-code>
+
+  <h4>Toast</h4>
+
+  <p>
+    New <code>(shown)</code> and <code>hidden</code> outputs.
+  </p>
+
+  <ngbd-code [snippet]="recipeToastTpl"></ngbd-code>
+
+  <p>
+    New <code>.show()</code> and <code>.hide()</code> methods that trigger transitions and return an
+    observable to be notified when it is done.
+  </p>
+
+  <ngbd-code [snippet]="recipeToastCmp"></ngbd-code>
+
+</ngbd-page-wrapper>

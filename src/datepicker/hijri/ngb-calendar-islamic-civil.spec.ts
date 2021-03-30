@@ -297,20 +297,25 @@ describe('ngb-calendar-islamic-civil', () => {
 
   const calendar = new NgbCalendarIslamicCivil();
   describe('toGregorian', () => {
-    DATE_TABLE.forEach(element => {
-      let iDate = new NgbDate(element[0], element[1], element[2]);
-      let gDate = new Date(element[3], element[4], element[5]);
-      it('should convert correctly from Hijri to Gregorian',
-         () => { expect(calendar.toGregorian(iDate).getTime()).toEqual(gDate.getTime()); });
+    it('should convert correctly from Hijri to Gregorian', () => {
+      DATE_TABLE.forEach(element => {
+        let iDate = new NgbDate(element[0], element[1], element[2]);
+        let gDate = new Date(element[3], element[4], element[5]);
+        expect(calendar.toGregorian(iDate).getTime())
+            .toEqual(gDate.getTime(), `Hijri ${iDate.year}-${iDate.month}-${iDate.day} should be Gregorian ${gDate}`);
+      });
     });
   });
 
   describe('fromGregorian', () => {
-    DATE_TABLE.forEach(element => {
-      let iDate = new NgbDate(element[0], element[1], element[2]);
-      const gDate = new Date(element[3], element[4], element[5]);
-      let iDate2 = calendar.fromGregorian(gDate);
-      it('should convert correctly from Gregorian to Hijri', () => { expect(iDate2.equals(iDate)).toBeTruthy(); });
+    it('should convert correctly from Gregorian to Hijri', () => {
+      DATE_TABLE.forEach(element => {
+        let iDate = new NgbDate(element[0], element[1], element[2]);
+        const gDate = new Date(element[3], element[4], element[5]);
+        let iDate2 = calendar.fromGregorian(gDate);
+        expect(iDate2.equals(iDate))
+            .toBeTruthy(`Gregorian ${gDate} should be Hijri ${iDate.year}-${iDate.month}-${iDate.day}`);
+      });
     });
   });
 

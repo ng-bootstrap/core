@@ -11,5 +11,16 @@ describe('ngb-modal-backdrop', () => {
 
     fixture.detectChanges();
     expect(fixture.nativeElement).toHaveCssClass('modal-backdrop');
+    expect(fixture.nativeElement).toHaveCssClass('show');
+    expect(fixture.nativeElement).not.toHaveCssClass('fade');
+  });
+
+  it('should render correct CSS classes for animations', () => {
+    const fixture = TestBed.createComponent(NgbModalBackdrop);
+    fixture.componentInstance.animation = true;
+
+    fixture.detectChanges();
+    expect(fixture.nativeElement).toHaveCssClass('show');
+    expect(fixture.nativeElement).toHaveCssClass('fade');
   });
 });

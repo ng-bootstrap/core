@@ -1,0 +1,34 @@
+<h3>Datepicker focus tests</h3>
+
+<form>
+  <div class="form-group form-inline">
+    <div class="input-group">
+      <input class="form-control" name="dp" placeholder="yyyy-mm-dd" #d="ngbDatepicker" ngbDatepicker [(ngModel)]="model"
+             [disabled]="disabled" [minDate]="{year: 2000, month: 1, day: 1}" [maxDate]="{year: 2100, month: 1, day: 1}"
+             [startDate]="startDate">
+      <div class="input-group-append">
+        <div tabindex="0" class="btn btn-outline-secondary" role="button" id="toggle" (click)="d.toggle()">Toggle</div>
+        <button class="btn btn-outline-secondary" type="button" id="selectDate" (click)="model = {year: 2018, month: 8, day: 10}">10
+          AUG 2018</button>
+      </div>
+    </div>
+
+    <div ngbDropdown class="d-inline-block ml-3">
+      <button class="btn btn-outline-secondary" id="start-date-dropdown" ngbDropdownToggle>Choose Start date</button>
+      <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+        <button class="dropdown-item" id="start-date-null" (click)="startDate = null">Null</button>
+        <button class="dropdown-item" id="start-date-month-only" (click)="startDate = {year: 2018, month: 8}">AUG 2018</button>
+        <button class="dropdown-item" id="start-date-month-and-day" (click)="startDate = {year: 2018, month: 8, day: 10}">10
+          AUG 2018</button>
+      </div>
+    </div>
+
+    <button id="disable" class="btn btn-outline-secondary ml-1" (click)="disabled = true">Disable</button>
+
+    <span class="ml-3">startDate is
+      <span id="start-date">{{ startDate | json }}</span>
+    </span>
+
+  </div>
+
+</form>

@@ -31,6 +31,6 @@ export class NgbdDatepickerCustomday {
   constructor(private calendar: NgbCalendar) {
   }
 
-  isDisabled = (date: NgbDate, current: {month: number}) => date.month !== current.month;
+  isDisabled = (date: NgbDate, current: {month: number, year: number}) => date.month !== current.month;
   isWeekend = (date: NgbDate) =>  this.calendar.getWeekday(date) >= 6;
 }

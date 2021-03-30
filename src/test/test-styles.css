@@ -1,0 +1,88 @@
+/*
+  Overriding some of the Bootstrap transition styles for testing purposes.
+
+  Adding `!important` will disable bootstrap's prefer-reduced-motion support and always run transitions regardless
+  of the host OS setting. We can simulate reduced motion support with the `.ngb-reduce-motion` class.
+ */
+
+.fade {
+  transition: opacity 0.01s linear !important;
+}
+
+.tooltip.show {
+  opacity: 1 !important;
+}
+
+.collapsing {
+  transition: height 0.01s ease !important;
+}
+
+.modal.fade .modal-dialog {
+  transition: -webkit-transform 0.01s ease-out !important;
+  transition: transform 0.01s ease-out !important;
+  transition: transform 0.01s ease-out,-webkit-transform 0.01s ease-out !important;
+}
+
+.carousel-item {
+  transition: -webkit-transform 0.01s ease-out !important;
+  transition: transform 0.01s ease-out !important;
+  transition: transform 0.01s ease-out,-webkit-transform 0.01s ease-out !important;
+}
+
+.ngb-reduce-motion .fade,
+.ngb-reduce-motion .collapsing,
+.ngb-reduce-motion .modal.fade .modal-dialog,
+.ngb-reduce-motion .carousel-item {
+  transition: none !important;
+}
+
+/*
+  Styles used for internal testing
+ */
+
+.ngb-test-transition {
+  height: 100px;
+  width: 100px;
+  background-color: red;
+}
+
+.ngb-test-none {
+  transition: none 0.01s linear;
+}
+
+.ngb-test-fade {
+  transition: opacity 0.01s linear;
+}
+
+.ngb-test-fade:not(.ngb-test-show) {
+  opacity: 0;
+}
+
+.ngb-test-long-duration {
+  opacity: 0;
+  transition: opacity 1s linear;
+}
+
+.ngb-test-before {
+  opacity: 1;
+}
+
+.ngb-test-during {
+  opacity: 0;
+  transition: opacity 0.01s linear;
+}
+
+.ngb-test-after {
+  opacity: 0;
+  transition: none;
+}
+
+.ngb-test-hide-outer {
+  opacity: 0 !important;
+  transition: opacity 0.1s linear;
+}
+
+.ngb-test-hide-inner {
+  opacity: 0 !important;
+  transition: opacity 0.01s linear;
+}

@@ -6,50 +6,95 @@ import { NgbdComponentsSharedModule, NgbdDemoList } from '../shared';
 import { NgbdApiPage } from '../shared/api-page/api.component';
 import { NgbdExamplesPage } from '../shared/examples-page/examples.component';
 import { NgbdAlertBasic } from './demos/basic/alert-basic';
+import { NgbdAlertBasicModule } from './demos/basic/alert-basic.module';
 import { NgbdAlertCloseable } from './demos/closeable/alert-closeable';
+import { NgbdAlertCloseableModule } from './demos/closeable/alert-closeable.module';
 import { NgbdAlertConfig } from './demos/config/alert-config';
+import { NgbdAlertConfigModule } from './demos/config/alert-config.module';
 import { NgbdAlertCustom } from './demos/custom/alert-custom';
+import { NgbdAlertCustomModule } from './demos/custom/alert-custom.module';
 import { NgbdAlertSelfclosing } from './demos/selfclosing/alert-selfclosing';
-
-const DEMO_DIRECTIVES = [NgbdAlertBasic, NgbdAlertCloseable, NgbdAlertSelfclosing, NgbdAlertCustom, NgbdAlertConfig];
+import { NgbdAlertSelfclosingModule } from './demos/selfclosing/alert-selfclosing.module';
 
 const DEMOS = {
   basic: {
     title: 'Basic Alert',
     type: NgbdAlertBasic,
-    code: require('!!raw-loader!./demos/basic/alert-basic'),
-    markup: require('!!raw-loader!./demos/basic/alert-basic.html')
+    files: [
+      {
+        name: 'alert-basic.html',
+        source: require('!!raw-loader!./demos/basic/alert-basic.html').default
+      },
+      {
+        name: 'alert-basic.ts',
+        source: require('!!raw-loader!./demos/basic/alert-basic').default
+      }
+    ]
   },
   closeable: {
     title: 'Closable Alert',
     type: NgbdAlertCloseable,
-    code: require('!!raw-loader!./demos/closeable/alert-closeable'),
-    markup: require('!!raw-loader!./demos/closeable/alert-closeable.html')
+    files: [
+      {
+        name: 'alert-closeable.html',
+        source: require('!!raw-loader!./demos/closeable/alert-closeable.html').default
+      },
+      {
+        name: 'alert-closeable.ts',
+        source: require('!!raw-loader!./demos/closeable/alert-closeable').default
+      }
+    ]
   },
   selfclosing: {
     title: 'Self closing alert',
     type: NgbdAlertSelfclosing,
-    code: require('!!raw-loader!./demos/selfclosing/alert-selfclosing'),
-    markup: require('!!raw-loader!./demos/selfclosing/alert-selfclosing.html')
+    files: [
+      {
+        name: 'alert-selfclosing.html',
+        source: require('!!raw-loader!./demos/selfclosing/alert-selfclosing.html').default
+      },
+      {
+        name: 'alert-selfclosing.ts',
+        source: require('!!raw-loader!./demos/selfclosing/alert-selfclosing').default
+      }
+    ]
   },
   custom: {
     title: 'Custom alert',
     type: NgbdAlertCustom,
-    code: require('!!raw-loader!./demos/custom/alert-custom'),
-    markup: require('!!raw-loader!./demos/custom/alert-custom.html')
+    files: [
+      {
+        name: 'alert-custom.html',
+        source: require('!!raw-loader!./demos/custom/alert-custom.html').default
+      },
+      {
+        name: 'alert-custom.ts',
+        source: require('!!raw-loader!./demos/custom/alert-custom').default
+      }
+    ]
   },
   config: {
     title: 'Global configuration of alerts',
     type: NgbdAlertConfig,
-    code: require('!!raw-loader!./demos/config/alert-config'),
-    markup: require('!!raw-loader!./demos/config/alert-config.html')
+    files: [
+      {
+        name: 'alert-config.html',
+        source: require('!!raw-loader!./demos/config/alert-config.html').default
+      },
+      {
+        name: 'alert-config.ts',
+        source: require('!!raw-loader!./demos/config/alert-config').default
+      }
+    ]
   }
 };
 
 export const ROUTES = [
   { path: '', pathMatch: 'full', redirectTo: 'examples' },
-  { path: '',
+  {
+    path: '',
     component: ComponentWrapper,
+    data: { bootstrap: 'https://getbootstrap.com/docs/%version%/components/alerts/' },
     children: [
       { path: 'examples', component: NgbdExamplesPage },
       { path: 'api', component: NgbdApiPage }
@@ -58,9 +103,15 @@ export const ROUTES = [
 ];
 
 @NgModule({
-  imports: [NgbdSharedModule, NgbdComponentsSharedModule ],
-  declarations: DEMO_DIRECTIVES,
-  entryComponents: DEMO_DIRECTIVES
+  imports: [
+    NgbdSharedModule,
+    NgbdComponentsSharedModule,
+    NgbdAlertBasicModule,
+    NgbdAlertCloseableModule,
+    NgbdAlertCustomModule,
+    NgbdAlertConfigModule,
+    NgbdAlertSelfclosingModule
+  ]
 })
 export class NgbdAlertModule {
   constructor(demoList: NgbdDemoList) {

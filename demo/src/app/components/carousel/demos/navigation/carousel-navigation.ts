@@ -1,6 +1,5 @@
-import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
+import {Component} from '@angular/core';
+import {NgbCarouselConfig} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'ngbd-carousel-navigation',
@@ -10,11 +9,11 @@ import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
 export class NgbdCarouselNavigation {
   showNavigationArrows = false;
   showNavigationIndicators = false;
-  images = [1, 2, 3].map(() => `https://picsum.photos/900/500?random&t=${Math.random()}`);
+  images = [1055, 194, 368].map((n) => `https://picsum.photos/id/${n}/900/500`);
 
-  constructor(config: NgbCarouselConfig, private _http: HttpClient) {
+  constructor(config: NgbCarouselConfig) {
     // customize default values of carousels used by this component tree
-      config.showNavigationArrows = true;
-      config.showNavigationIndicators = true;
+    config.showNavigationArrows = true;
+    config.showNavigationIndicators = true;
   }
 }

@@ -1,0 +1,11 @@
+<p>Please click one of the button to see a Toast being displayed in the top right corner of your screen:</p>
+<button class="btn btn-primary" (click)="showStandard()" ngbTooltip="Will disappear in 5s">Standard toast</button>&nbsp;
+<button class="btn btn-success" (click)="showSuccess()" ngbTooltip="Will disappear in 10s">Success toast</button>&nbsp;
+
+<ng-template #dangerTpl>
+  <svg xmlns="http://www.w3.org/2000/svg" fill="#fff" width="24" height="24" viewBox="0 0 24 24"><path d="M10.872 6.831l1.695 3.904 3.654-1.561-1.79 3.426 3.333.954-3.417 1.338 2.231 4.196-4.773-2.582-2.869 2.287.413-3.004-3.792-.726 2.93-1.74-1.885-2.512 3.427.646.843-4.626zm-.786-6.831l-1.665 9.119-6.512-1.228 3.639 4.851-5.548 3.294 7.108 1.361-.834 6.076 5.742-4.577 9.438 5.104-4.288-8.064 6.834-2.677-6.661-1.907 3.25-6.22-6.98 2.982-3.523-8.114z"/></svg>
+  Danger Danger !
+</ng-template>
+<button class="btn btn-danger" (click)="showDanger(dangerTpl)" ngbTooltip="Will disappear in 15s">Danger toast</button>&nbsp;
+
+<app-toasts aria-live="polite" aria-atomic="true"></app-toasts>

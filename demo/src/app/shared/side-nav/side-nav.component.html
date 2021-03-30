@@ -1,19 +1,35 @@
 <nav class="toc py-3">
-  <div class="toc-item" [class.active]="isActive(['/'], true)">
-    <a class="toc-link" routerLink="/">Home</a>
-  </div>
-  <div class="toc-item" [class.active]="isActive(['/getting-started'])">
+  <div class="toc-item mb-2" [class.active]="isActive(['/getting-started'], false)">
     <a class="toc-link" routerLink="/getting-started">Getting Started</a>
   </div>
-  <div class="toc-item" [class.active]="isActive(['/components'], false)">
-    <a class="toc-link" [routerLink]="['/components']">Components</a>
-    <ul class="nav flex-column">
-      <li
-        *ngFor="let component of components"
-        [class.active]="isActive(['/components', component.toLowerCase()], false)"
-      >
-        <a class="toc-link" [routerLink]="['/components', component.toLowerCase()]">{{ component }}</a>
+
+  <div class="toc-item mb-2" [class.active]="isActive(['/guides'], false)">
+    <a class="toc-link" [routerLink]="['/animations']">Guides</a>
+    <ul [ngbCollapse]="!isActive(['/guides'], false)" class="nav flex-column">
+      <li [class.active]="isActive(['/guides', 'animations'], false)">
+        <a class="toc-link d-inline-flex align-items-center" routerLink="/guides/animations">Animations</a>
+      </li>
+      <li [class.active]="isActive(['/guides', 'i18n'], false)">
+        <a class="toc-link" routerLink="/guides/i18n">Internationalization</a>
+      </li>
+      <li [class.active]="isActive(['/guides', 'positioning'], false)">
+        <a class="toc-link" routerLink="/guides/positioning">Positioning</a>
       </li>
     </ul>
   </div>
+
+  <div class="toc-item mb-2" [class.active]="isActive(['/components'], false)">
+    <a class="toc-link" [routerLink]="['/components']">Components</a>
+    <ul [ngbCollapse]="!isActive(['/components'], false)" class="nav flex-column">
+      <li *ngFor="let component of components"
+        [class.active]="isActive(['/components', component.toLowerCase()], false)">
+        <a class="toc-link" [routerLink]="['/components', component.toLowerCase()]">{{ component }}</a>
+      </li>
+      <li *ngFor="let component of deprecatedComponents"
+          [class.active]="isActive(['/components', component.toLowerCase()], false)">
+        <a class="toc-link deprecated" [routerLink]="['/components', component.toLowerCase()]">{{ component }}</a>
+      </li>
+    </ul>
+  </div>
+
 </nav>

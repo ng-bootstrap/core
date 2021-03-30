@@ -1,0 +1,18 @@
+<ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+  <li *ngFor="let id of tabs" [ngbNavItem]="id">
+    <a ngbNavLink>
+      Tab {{ id }}
+      <span class="close position-relative pl-2 font-weight-light" (click)="close($event, id)">×</span>
+    </a>
+    <ng-template ngbNavContent>
+      <p>Tab {{ id }} content</p>
+    </ng-template>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href (click)="add($event)">...</a>
+  </li>
+</ul>
+
+<div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+<pre>Active: {{ active }}</pre>

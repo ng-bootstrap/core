@@ -1,0 +1,16 @@
+<p>
+  When using non-manual triggers, you can control the delay to open and close the popover through the <code>openDelay</code> and
+  <code>closeDelay</code> properties. Note that the <code>autoClose</code> feature does not use the close delay, it closes the popover immediately.
+</p>
+
+<button type="button" class="btn btn-outline-secondary mr-2"
+  ngbPopover="You see, I show up after 300ms and disappear after 500ms!"
+  [openDelay]="300" [closeDelay]="500" triggers="mouseenter:mouseleave">
+  Hover 300ms here
+</button>
+
+<button type="button" class="btn btn-outline-secondary mr-2"
+  ngbPopover="You see, I show up after 1s and disappear after 2s!"
+  [openDelay]="1000" [closeDelay]="2000" triggers="mouseenter:mouseleave">
+  Hover 1s here
+</button>

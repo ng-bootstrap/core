@@ -1,6 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
 import {NgbTypeahead} from '@ng-bootstrap/ng-bootstrap';
-import {Observable, Subject, merge} from 'rxjs';
+import {Observable, Subject, merge, OperatorFunction} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 
 const states = ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado',
@@ -20,11 +20,11 @@ const states = ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'C
 export class NgbdTypeaheadFocus {
   model: any;
 
-  @ViewChild('instance') instance: NgbTypeahead;
+  @ViewChild('instance', {static: true}) instance: NgbTypeahead;
   focus$ = new Subject<string>();
   click$ = new Subject<string>();
 
-  search = (text$: Observable<string>) => {
+  search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) => {
     const debouncedText$ = text$.pipe(debounceTime(200), distinctUntilChanged());
     const clicksWithClosedPopup$ = this.click$.pipe(filter(() => !this.instance.isPopupOpen()));
     const inputFocus$ = this.focus$;

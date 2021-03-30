@@ -1,0 +1,30 @@
+<h3>
+  Modal autoclose tests
+  <span class="ml-1 badge badge-info" id="dismiss-reason">{{ reason }}</span>
+</h3>
+
+<!-- Modal content -->
+<ng-template #content>
+  <div class="modal-body">
+    <h2>Hello from modal</h2>
+    <button id="modal-close-button" class="btn btn-primary" (click)="closeModal()">Close modal</button>
+  </div>
+</ng-template>
+
+<!-- Controls -->
+<form id="default" (contextmenu)="$event.preventDefault()">
+  <div class="form-group form-inline">
+    <div class="input-group">
+      <button class="btn btn-outline-secondary" type="button" id="open-modal" (click)="openModal(content)">Open modal</button>
+    </div>
+
+    <button class="btn btn-outline-secondary ml-3" id="reset-button" (click)="reset()">Reset</button>
+    <button class="btn btn-outline-secondary ml-1" id="option-backdrop-static" (click)="options['backdrop'] = 'static'">backdrop = 'static'</button>
+    <button class="btn btn-outline-secondary ml-1" id="option-backdrop-false" (click)="options['backdrop'] = false">backdrop = false</button>
+    <button class="btn btn-outline-secondary ml-1" id="option-no-keyboard" (click)="options['keyboard'] = false">keyboard = 'false'</button>
+  </div>
+</form>
+
+<!-- Options -->
+<h4>Options</h4>
+<pre>{{ options | json }}</pre>

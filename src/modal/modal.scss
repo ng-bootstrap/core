@@ -1,0 +1,7 @@
+ngb-modal-window {
+  .component-host-scrollable {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+}

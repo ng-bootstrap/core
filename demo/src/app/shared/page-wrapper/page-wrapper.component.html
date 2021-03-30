@@ -1,12 +1,66 @@
-<header class="d-flex flex-column flex-md-row align-items-md-center p-5 bg-light">
-  <h1 class="mt-0">{{ pageTitle }}</h1>
-</header>
+<div class="container-fluid">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-lg-2"
+       style="border-right: 1px solid rgba(0, 0, 0, 0.1)">
+      <div
+        class="d-lg-none d-flex py-2 px-4 align-items-center text-body sidebar-collapsed"
+        (click)="sidebarCollapsed = !sidebarCollapsed"
+        role="button"
+      >
+        <span class="mr-auto">Menu</span>
+        <button
+          class="btn btn-link p-0"
+          aria-controls="doc-nav"
+          [attr.aria-expanded]="!sidebarCollapsed"
+          aria-label="Toggle documentation navigation"
+        >
+          <svg class="align-middle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" focusable="false"><title>Menu</title><path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" d="M4 7h22M4 15h22M4 23h22"></path></svg>
+        </button>
+      </div>
+      <ngbd-side-nav
+        id="doc-nav"
+        [ngbCollapse]="sidebarCollapsed"
+        class="d-lg-block my-3 collapse sidebar"
+      ></ngbd-side-nav>
+    </div>
 
-<div class="container-fluid mb-5">
-  <div class="row my-3">
-    <div
-      class="col-12 col-xl-10 py-3 px-5">
-      <ng-content></ng-content>
+    <div class="col-12 col-lg-10">
+      <header class="bg-light pt-4 pb-md-5 px-4 px-lg-5 d-flex d-md-block align-items-center title">
+        <h1 class="mt-0">{{ pageTitle }}</h1>
+
+        <ul class="nav nav-tabs px-4 px-lg-5 content-tabset justify-content-md-start justify-content-end">
+
+          <li
+            ngbDropdown placement="bottom-right"
+            class="nav-item align-self-center ml-0 ml-md-auto navigation-dropdown"
+            *ngIf="tableOfContents.length && isLargeScreenOrLess"
+          >
+            <span ngbDropdownToggle class="nav-link" title="Table of contents">
+              <span class="sr-only">Table of content</span>
+              <svg aria-hidden="true" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M464 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V80c0-26.51-21.49-48-48-48zm-6 400H54a6 6 0 0 1-6-6V86a6 6 0 0 1 6-6h404a6 6 0 0 1 6 6v340a6 6 0 0 1-6 6zm-42-92v24c0 6.627-5.373 12-12 12H204c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h200c6.627 0 12 5.373 12 12zm0-96v24c0 6.627-5.373 12-12 12H204c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h200c6.627 0 12 5.373 12 12zm0-96v24c0 6.627-5.373 12-12 12H204c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h200c6.627 0 12 5.373 12 12zm-252 12c0 19.882-16.118 36-36 36s-36-16.118-36-36 16.118-36 36-36 36 16.118 36 36zm0 96c0 19.882-16.118 36-36 36s-36-16.118-36-36 16.118-36 36-36 36 16.118 36 36zm0 96c0 19.882-16.118 36-36 36s-36-16.118-36-36 16.118-36 36-36 36 16.118 36 36z"></path></svg>
+            </span>
+
+            <div class="dropdown-menu-right" ngbDropdownMenu>
+              <a *ngFor="let topic of tableOfContents"
+                 class="dropdown-item" routerLink="." [fragment]="topic.fragment">{{topic.title}}</a>
+            </div>
+          </li>
+        </ul>
+      </header>
+
+      <section class="row py-5 px-2 px-md-4 px-lg-5">
+        <div class="col-12 col-xl-9 px-md-0 pr-xl-4">
+          <ng-content></ng-content>
+        </div>
+
+        <div class="col-12 col-xl-3 d-none d-xl-block contextual-nav">
+          <ul class="nav flex-column text-muted pt-4">
+            <li *ngFor="let topic of tableOfContents" class="nav-item">
+              <a [id]="topic.fragment" class="nav-link" routerLink="." [fragment]="topic.fragment">{{topic.title}}</a>
+            </li>
+          </ul>
+        </div>
+      </section>
     </div>
   </div>
 </div>

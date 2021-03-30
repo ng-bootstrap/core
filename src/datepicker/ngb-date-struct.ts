@@ -1,5 +1,9 @@
 /**
- * Interface of the model of the NgbDatepicker and NgbInputDatepicker directives
+ * An interface of the date model used by the datepicker.
+ *
+ * All datepicker APIs consume `NgbDateStruct`, but return `NgbDate`.
+ *
+ * See the [date format overview](#/components/datepicker/overview#date-model) for more details.
  */
 export interface NgbDateStruct {
   /**

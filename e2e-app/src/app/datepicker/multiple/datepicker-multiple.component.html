@@ -1,0 +1,14 @@
+<h3>Datepicker multiple</h3>
+
+<form>
+  <div>
+    <ngb-datepicker id="dp1" [startDate]="startDate"></ngb-datepicker>
+    <ngb-datepicker id="dp2" [startDate]="startDate"></ngb-datepicker>
+
+    <span class="ml-3">startDate is
+      <span id="start-date">{{ startDate | json }}</span>
+    </span>
+
+  </div>
+
+</form>

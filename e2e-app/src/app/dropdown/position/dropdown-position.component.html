@@ -1,0 +1,38 @@
+<h3>Dropdown positioning tests</h3>
+
+<form id="default">
+  <div *ngIf="isInDom" class="form-group form-inline d-inline-block mr-3">
+    <div id="dropdown" ngbDropdown class="d-inline-block mr-1 mb-1" [autoClose]="false" [container]="container" [placement]="placement">
+      <button class="btn btn-outline-secondary" ngbDropdownToggle>Toggle dropdown</button>
+      <div ngbDropdownMenu id="dropdownMenu">
+        <button ngbDropdownItem>Item</button>
+      </div>
+    </div>
+    <br />
+    <div id="dropdownWithTemplate" ngbDropdown class="d-inline-block" [autoClose]="false" [container]="container" [placement]="placement">
+      <button class="btn btn-outline-secondary" ngbDropdownToggle>Dropdown with template</button>
+      <div ngbDropdownMenu id="dropdownWithTemplateMenu">
+        <button ngbDropdownItem>Action - 1</button>
+        <button ngbDropdownItem>Another Action</button>
+        <button ngbDropdownItem>Something else is here</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-inline-block ml-3">
+    <div class="mb-1">
+      <button class="btn btn-outline-secondary mr-1" id="isInDom-true" (click)="isInDom = true">Add in dom</button>
+      <button class="btn btn-outline-secondary mr-1" id="isInDom-false" (click)="isInDom = false">Remove from dom</button>
+      <button class="btn btn-outline-secondary mr-1 ml-2" id="container-body" (click)="toggleContainer('body')">Append to body</button>
+      <button class="btn btn-outline-secondary" id="container-null" (click)="toggleContainer(null)">Append to widget</button>
+    </div>
+    <div>
+      <button class="btn btn-outline-secondary mr-1 ml-2" id="placement-top-left" (click)="togglePlacement('top-left')">On top-left</button>
+      <button class="btn btn-outline-secondary mr-1" id="placement-bottom-left" (click)="togglePlacement('bottom-left')">On bottom-left</button>
+      <button class="btn btn-outline-secondary mr-1 ml-2" id="placement-top-right" (click)="togglePlacement('top-right')">On top-right</button>
+      <button class="btn btn-outline-secondary mr-1" id="placement-bottom-right" (click)="togglePlacement('bottom-right')">On bottom-right</button>
+    </div>
+  </div>
+
+</form>
+

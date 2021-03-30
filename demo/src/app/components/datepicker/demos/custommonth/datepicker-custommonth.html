@@ -1,0 +1,24 @@
+<p>This datepicker uses a custom month layout.</p>
+
+<div class="d-inline-block">
+
+  <div class="btn-group d-flex justify-content-end mb-2" role="group">
+    <button type="button" class="btn btn-sm btn-outline-primary" (click)="navigate(-1);">Prev</button>
+    <button type="button" class="btn btn-sm btn-outline-primary" (click)="today()">Today</button>
+    <button type="button" class="btn btn-sm btn-outline-primary" (click)="navigate(1)">Next</button>
+  </div>
+
+  <ngb-datepicker class="custom-datepicker px-3 pt-1 pb-3"
+                  #dp
+                  [displayMonths]="4"
+                  outsideDays="hidden"
+                  [showWeekdays]="false"
+                  navigation="none">
+    <ng-template ngbDatepickerContent>
+      <div *ngFor="let month of dp.state.months">
+        <div class="text-primary p-1 font-weight-bold">{{ i18n.getMonthShortName(month.month) }} {{ month.year }}</div>
+        <ngb-datepicker-month class="border rounded" [month]="month"></ngb-datepicker-month>
+      </div>
+    </ng-template>
+  </ngb-datepicker>
+</div>

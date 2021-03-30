@@ -57,7 +57,7 @@ export abstract class NgbCalendarHijri extends NgbCalendar {
     return day === 0 ? 7 : day;
   }
 
-  getWeekNumber(week: NgbDate[], firstDayOfWeek: number) {
+  getWeekNumber(week: readonly NgbDate[], firstDayOfWeek: number) {
     // in JS Date Sun=0, in ISO 8601 Sun=7
     if (firstDayOfWeek === 7) {
       firstDayOfWeek = 0;
@@ -76,8 +76,8 @@ export abstract class NgbCalendarHijri extends NgbCalendar {
   getToday(): NgbDate { return this.fromGregorian(new Date()); }
 
 
-  isValid(date: NgbDate): boolean {
-    return date && isNumber(date.year) && isNumber(date.month) && isNumber(date.day) &&
+  isValid(date?: NgbDate | null): boolean {
+    return date != null && isNumber(date.year) && isNumber(date.month) && isNumber(date.day) &&
         !isNaN(this.toGregorian(date).getTime());
   }
 

@@ -10,7 +10,7 @@ import { NgbdOverviewSection } from './overview';
   },
   template: `
     <h2>
-      <a class="title-fragment" [routerLink]="" [fragment]="section.fragment" ngbdFragment>
+      <a class="title-fragment" routerLink="." [fragment]="section.fragment" ngbdFragment>
         <img src="img/link-symbol.svg" />
       </a>
       {{ section.title }}

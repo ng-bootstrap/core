@@ -1,0 +1,103 @@
+<p>
+  Toasts provide feedback messages as notifications to the user.<br />
+  Goal is to mimic the push notifications available both on mobile and desktop operating systems.
+</p>
+
+<ngbd-overview-section [section]="sections['inline-usage']">
+  <p><a [routerLink]="['..', 'api']" fragment="NgbToast">NgbToast</a> component allows you to only render the corresponding markup. Use it in one of your templates, and you are done. It will render a toast.</p>
+  <ngbd-code [snippet]="TOAST_INLINE_BASIC"></ngbd-code>
+  <br />
+  <p>Live example available <a [routerLink]="['..', 'examples']" fragment="inline" title="Declarative inline usage">here</a>.</p>
+  <p>
+    Nonetheless, with this inline technique, you must handle the toast's lifecycle yourself, i.e. it won't disappear automagically or in other words we don't remove the markup, nor destroy the component.
+  </p><p>
+    To make it disappear, you can listen to the <a [routerLink]="['..', 'api']" fragment="NgbToast"><code>(hide)</code></a>
+    output and remove/destroy/hide it yourself, and <a routerLink="." fragment="toast-service">next section</a> details how to do that in a real application environment.
+  </p>
+  <ngbd-code [snippet]="TOAST_INLINE_LIFECYCLE"></ngbd-code>
+</ngbd-overview-section>
+
+<ngbd-overview-section [section]="sections['toast-service']">
+  <p>Let's take the opportunity to demonstrate how to simply build a global toast management service.</p>
+  <ngb-alert [dismissible]="false" type="secondary">
+    <strong>TLDR;</strong>
+    You don't feel reading these long explanations? Go to the live example <a [routerLink]="['..', 'examples']" fragment="howto-global" title="Toast management service">here</a>.
+  </ngb-alert>
+
+  <p>In order to create our global toast system, 3 simple steps need to be done:<p>
+  <ol>
+    <li>Create a global <code>AppToastService</code> to act as a global storage for toasts.</li>
+    <li>Create a container component <code>&lt;app-toasts&gt;</code>, acting as the host in the application to display your toasts.
+    You could use <code>&lt;ngb-toast&gt;</code> with an <code>*ngFor</code> to read the list of toasts to display from the service.</li>
+    <li>Finally, use this container component in your application.</li>
+  </ol>
+
+  <h4>1. Global toast service</h4>
+  <p>
+    Relying on Angular dependency injection to share some piece of logic application-wide is always a good and solid starting choice.
+  </p>
+  <p>
+    The service manages a collection of toasts. It also provides a public method to push a new toast to that same collection.
+    <ngbd-code [snippet]="APP_TOAST_SERVICE"></ngbd-code>
+  </p>
+
+  <ngb-alert [dismissible]="false" type="warning">
+    <svg:svg ngbdIcon="lightbulb" fill="currentColor" />
+    You could also create an interface to type your toast instead of using <code>any[]</code> here.
+  </ngb-alert>
+  <p>
+    Additionally, a method to remove an existing toast from the collection is also implemented.
+    <ngbd-code [snippet]="APP_TOAST_SERVICE_REMOVE"></ngbd-code>
+  </p>
+
+  <h4>2. Toast container component</h4>
+  <p>
+    As stated previously, <code>&lt;ngb-toast&gt;</code> only generates a valid Bootstrap toast markup.
+    You'll still have to position them properly on the screen.
+    <br />
+    Thus, as a suggestion, toasts could be rendered in the top right corner of the application, as a kind of overlay.
+  </p>
+  <p>
+    To achieve that, you could create a dedicated container component/element to render all toasts in a convenient way.
+    For example, this container could be positionned using CSS property <code>position: static</code>.
+  </p>
+  <ul ngbNav #nav="ngbNav" class="nav-tabs">
+    <li ngbNavItem>
+      <a ngbNavLink>Template</a>
+      <ngbd-code *ngbNavContent [snippet]="APP_TOASTS_CONTAINER_TPL"></ngbd-code>
+    </li>
+    <li ngbNavItem>
+      <a ngbNavLink>Styles</a>
+      <div *ngbNavContent>
+        <ngbd-code [snippet]="APP_TOASTS_CONTAINER_STYLES"></ngbd-code>
+        <p>We provide a dedicated <code>ngb-toasts</code> CSS class you could use, or write your own styles in case some specificities would be needed.</p>
+      </div>
+    </li>
+    <li ngbNavItem>
+      <a ngbNavLink>Component</a>
+      <ngbd-code *ngbNavContent [snippet]="APP_TOASTS_CONTAINER"></ngbd-code>
+    </li>
+  </ul>
+  <div [ngbNavOutlet]="nav"></div>
+  <hr />
+  <p>
+    Lastly, let's use this container. Common sense would suggest to put it somewhere quite high in your hierarchy of components.
+    Your root component would be a good candidate.
+  </p>
+  <ngbd-code [snippet]="CONTAINER_USAGE"></ngbd-code>
+  <p>You're done! Just inject and use your <code>AppToastService</code> anywhere you want to create a new toast. <code>&lt;app-toasts&gt;</code> will take care of displaying them.</p>
+
+  <ngb-alert [dismissible]="false" type="warning" class="d-flex flex-row">
+    <div class="mr-1">
+      <svg:svg ngbdIcon="lightbulb" fill="currentColor" />
+    </div>
+    <div>
+      Note the accessibility attributes <code>aria-live="polite"</code> &amp; <code>aria-atomic="true"</code>. They are <strong>mandatory</strong> in order to be compliant with screen readers technology.
+      More information available on <a href="https://getbootstrap.com/docs/{{ bsVersion }}/components/toasts/#accessibility" target="_blank" rel="noopener noreferrer">Bootstrap documentation</a>.
+    </div>
+  </ngb-alert>
+
+  <p>
+    Click <a [routerLink]="['..', 'examples']" fragment="howto-global" title="Toast management service">here</a> to see an example a bit more advanced of this how-to.
+  </p>
+</ngbd-overview-section>

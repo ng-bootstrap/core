@@ -1,9 +1,10 @@
+// tslint:disable:deprecation
 import {TestBed, ComponentFixture, inject} from '@angular/core/testing';
 import {createGenericTestComponent} from '../test/common';
 
 import {Component} from '@angular/core';
 
-import {NgbTabsetModule} from './tabset.module';
+import {NgbTabChangeEvent, NgbTabsetModule} from './tabset.module';
 import {NgbTabsetConfig} from './tabset-config';
 import {NgbTabset} from './tabset';
 
@@ -96,15 +97,14 @@ describe('ngb-tabset', () => {
     const tabContent = getTabContent(compiled);
 
     expect(tabTitles[0].getAttribute('role')).toBe('tab');
-    expect(tabTitles[0].getAttribute('aria-expanded')).toBe('true');
+    expect(tabTitles[0].getAttribute('aria-selected')).toBe('true');
     expect(tabTitles[0].getAttribute('aria-controls')).toBe(tabContent[0].getAttribute('id'));
 
     expect(tabContent[0].getAttribute('role')).toBe('tabpanel');
-    expect(tabContent[0].getAttribute('aria-expanded')).toBe('true');
     expect(tabContent[0].getAttribute('aria-labelledby')).toBe(tabTitles[0].id);
 
     expect(tabTitles[1].getAttribute('role')).toBe('tab');
-    expect(tabTitles[1].getAttribute('aria-expanded')).toBe('false');
+    expect(tabTitles[1].getAttribute('aria-selected')).toBe('false');
     expect(tabTitles[1].getAttribute('aria-controls')).toBeNull();
   });
 
@@ -121,13 +121,13 @@ describe('ngb-tabset', () => {
     const tabContent = getTabContent(compiled);
 
     expect(tabTitles[0].getAttribute('aria-controls')).toBe(tabContent[0].getAttribute('id'));
-    expect(tabContent[0].getAttribute('aria-expanded')).toBe('true');
+    expect(tabTitles[0].getAttribute('aria-selected')).toBe('true');
 
     expect(tabTitles[1].getAttribute('aria-controls')).toBeNull();
     expect(tabContent[1]).toBeUndefined();
   });
 
-  it('should have aria-controls and aria-expanded when tab content is hidden', () => {
+  it('should have aria-controls and aria-selected when tab content is hidden', () => {
     const fixture = createTestComponent(`
       <ngb-tabset [destroyOnHide]="false">
         <ngb-tab title="foo"><ng-template ngbTabContent>Foo</ng-template></ngb-tab>
@@ -140,10 +140,10 @@ describe('ngb-tabset', () => {
     const tabContent = getTabContent(compiled);
 
     expect(tabTitles[0].getAttribute('aria-controls')).toBe(tabContent[0].id);
-    expect(tabContent[0].getAttribute('aria-expanded')).toBe('true');
+    expect(tabTitles[0].getAttribute('aria-selected')).toBe('true');
 
     expect(tabTitles[1].getAttribute('aria-controls')).toBe(tabContent[1].id);
-    expect(tabContent[1].getAttribute('aria-expanded')).toBe('false');
+    expect(tabTitles[1].getAttribute('aria-selected')).toBe('false');
   });
 
   it('should allow mix of text and HTML in tab titles', () => {
@@ -188,8 +188,8 @@ describe('ngb-tabset', () => {
     fixture.detectChanges();
 
     const titles = getTabTitles(fixture.nativeElement);
-    const parentTitle = titles[0].textContent.trim();
-    const childTitle = titles[1].textContent.trim();
+    const parentTitle = titles[0].textContent !.trim();
+    const childTitle = titles[1].textContent !.trim();
 
     expect(parentTitle).toContain('parent');
     expect(parentTitle).not.toContain('child');
@@ -536,7 +536,7 @@ describe('ngb-tabset', () => {
 
     const button = getButton(fixture.nativeElement);
 
-    let changeEvent = null;
+    let changeEvent: NgbTabChangeEvent | null = null;
     fixture.componentInstance.changeCallback = (event) => {
       changeEvent = event;
       event.preventDefault();
@@ -545,7 +545,7 @@ describe('ngb-tabset', () => {
     // Select the second tab -> selection will be canceled
     (<HTMLElement>button[1]).click();
     fixture.detectChanges();
-    expect(changeEvent).toEqual(jasmine.objectContaining({activeId: 'first', nextId: 'second'}));
+    expect(changeEvent !).toEqual(jasmine.objectContaining({activeId: 'first', nextId: 'second'}));
     expectTabs(fixture.nativeElement, [true, false]);
   });
 

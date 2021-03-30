@@ -1,0 +1,4 @@
+<ngb-toast *ngIf="show" header="Click my close icon →" [autohide]="false" (hidden)="close()">
+  If you close me, I will automatically re-appear after a few seconds.
+</ngb-toast>
+<p *ngIf="!show">I'll be back!</p>

@@ -22,12 +22,12 @@ const BADGES = {
 })
 export class NgbdApiDocsBadge {
 
-  badgeClass;
-  text;
+  badgeClass: string;
+  text: string;
 
-  @Input() deprecated: {version: string};
+  @Input() deprecated?: {version: string};
 
-  @Input() since: {version: string};
+  @Input() since?: {version: string};
 
   @Input()
   set type(type: string) {

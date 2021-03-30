@@ -1,0 +1,13 @@
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { NgbdPaginationConfig } from './pagination-config';
+
+@NgModule({
+  imports: [BrowserModule, NgbModule],
+  declarations: [NgbdPaginationConfig],
+  exports: [NgbdPaginationConfig],
+  bootstrap: [NgbdPaginationConfig]
+})
+export class NgbdPaginationConfigModule {}

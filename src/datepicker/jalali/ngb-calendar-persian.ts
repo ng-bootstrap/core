@@ -41,7 +41,7 @@ export class NgbCalendarPersian extends NgbCalendar {
     return day === 0 ? 7 : day;
   }
 
-  getWeekNumber(week: NgbDate[], firstDayOfWeek: number) {
+  getWeekNumber(week: readonly NgbDate[], firstDayOfWeek: number) {
     // in JS Date Sun=0, in ISO 8601 Sun=7
     if (firstDayOfWeek === 7) {
       firstDayOfWeek = 0;
@@ -59,8 +59,8 @@ export class NgbCalendarPersian extends NgbCalendar {
 
   getToday(): NgbDate { return fromGregorian(new Date()); }
 
-  isValid(date: NgbDate): boolean {
-    return date && isInteger(date.year) && isInteger(date.month) && isInteger(date.day) &&
+  isValid(date?: NgbDate | null): boolean {
+    return date != null && isInteger(date.year) && isInteger(date.month) && isInteger(date.day) &&
         !isNaN(toGregorian(date).getTime());
   }
 }

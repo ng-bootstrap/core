@@ -40,7 +40,8 @@ export class Live implements OnDestroy {
   ngOnDestroy() {
     const element = getLiveElement(this._document);
     if (element) {
-      element.parentElement.removeChild(element);
+      // if exists, it will always be attached to the <body>
+      element.parentElement !.removeChild(element);
     }
   }
 
@@ -48,12 +49,14 @@ export class Live implements OnDestroy {
     const element = getLiveElement(this._document, true);
     const delay = this._delay;
 
-    element.textContent = '';
-    const setText = () => element.textContent = message;
-    if (delay === null) {
-      setText();
-    } else {
-      setTimeout(setText, delay);
+    if (element != null) {
+      element.textContent = '';
+      const setText = () => element.textContent = message;
+      if (delay === null) {
+        setText();
+      } else {
+        setTimeout(setText, delay);
+      }
     }
   }
 }

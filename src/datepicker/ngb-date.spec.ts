@@ -8,9 +8,12 @@ describe('ngb-date', () => {
        () => { expect(NgbDate.from({year: 2010, month: 10, day: 2})).toEqual(new NgbDate(2010, 10, 2)); });
 
     it('should work with non-numeric values', () => {
-      expect(NgbDate.from({year: null, month: null, day: null})).toEqual(new NgbDate(null, null, null));
-      expect(NgbDate.from({year: undefined, month: undefined, day: undefined})).toEqual(new NgbDate(null, null, null));
-      expect(NgbDate.from({year: <any>'2010', month: <any>'10', day: <any>'2'})).toEqual(new NgbDate(null, null, null));
+      expect(NgbDate.from(<any>{year: null, month: null, day: null}))
+          .toEqual(new NgbDate(<any>null, <any>null, <any>null));
+      expect(NgbDate.from(<any>{year: undefined, month: undefined, day: undefined}))
+          .toEqual(new NgbDate(<any>null, <any>null, <any>null));
+      expect(NgbDate.from({year: <any>'2010', month: <any>'10', day: <any>'2'}))
+          .toEqual(new NgbDate(<any>null, <any>null, <any>null));
     });
 
     it('should return the same NgbDate object', () => {
@@ -23,6 +26,8 @@ describe('ngb-date', () => {
     const date = new NgbDate(2016, 8, 18);
 
     it('should return true for the same dates', () => { expect(date.equals(new NgbDate(2016, 8, 18))).toBeTruthy(); });
+
+    it('should work with structures', () => { expect(date.equals({day: 18, month: 8, year: 2016})).toBeTruthy(); });
 
     it('should return false different dates', () => {
       expect(date.equals(new NgbDate(0, 8, 18))).toBeFalsy();
@@ -44,6 +49,8 @@ describe('ngb-date', () => {
       expect(date.before(undefined)).toBeFalsy();
     });
 
+    it('should work with structures', () => { expect(date.before({day: 18, month: 9, year: 2016})).toBeTruthy(); });
+
     it('should return true if current date is before the other one', () => {
       expect(date.before(new NgbDate(2016, 8, 19))).toBeTruthy();
       expect(date.before(new NgbDate(2016, 9, 18))).toBeTruthy();
@@ -64,6 +71,8 @@ describe('ngb-date', () => {
       expect(date.after(null)).toBeFalsy();
       expect(date.after(undefined)).toBeFalsy();
     });
+
+    it('should work with structures', () => { expect(date.after({day: 17, month: 8, year: 2016})).toBeTruthy(); });
 
     it('should return true if current date is after the other one', () => {
       expect(date.after(new NgbDate(2016, 8, 17))).toBeTruthy();

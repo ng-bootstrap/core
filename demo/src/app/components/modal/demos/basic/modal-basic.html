@@ -1,7 +1,7 @@
-<ng-template #content let-c="close" let-d="dismiss">
+<ng-template #content let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
-    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -12,16 +12,14 @@
         <div class="input-group">
           <input id="dateOfBirth" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker">
           <div class="input-group-append">
-            <button class="btn btn-outline-secondary" (click)="dp.toggle()" type="button">
-              <img src="img/calendar-icon.svg" style="width: 1.2rem; height: 1rem; cursor: pointer;"/>
-            </button>
+            <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
           </div>
         </div>
       </div>
     </form>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="c('Save click')">Save</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
   </div>
 </ng-template>
 
@@ -29,4 +27,4 @@
 
 <hr>
 
-<pre>{{closeResult}}</pre>
+<pre>{{ closeResult }}</pre>

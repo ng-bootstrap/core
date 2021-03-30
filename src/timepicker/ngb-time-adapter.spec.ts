@@ -9,7 +9,7 @@ describe('ngb-time model adapter', () => {
 
     it('should convert invalid and incomplete values to null', () => {
       expect(adapter.fromModel(null)).toBeNull();
-      expect(adapter.fromModel(undefined)).toBeNull();
+      expect(adapter.fromModel(<any>undefined)).toBeNull();
       expect(adapter.fromModel(<any>'')).toBeNull();
       expect(adapter.fromModel(<any>'s')).toBeNull();
       expect(adapter.fromModel(<any>2)).toBeNull();
@@ -20,8 +20,9 @@ describe('ngb-time model adapter', () => {
 
     it('should convert valid time', () => {
       expect(adapter.fromModel({hour: 19, minute: 5, second: 1})).toEqual({hour: 19, minute: 5, second: 1});
-      expect(adapter.fromModel(<any>{hour: 19, minute: 5})).toEqual({hour: 19, minute: 5, second: null});
-      expect(adapter.fromModel(<any>{hour: 19, minute: 5, second: null})).toEqual({hour: 19, minute: 5, second: null});
+      expect(adapter.fromModel(<any>{hour: 19, minute: 5})).toEqual(<any>{hour: 19, minute: 5, second: null});
+      expect(adapter.fromModel(<any>{hour: 19, minute: 5, second: null}))
+          .toEqual(<any>{hour: 19, minute: 5, second: null});
     });
   });
 
@@ -29,7 +30,7 @@ describe('ngb-time model adapter', () => {
 
     it('should convert invalid and incomplete values to null', () => {
       expect(adapter.toModel(null)).toBeNull();
-      expect(adapter.toModel(undefined)).toBeNull();
+      expect(adapter.toModel(<any>undefined)).toBeNull();
       expect(adapter.toModel(<any>'')).toBeNull();
       expect(adapter.toModel(<any>'s')).toBeNull();
       expect(adapter.toModel(<any>2)).toBeNull();
@@ -40,8 +41,9 @@ describe('ngb-time model adapter', () => {
 
     it('should convert a valid time', () => {
       expect(adapter.toModel({hour: 19, minute: 5, second: 1})).toEqual({hour: 19, minute: 5, second: 1});
-      expect(adapter.toModel(<any>{hour: 19, minute: 5})).toEqual({hour: 19, minute: 5, second: null});
-      expect(adapter.toModel(<any>{hour: 19, minute: 5, second: null})).toEqual({hour: 19, minute: 5, second: null});
+      expect(adapter.toModel(<any>{hour: 19, minute: 5})).toEqual(<any>{hour: 19, minute: 5, second: null});
+      expect(adapter.toModel(<any>{hour: 19, minute: 5, second: null}))
+          .toEqual(<any>{hour: 19, minute: 5, second: null});
     });
   });
 

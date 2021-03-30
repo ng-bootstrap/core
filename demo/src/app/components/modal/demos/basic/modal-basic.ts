@@ -7,7 +7,7 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './modal-basic.html'
 })
 export class NgbdModalBasic {
-  closeResult: string;
+  closeResult = '';
 
   constructor(private modalService: NgbModal) {}
 
@@ -25,7 +25,7 @@ export class NgbdModalBasic {
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
       return 'by clicking on a backdrop';
     } else {
-      return  `with: ${reason}`;
+      return `with: ${reason}`;
     }
   }
 }

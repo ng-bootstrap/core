@@ -1,46 +1,42 @@
-import {Directive, forwardRef, Input} from '@angular/core';
+import {ChangeDetectorRef, Directive, forwardRef, Input} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
 import {NgbButtonLabel} from './label';
 
-const NGB_CHECKBOX_VALUE_ACCESSOR = {
-  provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => NgbCheckBox),
-  multi: true
-};
-
-
 /**
- * Easily create Bootstrap-style checkbox buttons. A value of a checked button is bound to a variable
- * specified via ngModel.
+ * Allows to easily create Bootstrap-style checkbox buttons.
+ *
+ * Integrates with forms, so the value of a checked button is bound to the underlying form control
+ * either in a reactive or template-driven way.
  */
 @Directive({
   selector: '[ngbButton][type=checkbox]',
   host: {
-    'autocomplete': 'off',
     '[checked]': 'checked',
     '[disabled]': 'disabled',
     '(change)': 'onInputChange($event)',
     '(focus)': 'focused = true',
     '(blur)': 'focused = false'
   },
-  providers: [NGB_CHECKBOX_VALUE_ACCESSOR]
+  providers: [{provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => NgbCheckBox), multi: true}]
 })
 export class NgbCheckBox implements ControlValueAccessor {
+  static ngAcceptInputType_disabled: boolean | '';
+
   checked;
 
   /**
-   * A flag indicating if a given checkbox button is disabled.
+   * If `true`, the checkbox button will be disabled
    */
   @Input() disabled = false;
 
   /**
-   * Value to be propagated as model when the checkbox is checked.
+   * The form control value when the checkbox is checked.
    */
   @Input() valueChecked = true;
 
   /**
-   * Value to be propagated as model when the checkbox is unchecked.
+   * The form control value when the checkbox is unchecked.
    */
   @Input() valueUnChecked = false;
 
@@ -54,7 +50,7 @@ export class NgbCheckBox implements ControlValueAccessor {
     }
   }
 
-  constructor(private _label: NgbButtonLabel) {}
+  constructor(private _label: NgbButtonLabel, private _cd: ChangeDetectorRef) {}
 
   onInputChange($event) {
     const modelToPropagate = $event.target.checked ? this.valueChecked : this.valueUnChecked;
@@ -75,5 +71,8 @@ export class NgbCheckBox implements ControlValueAccessor {
   writeValue(value) {
     this.checked = value === this.valueChecked;
     this._label.active = this.checked;
+
+    // label won't be updated, if it is inside the OnPush component when [ngModel] changes
+    this._cd.markForCheck();
   }
 }

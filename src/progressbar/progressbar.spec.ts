@@ -19,7 +19,7 @@ function getBarHeight(nativeEl): string {
 }
 
 function getBarValue(nativeEl): number {
-  return parseInt(getProgressbar(nativeEl).getAttribute('aria-valuenow'), 10);
+  return parseInt(getProgressbar(nativeEl).getAttribute('aria-valuenow') !, 10);
 }
 
 function getProgressbar(nativeEl: Element): HTMLElement {
@@ -37,6 +37,7 @@ describe('ngb-progressbar', () => {
       expect(progressCmp.max).toBe(defaultConfig.max);
       expect(progressCmp.animated).toBe(defaultConfig.animated);
       expect(progressCmp.striped).toBe(defaultConfig.striped);
+      expect(progressCmp.textType).toBe(defaultConfig.textType);
       expect(progressCmp.type).toBe(defaultConfig.type);
     });
 
@@ -56,6 +57,48 @@ describe('ngb-progressbar', () => {
 
       progressCmp.value = 30;
       expect(progressCmp.getPercentValue()).toBe(20);
+    });
+
+    it('should calculate the percentage (custom max size of null)', () => {
+      progressCmp.max = <any>null;
+
+      progressCmp.value = 25;
+      expect(progressCmp.getPercentValue()).toBe(25);
+    });
+
+    it('should calculate the percentage (custom max size of undefined)', () => {
+      progressCmp.max = <any>undefined;
+
+      progressCmp.value = 25;
+      expect(progressCmp.getPercentValue()).toBe(25);
+    });
+
+    it('should calculate the percentage (custom max size of zero)', () => {
+      progressCmp.max = 0;
+
+      progressCmp.value = 25;
+      expect(progressCmp.getPercentValue()).toBe(25);
+    });
+
+    it('should calculate the percentage (custom negative max size)', () => {
+      progressCmp.max = -10;
+
+      progressCmp.value = 25;
+      expect(progressCmp.getPercentValue()).toBe(25);
+    });
+
+    it('should calculate the percentage (custom max size of positive infinity)', () => {
+      progressCmp.max = Number.POSITIVE_INFINITY;
+
+      progressCmp.value = 25;
+      expect(progressCmp.getPercentValue()).toBe(25);
+    });
+
+    it('should calculate the percentage (custom max size of negative infinity)', () => {
+      progressCmp.max = Number.NEGATIVE_INFINITY;
+
+      progressCmp.value = 25;
+      expect(progressCmp.getPercentValue()).toBe(25);
     });
 
     it('should set the value to 0 for negative numbers', () => {
@@ -138,6 +181,21 @@ describe('ngb-progressbar', () => {
       fixture.componentInstance.type = 'info';
       fixture.detectChanges();
       expect(getProgressbar(fixture.nativeElement)).toHaveCssClass('bg-info');
+
+      fixture.componentInstance.type = 'dark';
+      fixture.detectChanges();
+      expect(getProgressbar(fixture.nativeElement)).toHaveCssClass('bg-dark');
+    });
+
+    it('accepts a custom text type', () => {
+      const html = '<ngb-progressbar [value]="value" [textType]="textType"></ngb-progressbar>';
+      const fixture = createTestComponent(html);
+
+      expect(getProgressbar(fixture.nativeElement)).toHaveCssClass('text-light');
+
+      fixture.componentInstance.textType = 'info';
+      fixture.detectChanges();
+      expect(getProgressbar(fixture.nativeElement)).toHaveCssClass('text-info');
     });
 
     it('accepts animated as normal attr', () => {
@@ -225,6 +283,7 @@ describe('ngb-progressbar', () => {
       config.max = 1000;
       config.striped = true;
       config.animated = true;
+      config.textType = 'white';
       config.type = 'success';
     }));
 
@@ -236,6 +295,7 @@ describe('ngb-progressbar', () => {
       expect(progressbar.max).toBe(config.max);
       expect(progressbar.striped).toBe(config.striped);
       expect(progressbar.animated).toBe(config.animated);
+      expect(progressbar.textType).toBe(config.textType);
       expect(progressbar.type).toBe(config.type);
     });
   });
@@ -245,6 +305,7 @@ describe('ngb-progressbar', () => {
     config.max = 1000;
     config.striped = true;
     config.animated = true;
+    config.textType = 'light';
     config.type = 'success';
 
     beforeEach(() => {
@@ -260,6 +321,7 @@ describe('ngb-progressbar', () => {
       expect(progressbar.max).toBe(config.max);
       expect(progressbar.striped).toBe(config.striped);
       expect(progressbar.animated).toBe(config.animated);
+      expect(progressbar.textType).toBe(config.textType);
       expect(progressbar.type).toBe(config.type);
     });
   });
@@ -271,5 +333,7 @@ class TestComponent {
   max = 50;
   animated = true;
   striped = true;
+
+  textType = 'light';
   type = 'warning';
 }

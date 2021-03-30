@@ -1,0 +1,67 @@
+<p>
+  Bootstrap provides the some basic <a href="https://getbootstrap.com/docs/{{ bootstrapVersion }}/content/tables/">styling for the tables</a>
+  including CSS classes for responsiveness, striping odd/even rows, changing borders and captions, hovering rows, etc.
+  These styles are opt-in and can be used with pure Angular to produce something like this:
+</p>
+
+<ngbd-table-overview-demo></ngbd-table-overview-demo>
+
+<br>
+
+<ngb-alert [dismissible]="false">
+  At the moment we do not have plans to provide a dedicated component like <code>NgbTable</code> or <code>NgbGrid</code>
+  as a part of ng-bootstrap project. As usual we're open to the <i>productive</i> discussion on GitHub.
+</ngb-alert>
+
+<ngbd-overview-section [section]="sections['why-not']">
+  <p>
+    Most importantly, there are way too many different use cases and options for such a complex component.
+    Instead of building a <b>monster-of-a-widget</b> with hundreds of options and customizations, we would
+    encourage you to use composition and pure Angular. Most tables don't need all the features
+    and if you want a spreadsheet-like functionality there are dedicated libraries available.
+  </p>
+
+  <p>
+    Think about implementing the features you need and wrapping them into a component for your application.
+    It might be simpler than it seems.
+  </p>
+
+  <p>
+    If you decide to choose a library for tables, make sure that it plays nicely with Angular:
+  </p>
+
+  <ul>
+    <li>doesn't trigger change detection excessively</li>
+    <li>doesn't generate thousands of DOM nodes</li>
+    <li>doesn't bloat your resulting bundle size by bringing 3rd party dependencies</li>
+    <li>doesn't pretend to be an Angular library by wrapping something else</li>
+  </ul>
+</ngbd-overview-section>
+
+<ngbd-overview-section [section]="sections['examples']">
+  <p>
+    Having said that, we decided to give you some simple examples of common table features.
+    Take a look at them for the inspiration and maybe even use them as a starting point.
+  </p>
+
+  <ul>
+    <li>
+      <a routerLink="../examples" fragment="sortable">Sorting</a> -
+      shows a sample <code>NgbdSortableHeader</code> directive that you can stick on a <code>&lt;th&gt;</code>
+      element to handle sorting
+    </li>
+    <li>
+      <a routerLink="../examples" fragment="pagination">Pagination</a> -
+      shows how to use a <a routerLink="../../pagination"><code>NgbPagination</code></a> component together with the table
+    </li>
+    <li>
+      <a routerLink="../examples" fragment="filtering">Search / filtering</a> -
+      full text search example over the table data
+    </li>
+    <li>
+      <a routerLink="../examples" fragment="complete">Service example</a> -
+      a service that will handle sorting, pagination and filtering in an asynchronous manner.
+      It is based on observables and simulates debouncing and a custom delay for the data fetch.
+    </li>
+  </ul>
+</ngbd-overview-section>

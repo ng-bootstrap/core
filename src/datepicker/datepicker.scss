@@ -1,0 +1,62 @@
+ngb-datepicker {
+  border: 1px solid #dfdfdf;
+  border-radius: .25rem;
+  display: inline-block;
+
+  &-month {
+    pointer-events: auto;
+  }
+
+  &.dropdown-menu {
+    padding: 0;
+  }
+}
+
+.ngb-dp {
+  &-body {
+    z-index: 1050;
+  }
+
+  &-header {
+    border-bottom: 0;
+    border-radius: .25rem .25rem 0 0;
+    padding-top: .25rem;
+    background-color: #f8f9fa;
+    background-color: var(--light);
+  }
+
+  &-months {
+    display: flex;
+  }
+
+  &-month {
+    pointer-events: none;
+
+    &-name {
+      font-size: larger;
+      height: 2rem;
+      line-height: 2rem;
+      text-align: center;
+      background-color: #f8f9fa;
+      background-color: var(--light);
+    }
+
+    & + & {
+      .ngb-dp-month-name, .ngb-dp-week {
+        padding-left: 1rem;
+      }
+    }
+
+    &:last-child .ngb-dp-week {
+      padding-right: .25rem;
+    }
+
+    &:first-child .ngb-dp-week {
+      padding-left: .25rem;
+    }
+
+    .ngb-dp-week:last-child {
+      padding-bottom: .25rem;
+    }
+  }
+}

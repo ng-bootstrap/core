@@ -1,0 +1,263 @@
+<ngbd-page-wrapper pageTitle="Introduction">
+
+  <ngbd-page-header title="Dependencies" fragment="dependencies" class="mt-0"></ngbd-page-header>
+
+  <p>
+    The only two required dependencies are <a href="https://angular.io" target="_blank">Angular</a> and
+    <a href="https://getbootstrap.com" target="_blank">Bootstrap</a> CSS.
+    The supported versions are:
+  </p>
+
+  <table class="table" style="width: auto">
+    <thead>
+      <tr>
+        <th scope="col">ng-bootstrap</th>
+        <th scope="col">Angular</th>
+        <th scope="col">Bootstrap CSS</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-template #showOlderVersions>
+        <tr>
+          <td colspan="3" class="text-center p-1">
+            <button class="btn btn-link m-0" (click)="olderVersionsCollapsed = false">Show older versions</button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template [ngIf]="!olderVersionsCollapsed" [ngIfElse]="showOlderVersions">
+        <tr>
+          <th scope="row">1.x.x</th>
+          <td>5.0.2</td>
+          <td>4.0.0</td>
+        </tr>
+        <tr>
+          <th scope="row">2.x.x</th>
+          <td>6.0.0</td>
+          <td>4.0.0</td>
+        </tr>
+        <tr>
+          <th scope="row">3.x.x</th>
+          <td>6.1.0</td>
+          <td>4.0.0</td>
+        </tr>
+        <tr>
+          <th scope="row">4.x.x</th>
+          <td>7.0.0</td>
+          <td>4.0.0</td>
+        </tr>
+        <tr>
+          <th scope="row">5.x.x</th>
+          <td>8.0.0</td>
+          <td>4.3.1</td>
+        </tr>
+      </ng-template>
+      <tr>
+        <th scope="row">6.x.x</th>
+        <td>9.0.0</td>
+        <td>4.4.1</td>
+      </tr>
+      <tr>
+        <th scope="row">7.x.x, 8.x.x</th>
+        <td>10.0.0</td>
+        <td>4.5.0</td>
+      </tr>
+      <tr>
+        <th scope="row">9.x.x</th>
+        <td>11.0.0</td>
+        <td>4.5.0</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    When bumping ng-bootstrap major version, make sure to check all the breaking changes listed in the
+    <a href="https://github.com/ng-bootstrap/ng-bootstrap/blob/master/CHANGELOG.md" target="_blank">changelog</a>.
+    We try to minimize them as much as possible.
+  </p>
+
+  <ngbd-page-header title="Installation" fragment="installation" class="mb-3"></ngbd-page-header>
+
+  <p>
+    We strongly recommend using
+    <a href="https://cli.angular.io/" target="_blank">Angular CLI</a> for setting up a new project.
+    If you have an Angular &ge; 9 CLI project, you could simply use our schematics to add ng-bootstrap library to it.
+  </p>
+
+  <p>
+    Just run the following:
+  </p>
+
+  <ngbd-code [snippet]="schematics"></ngbd-code>
+
+  <p>
+    It will install ng-bootstrap for the default application specified in your <code>angular.json</code>.
+    If you have multiple projects and you want to target a specific application,
+    you could specify the <code>--project</code> option
+  </p>
+
+  <ngbd-code [snippet]="schematicsProject"></ngbd-code>
+
+  <br>
+
+  <h4>Manual installation</h4>
+
+  <p>
+    If you prefer not to use schematics or want to add ng-bootstrap to an older project, you'll need to do the
+    following:
+  </p>
+
+  <ul>
+    <li>Add <code>bootstrap</code> and <code>@ng-bootstrap/ng-bootstrap</code> dependencies from npm</li>
+    <li>Install the <code>@angular/localize</code> polyfill</li>
+    <li>Add bootstrap CSS/SCSS to your project (no javascript is required)</li>
+    <li>Import <code>NgbModule</code> or any other component module like <code>NgbPaginationModule</code> in your
+      application</li>
+  </ul>
+
+  <p>
+    <a href (click)="instructionsCollapsed = !instructionsCollapsed; $event.preventDefault()"
+      [attr.aria-expanded]="!instructionsCollapsed" aria-controls="detailed-instructions">
+      Click here to {{ instructionsCollapsed ? 'show' : 'hide' }} detailed instructions
+    </a>
+  </p>
+
+  <div id="detailed=instructions" [ngbCollapse]="instructionsCollapsed">
+    <div class="card">
+      <div class="card-body">
+        <h5>Bootstrap (CSS only)</h5>
+
+        <p>
+          You need to add Bootstrap CSS to your application using your preferred way (see
+          <a href="https://getbootstrap.com/docs/{{ bsVersion }}/getting-started/download/" target="_blank">Bootstrap
+            instructions</a>).
+        </p>
+
+        <p>
+          For example you could install Bootstrap from npm
+        </p>
+
+        <ngbd-code [snippet]="bootstrapInstall"></ngbd-code>
+
+        <p>
+          and add Bootstrap CSS or SCSS to your project.
+        </p>
+
+        <p>
+          In case you're using CSS, you just need to add Bootstrap styles to your <code>angular.json</code>
+          configuration:
+        </p>
+
+        <ngbd-code [snippet]="bootstrapCssAngularJson"></ngbd-code>
+
+        <p>
+          In case you're using SCSS, please add this to your <code>styles.scss</code> directly:
+        </p>
+
+        <ngbd-code [snippet]="bootstrapCss"></ngbd-code>
+
+        <ngb-alert type="warning" [dismissible]="false" class="mt-3">
+          <p class="font-weight-bold" style="font-size: 1.1rem">
+            Should I add Bootstrap JavaScript files to my project?
+          </p>
+
+          <p>No, adding <code>bootstrap.js</code> or <code>bootstrap.min.js</code> is not necessary.</p>
+
+          The goal of ng-bootstrap is to <i>completely replace</i> JavaScript implementation for components.
+          Nor should you include other dependencies like jQuery or popper.js.
+          It is not necessary and might interfere with ng-bootstrap code.
+        </ngb-alert>
+
+        <h5>@angular/localize polyfill</h5>
+
+        <p>
+          If you're using Angular &ge; 9.0.0 and ng-bootstrap &ge; 6.0.0,
+          you also have to install the <code>@angular/localize</code> polyfill:
+        </p>
+
+        <ngbd-code [snippet]="polyfillInstall"></ngbd-code>
+
+        <p>
+          See more details in
+          <a href="https://angular.io/guide/i18n#setting-up-localization-with-the-angular-cli" target="_blank">the
+            official documentation</a>.
+        </p>
+
+        <h5>ng-bootstrap</h5>
+
+        <p>Installing the library itself from npm is simply doing</p>
+
+        <ngbd-code [snippet]="codeInstall"></ngbd-code>
+
+        <p>Once installed you need to import our main module and you're good to go</p>
+
+        <ngbd-code [snippet]="codeRoot"></ngbd-code>
+      </div>
+    </div>
+  </div>
+
+  <ngbd-page-header title="Alternative imports" fragment="imports"></ngbd-page-header>
+
+  <p>
+    Instead of importing the whole library with <code>NgbModule</code>,
+    you could only import modules with components you need, ex. pagination and alert.
+  </p>
+
+  <p>
+    The resulting bundle will be smaller in this case.
+  </p>
+
+  <ngbd-code [snippet]="codeOther"></ngbd-code>
+
+  <ngbd-page-header title="Supported Browsers" fragment="browsers"></ngbd-page-header>
+
+  <p>We strive to support the same browsers and versions as supported by both Bootstrap and Angular, whichever is more
+    restrictive. Check browser support notes for
+    <a href="https://angular.io/guide/browser-support" target="_blank">Angular</a> and
+    <a href="https://getbootstrap.com/docs/{{ bsVersion }}/getting-started/browsers-devices/"
+      target="_blank">Bootstrap</a>.
+  </p>
+
+  <p>Our code is automatically tested on all supported browsers.</p>
+
+  <ngbd-page-header title="Getting help" fragment="getting-help"></ngbd-page-header>
+
+  <p>
+    Please, do not open issues for the general support questions as we want to keep GitHub issues for bug reports
+    and feature requests. You've got much better chances of getting your question answered on
+    <a href="https://stackoverflow.com/questions/tagged/ng-bootstrap" target="_blank">StackOverflow</a> where the
+    community at large are looking
+    at questions tagged with <code>ng-bootstrap</code>.
+  </p>
+  <p>
+    StackOverflow is a much better place to ask questions since:
+  </p>
+  <ul>
+    <li>there are hundreds of people willing to help on StackOverflow,</li>
+    <li>questions and answers stay available for public viewing so your question / answer might help someone else, and
+    </li>
+    <li>the SO voting system assures that the best answers are prominently visible.</li>
+  </ul>
+  <p>
+    To save your and our time we will be systematically closing all the issues that are requests for general support and
+    redirecting people to StackOverflow.
+  </p>
+
+  <ngbd-page-header title="Contributing" fragment="contributing"></ngbd-page-header>
+
+  <p>
+    We are always looking for the quality contributions! Please check the
+    <a href="https://github.com/ng-bootstrap/ng-bootstrap/blob/master/CONTRIBUTING.md" target="_blank">Contributing</a>
+    doc
+    for contribution guidelines. Additionally, for local building and testing information, please see our
+    <a href="https://github.com/ng-bootstrap/ng-bootstrap/blob/master/DEVELOPER.md" target="_blank">Developer's
+      Guide</a>.
+  </p>
+
+  <ngbd-page-header title="Code of conduct" fragment="code-of-conduct"></ngbd-page-header>
+
+  <p>
+    Please take a moment to read our
+    <a href="https://github.com/ng-bootstrap/ng-bootstrap/blob/master/CODE_OF_CONDUCT.md" target="_blank">Code of
+      Conduct</a>.
+  </p>
+</ngbd-page-wrapper>

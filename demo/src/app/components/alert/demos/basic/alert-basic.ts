@@ -1,7 +1,5 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
-@Component({
-  selector: 'ngbd-alert-basic',
-  templateUrl: './alert-basic.html'
-})
-export class NgbdAlertBasic {}
+@Component({selector: 'ngbd-alert-basic', templateUrl: './alert-basic.html'})
+export class NgbdAlertBasic {
+}

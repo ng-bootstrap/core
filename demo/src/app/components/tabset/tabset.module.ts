@@ -6,65 +6,70 @@ import { NgbdComponentsSharedModule, NgbdDemoList } from '../shared';
 import { NgbdApiPage } from '../shared/api-page/api.component';
 import { NgbdExamplesPage } from '../shared/examples-page/examples.component';
 import { NgbdTabsetBasic } from './demos/basic/tabset-basic';
+import { NgbdTabsetBasicModule } from './demos/basic/tabset-basic.module';
 import { NgbdTabsetConfig } from './demos/config/tabset-config';
+import { NgbdTabsetConfigModule } from './demos/config/tabset-config.module';
 import { NgbdTabsetJustify } from './demos/justify/tabset-justify';
+import { NgbdTabsetJustifyModule } from './demos/justify/tabset-justify.module';
 import { NgbdTabsetOrientation } from './demos/orientation/tabset-orientation';
+import { NgbdTabsetOrientationModule } from './demos/orientation/tabset-orientation.module';
 import { NgbdTabsetPills } from './demos/pills/tabset-pills';
+import { NgbdTabsetPillsModule } from './demos/pills/tabset-pills.module';
+import { NgbdTabsetPreventChangeModule } from './demos/preventchange/tabset-prevent-change.module';
 import { NgbdTabsetPreventchange } from './demos/preventchange/tabset-preventchange';
 import { NgbdTabsetSelectbyid } from './demos/selectbyid/tabset-selectbyid';
-
-const DEMO_DIRECTIVES = [
-  NgbdTabsetBasic,
-  NgbdTabsetPills,
-  NgbdTabsetPreventchange,
-  NgbdTabsetSelectbyid,
-  NgbdTabsetConfig,
-  NgbdTabsetJustify,
-  NgbdTabsetOrientation
-];
+import { NgbdTabsetSelectbyidModule } from './demos/selectbyid/tabset-selectbyid.module';
+import { NgbdTabsetWarningComponent } from './tabset-warning.component';
 
 const DEMOS = {
   basic: {
     title: 'Tabset',
     type: NgbdTabsetBasic,
-    code: require('!!raw-loader!./demos/basic/tabset-basic'),
-    markup: require('!!raw-loader!./demos/basic/tabset-basic.html')
+    code: require('!!raw-loader!./demos/basic/tabset-basic').default,
+    markup: require('!!raw-loader!./demos/basic/tabset-basic.html').default,
+    showStackblitz: false
   },
   pills: {
     title: 'Pills',
     type: NgbdTabsetPills,
-    code: require('!!raw-loader!./demos/pills/tabset-pills'),
-    markup: require('!!raw-loader!./demos/pills/tabset-pills.html')
+    code: require('!!raw-loader!./demos/pills/tabset-pills').default,
+    markup: require('!!raw-loader!./demos/pills/tabset-pills.html').default,
+    showStackblitz: false
   },
   selectbyid: {
     title: 'Select an active tab by id',
     type: NgbdTabsetSelectbyid,
-    code: require('!!raw-loader!./demos/selectbyid/tabset-selectbyid'),
-    markup: require('!!raw-loader!./demos/selectbyid/tabset-selectbyid.html')
+    code: require('!!raw-loader!./demos/selectbyid/tabset-selectbyid').default,
+    markup: require('!!raw-loader!./demos/selectbyid/tabset-selectbyid.html').default,
+    showStackblitz: false
   },
   preventchange: {
     title: 'Prevent tab change',
     type: NgbdTabsetPreventchange,
-    code: require('!!raw-loader!./demos/preventchange/tabset-preventchange'),
-    markup: require('!!raw-loader!./demos/preventchange/tabset-preventchange.html')
+    code: require('!!raw-loader!./demos/preventchange/tabset-preventchange').default,
+    markup: require('!!raw-loader!./demos/preventchange/tabset-preventchange.html').default,
+    showStackblitz: false
   },
   justify: {
     title: 'Nav justification',
     type: NgbdTabsetJustify,
-    code: require('!!raw-loader!./demos/justify/tabset-justify'),
-    markup: require('!!raw-loader!./demos/justify/tabset-justify.html')
+    code: require('!!raw-loader!./demos/justify/tabset-justify').default,
+    markup: require('!!raw-loader!./demos/justify/tabset-justify.html').default,
+    showStackblitz: false
   },
   orientation: {
     title: 'Nav orientation',
     type: NgbdTabsetOrientation,
-    code: require('!!raw-loader!./demos/orientation/tabset-orientation'),
-    markup: require('!!raw-loader!./demos/orientation/tabset-orientation.html')
+    code: require('!!raw-loader!./demos/orientation/tabset-orientation').default,
+    markup: require('!!raw-loader!./demos/orientation/tabset-orientation.html').default,
+    showStackblitz: false
   },
   config: {
     title: 'Global configuration of tabs',
     type: NgbdTabsetConfig,
-    code: require('!!raw-loader!./demos/config/tabset-config'),
-    markup: require('!!raw-loader!./demos/config/tabset-config.html')
+    code: require('!!raw-loader!./demos/config/tabset-config').default,
+    markup: require('!!raw-loader!./demos/config/tabset-config.html').default,
+    showStackblitz: false
   }
 };
 
@@ -73,6 +78,9 @@ export const ROUTES = [
   {
     path: '',
     component: ComponentWrapper,
+    data: {
+      header: NgbdTabsetWarningComponent
+    },
     children: [
       { path: 'examples', component: NgbdExamplesPage },
       { path: 'api', component: NgbdApiPage }
@@ -83,13 +91,20 @@ export const ROUTES = [
 @NgModule({
   imports: [
     NgbdSharedModule,
-    NgbdComponentsSharedModule
+    NgbdComponentsSharedModule,
+    NgbdTabsetBasicModule,
+    NgbdTabsetPillsModule,
+    NgbdTabsetPreventChangeModule,
+    NgbdTabsetSelectbyidModule,
+    NgbdTabsetConfigModule,
+    NgbdTabsetJustifyModule,
+    NgbdTabsetOrientationModule
   ],
-  declarations: DEMO_DIRECTIVES,
-  entryComponents: DEMO_DIRECTIVES
+  declarations: [NgbdTabsetWarningComponent],
+  entryComponents: [NgbdTabsetWarningComponent]
 })
 export class NgbdTabsetModule {
   constructor(demoList: NgbdDemoList) {
-    demoList.register('tabs', DEMOS);
+    demoList.register('tabset', DEMOS);
   }
 }

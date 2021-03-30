@@ -1,0 +1,27 @@
+<h3>Modal stack confirmation test</h3>
+
+<ng-template #modal let-modal>
+  <div id="modal" class="modal-header">
+    <h4 class="modal-title">Modal with closure confirmation</h4>
+    <button id="close" type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>This modal will trigger confirmation</p>
+  </div>
+</ng-template>
+
+<ng-template #confirmation let-modal>
+  <div id="stack-modal" class="modal-header">
+    <h4 class="modal-title">Are you sure you want to close the modal?</h4>
+    <button id="dismiss" type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <button id="confirm" class="btn btn-primary" (click)="modal.close()">Yep</button>
+  </div>
+</ng-template>
+
+<button class="btn btn-outline-secondary ml-2" type="button" id="open-modal" (click)="openModal(modal)">Open Modal</button>

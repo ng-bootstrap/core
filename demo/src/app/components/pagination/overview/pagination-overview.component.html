@@ -1,0 +1,93 @@
+<p>
+  Pagination is a component that only displays page numbers. It will not manipulate your data collection. You will have
+  to split your data collection into pages yourself.
+</p>
+
+
+<ngbd-overview-section [section]="sections['basic-usage']">
+  <p>
+    In order to properly operate a pagination behaviour, there are 3 important notions you have to be familiar with,
+    which are actually available as <code>@Input()</code> on the widget:
+  </p>
+  <ol>
+    <li><code>collectionSize</code> - Number of elements/items in the collection.
+      i.e. the total number of items the
+      pagination should handle.</li>
+    <li><code>pageSize</code> - Number of elements/items per page.</li>
+    <li><code>page</code> - The current page.</li>
+  </ol>
+
+  <p>To split the data collection yourself, use <code>*ngFor</code> associated with the <a href="https://angular.io/api/common/SlicePipe"
+      rel="no-opener no-referer"><code>slice</code></a> pipe to extract (or <em>slice</em>) a sub-part of it.</p>
+
+  <p>Corresponding code could be something like:</p>
+  <ngbd-code [snippet]="NGFOR"></ngbd-code>
+  <p>and the associated <code>&lt;ngb-pagination&gt;</code> would be like:</p>
+  <ngbd-code [snippet]="NGB_PAGINATION"></ngbd-code>
+
+  <br />
+  <ngb-alert type="warning" [dismissible]="false">
+    Be aware that both <code>page</code> and <code>pageSize</code> have default values,
+    which are respectively <code>1</code> and <code>10</code>.
+  </ngb-alert>
+
+  <h4>Filtering and sorting</h4>
+  <p>
+    To add filtering or sorting on top of your pagination, you will have to update the way you split your
+    data collection. As mentionned in <a href="https://angular.io/guide/pipes#appendix-no-filterpipe-or-orderbypipe"
+      rel="no-opener no-referer">Angular documentation</a>, you don't need to reimplement dedicated pipes for
+    that purpose.
+    Recommendation is to move filtering and sorting logic into the component itself where some property getters could
+    be exposed.
+  </p>
+</ngbd-overview-section>
+
+<ngbd-overview-section [section]="sections['customization']">
+  <p>
+    It is possible to customize what exactly is displayed in each pagination link and there are several ways of doing it.
+  </p>
+
+  <p>
+    You could use the Angular i18n API as all labels are translated. For instance you could replace the default
+    <code>'&laquo;'</code> (previous arrow) with the <code>'Prev'</code> text by providing a different translation for the
+    <code>ngb.pagination.previous</code> key in your i18n file and <code>ngb.pagination.previous-aria</code> for the
+    corresponding <code>aria-label</code> attribute.
+  </p>
+
+  <p>
+    You could also override the CSS to hide the default <code>span</code> and provide an alternative content.
+    For example for the previous arrow:
+  </p>
+  <ngbd-code [snippet]="CUSTOM_CSS"></ngbd-code>
+
+  <h4>
+    Using templates
+  </h4>
+  <ngbd-api-docs-badge [since]="{version: '4.1.0'}"></ngbd-api-docs-badge>
+
+  <p>
+    Sometimes you would want to display an icon, an image or any arbitrary markup instead of the page number.
+    In this case since you could use the template-based API to override any pagination link:
+  </p>
+  <ngbd-code [snippet]="CUSTOM_TPL"></ngbd-code>
+
+  <p>
+    In this case we customize all pagination links, but you can pick only the ones you need of course.
+    The template <a routerLink="../api" fragment="NgbPaginationLinkContext"><code>NgbPaginationLinkContext</code></a>
+    is available for all templates and for page numbers there is a
+    <a routerLink="../api" fragment="NgbPaginationNumberContext"><code>NgbPaginationNumberContext</code></a>
+    that adds displayed number on top.
+  </p>
+
+  <ngbd-api-docs-badge [since]="{version: '9.1.0'}"></ngbd-api-docs-badge>
+  <p>
+    You can additionally decide how to render all page numbers using
+    <a routerLink="../api" fragment="NgbPaginationPagesContext"><code>NgbPaginationPagesContext</code></a>
+  </p>
+  <ngbd-code [snippet]="CUSTOM_TPL_PAGES"></ngbd-code>
+
+  <p>
+    Also see the <a routerLink="../examples" fragment="customization">Customization example</a> for a
+    live version.
+  </p>
+</ngbd-overview-section>

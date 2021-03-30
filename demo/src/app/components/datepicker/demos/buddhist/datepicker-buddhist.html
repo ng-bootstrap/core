@@ -1,0 +1,22 @@
+<p>The Buddhist calendar is a solar calendar that was used in Thailand.</p>
+
+<ngb-datepicker #dp [(ngModel)]="model" [showWeekNumbers]="true" ></ngb-datepicker>
+
+<hr />
+
+<button class="btn btn-sm btn-outline-primary mr-2" (click)="selectToday()">
+  Select Today
+</button>
+<button class="btn btn-sm btn-outline-primary mr-2" (click)="dp.navigateTo()">
+  To current month
+</button>
+<button
+  class="btn btn-sm btn-outline-primary mr-2"
+  (click)="dp.navigateTo({year: 2524, month: 5})"
+>
+  To May 2524
+</button>
+
+<hr />
+
+<pre>Model: {{ model | json }}</pre>

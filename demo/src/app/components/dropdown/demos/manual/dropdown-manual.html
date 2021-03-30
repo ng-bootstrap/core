@@ -3,11 +3,11 @@
 <div class="d-inline-block" ngbDropdown #myDrop="ngbDropdown">
   <button class="btn btn-outline-primary mr-2" id="dropdownManual" ngbDropdownAnchor (focus)="myDrop.open()">Toggle dropdown</button>
   <div ngbDropdownMenu aria-labelledby="dropdownManual">
-    <button class="dropdown-item">Action - 1</button>
-    <button class="dropdown-item">Another Action</button>
-    <button class="dropdown-item">Something else is here</button>
+    <button ngbDropdownItem>Action - 1</button>
+    <button ngbDropdownItem>Another Action</button>
+    <button ngbDropdownItem>Something else is here</button>
   </div>
-
-  <button class="btn btn-outline-success mr-2" (click)="$event.stopPropagation(); myDrop.open();">Open from outside</button>
-  <button class="btn btn-outline-danger mr-2" (click)="$event.stopPropagation(); myDrop.close();">Close from outside</button>
 </div>
+
+<button class="btn btn-outline-success mr-2" (click)="$event.stopPropagation(); myDrop.open();">Open from outside</button>
+<button class="btn btn-outline-danger mr-2" (click)="$event.stopPropagation(); myDrop.close();">Close from outside</button>

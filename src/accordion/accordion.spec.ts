@@ -1,10 +1,12 @@
 import {TestBed, ComponentFixture, inject} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {createGenericTestComponent} from '../test/common';
+import {createGenericTestComponent, isBrowserVisible} from '../test/common';
 
 import {Component} from '@angular/core';
 
 import {NgbAccordionModule, NgbPanelChangeEvent, NgbAccordionConfig, NgbAccordion} from './accordion.module';
+import {NgbConfig} from '../ngb-config';
+import {NgbConfigAnimation} from '../test/ngb-config-animation';
 
 const createTestComponent = (html: string) =>
     createGenericTestComponent(html, TestComponent) as ComponentFixture<TestComponent>;
@@ -14,15 +16,19 @@ function getPanels(element: HTMLElement): HTMLDivElement[] {
 }
 
 function getPanelsContent(element: HTMLElement): HTMLDivElement[] {
-  return <HTMLDivElement[]>Array.from(element.querySelectorAll('.card > .collapse'));
+  return <HTMLDivElement[]>Array.from(element.querySelectorAll('.card > .collapse, .card > .collapsing'));
 }
 
-function getPanelsTitle(element: HTMLElement): HTMLButtonElement[] {
+function getPanelsButton(element: HTMLElement): HTMLButtonElement[] {
   return <HTMLButtonElement[]>Array.from(element.querySelectorAll('.card > .card-header button'));
 }
 
+function getPanelsTitle(element: HTMLElement): string[] {
+  return getPanelsButton(element).map(button => button.textContent !.trim());
+}
+
 function getButton(element: HTMLElement, index: number): HTMLButtonElement {
-  return <HTMLButtonElement>element.querySelectorAll('button')[index];
+  return <HTMLButtonElement>element.querySelectorAll('button[type="button"]')[index];
 }
 
 function expectOpenPanels(nativeEl: HTMLElement, openPanelsDef: boolean[]) {
@@ -30,16 +36,15 @@ function expectOpenPanels(nativeEl: HTMLElement, openPanelsDef: boolean[]) {
   const panels = getPanels(nativeEl);
   expect(panels.length).toBe(openPanelsDef.length);
 
-  const panelsTitles = getPanelsTitle(nativeEl);
-  const result = panelsTitles.map((titleEl: HTMLButtonElement) => {
+  const panelsButton = getPanelsButton(nativeEl);
+  const result = panelsButton.map(titleEl => {
     const isAriaExpanded = titleEl.getAttribute('aria-expanded') === 'true';
     const isCSSCollapsed = titleEl.classList.contains('collapsed');
     return isAriaExpanded === !isCSSCollapsed ? isAriaExpanded : fail('inconsistent state');
   });
 
   const panelContents = getPanelsContent(nativeEl);
-  panelContents.forEach(
-      (panelContent: HTMLDivElement) => { expect(panelContent.classList.contains('show')).toBeTruthy(); });
+  panelContents.forEach(panelContent => { expect(panelContent.classList.contains('show')).toBeTruthy(); });
 
   expect(panelContents.length).toBe(noOfOpenPanels);
   expect(result).toEqual(openPanelsDef);
@@ -48,8 +53,9 @@ function expectOpenPanels(nativeEl: HTMLElement, openPanelsDef: boolean[]) {
 describe('ngb-accordion', () => {
   let html = `
     <ngb-accordion #acc="ngbAccordion" [closeOthers]="closeOthers" [activeIds]="activeIds"
-      (panelChange)="changeCallback($event)" [type]="classType">
-      <ngb-panel *ngFor="let panel of panels" [id]="panel.id" [disabled]="panel.disabled" [type]="panel.type">
+      (panelChange)="changeCallback($event)" (shown)="shownCallback($event)" (hidden)="hiddenCallback($event)" [type]="classType">
+      <ngb-panel *ngFor="let panel of panels" [id]="panel.id" [disabled]="panel.disabled" [type]="panel.type"
+        (shown)="panelShownCallback($event)" (hidden)="panelHiddenCallback($event)">
         <ng-template ngbPanelTitle>{{panel.title}}</ng-template>
         <ng-template ngbPanelContent>{{panel.content}}</ng-template>
       </ngb-panel>
@@ -63,8 +69,8 @@ describe('ngb-accordion', () => {
   });
 
   it('should initialize inputs with default values', () => {
-    const defaultConfig = new NgbAccordionConfig();
-    const accordionCmp = new NgbAccordion(defaultConfig);
+    const defaultConfig = new NgbAccordionConfig(new NgbConfig());
+    const accordionCmp = TestBed.createComponent(NgbAccordion).componentInstance;
     expect(accordionCmp.type).toBe(defaultConfig.type);
     expect(accordionCmp.closeOtherPanels).toBe(defaultConfig.closeOthers);
   });
@@ -203,8 +209,7 @@ describe('ngb-accordion', () => {
 
     const titles = getPanelsTitle(compiled);
     expect(titles.length).not.toBe(0);
-
-    titles.forEach((title: HTMLElement, idx: number) => { expect(title.textContent.trim()).toBe(`Panel ${idx + 1}`); });
+    titles.forEach((title, idx) => { expect(title).toBe(`Panel ${idx + 1}`); });
   });
 
   it('can use a title without template', () => {
@@ -219,8 +224,8 @@ describe('ngb-accordion', () => {
 
     fixture.detectChanges();
 
-    const title: HTMLElement = getPanelsTitle(fixture.nativeElement)[0];
-    expect(title.textContent.trim()).toBe('Panel 1');
+    const title = getPanelsTitle(fixture.nativeElement)[0];
+    expect(title).toBe('Panel 1');
   });
 
   it('can mix title and template', () => {
@@ -240,8 +245,77 @@ describe('ngb-accordion', () => {
     fixture.detectChanges();
 
     const titles = getPanelsTitle(fixture.nativeElement);
+    titles.forEach((title, idx) => { expect(title).toBe(`Panel ${idx + 1}`); });
+  });
 
-    titles.forEach((title: HTMLElement, idx: number) => { expect(title.textContent.trim()).toBe(`Panel ${idx + 1}`); });
+  it('can use header as a template', () => {
+    const testHtml = `
+    <ngb-accordion>
+     <ngb-panel>
+       <ng-template ngbPanelHeader>
+         <button ngbPanelToggle>Title 1</button>
+       </ng-template>
+       <ng-template ngbPanelContent>Content 1</ng-template>
+     </ngb-panel>
+     <ngb-panel>
+       <ng-template ngbPanelHeader>
+         <button ngbPanelToggle>Title 2</button>
+       </ng-template>
+       <ng-template ngbPanelContent>Content 2</ng-template>
+     </ngb-panel>
+    </ngb-accordion>
+    `;
+    const fixture = createTestComponent(testHtml);
+    const titles = getPanelsTitle(fixture.nativeElement);
+    titles.forEach((title, idx) => { expect(title).toBe(`Title ${idx + 1}`); });
+  });
+
+  it('should pass context to a header template', () => {
+    const testHtml = `
+    <ngb-accordion [activeIds]="activeIds">
+     <ngb-panel id="one">
+       <ng-template ngbPanelHeader let-opened="opened">
+         <button ngbPanelToggle>{{ opened ? 'opened' : 'closed' }}</button>
+       </ng-template>
+       <ng-template ngbPanelContent>Content 1</ng-template>
+     </ngb-panel>
+    </ngb-accordion>
+    `;
+    const fixture = createTestComponent(testHtml);
+    let title = getPanelsTitle(fixture.nativeElement)[0];
+
+    expectOpenPanels(fixture.nativeElement, [false]);
+    expect(title).toBe(`closed`);
+
+    fixture.componentInstance.activeIds = 'one';
+    fixture.detectChanges();
+
+    title = getPanelsTitle(fixture.nativeElement)[0];
+    expectOpenPanels(fixture.nativeElement, [true]);
+    expect(title).toBe(`opened`);
+  });
+
+  it('can should prefer header as a template to other ways of providing a title', () => {
+    const testHtml = `
+    <ngb-accordion>
+     <ngb-panel title="Panel Title 1">
+       <ng-template ngbPanelHeader>
+         <button ngbPanelToggle>Header Title 1</button>
+       </ng-template>
+       <ng-template ngbPanelContent>Content 1</ng-template>
+     </ngb-panel>
+     <ngb-panel>
+       <ng-template ngbPanelTitle>Panel Title 2</ng-template>
+       <ng-template ngbPanelHeader>
+         <button ngbPanelToggle>Header Title 2</button>
+       </ng-template>
+       <ng-template ngbPanelContent>Content 2</ng-template>
+     </ngb-panel>
+    </ngb-accordion>
+    `;
+    const fixture = createTestComponent(testHtml);
+    const titles = getPanelsTitle(fixture.nativeElement);
+    titles.forEach((title, idx) => { expect(title).toBe(`Header Title ${idx + 1}`); });
   });
 
   it('should not pick up titles from nested accordions', () => {
@@ -263,9 +337,7 @@ describe('ngb-accordion', () => {
     // additional change detection is required to reproduce the problem in the test environment
     fixture.detectChanges();
 
-    const titles = getPanelsTitle(fixture.nativeElement);
-    const parentTitle = titles[0].textContent.trim();
-    const childTitle = titles[1].textContent.trim();
+    const[parentTitle, childTitle] = getPanelsTitle(fixture.nativeElement);
 
     expect(parentTitle).toContain('parent title');
     expect(parentTitle).not.toContain('child title');
@@ -284,7 +356,7 @@ describe('ngb-accordion', () => {
     const panelsContent = getPanelsContent(fixture.nativeElement);
 
     expect(panelsContent.length).toBe(1);
-    expect(panelsContent[0].textContent.trim()).toBe('');
+    expect(panelsContent[0].textContent !.trim()).toBe('');
   });
 
   it('should have the appropriate content', () => {
@@ -300,9 +372,9 @@ describe('ngb-accordion', () => {
     const contents = getPanelsContent(compiled);
     expect(contents.length).not.toBe(0);
 
-    contents.forEach((content: HTMLElement, idx: number) => {
+    contents.forEach((content, idx) => {
       expect(content.getAttribute('aria-labelledby')).toBe(`${content.id}-header`);
-      expect(content.textContent.trim()).toBe(originalContent[idx].content);
+      expect(content.textContent !.trim()).toBe(originalContent[idx].content);
     });
   });
 
@@ -318,7 +390,7 @@ describe('ngb-accordion', () => {
     const contents = getPanelsContent(compiled);
     expect(contents.length).not.toBe(0);
 
-    contents.forEach((content: HTMLElement) => {
+    contents.forEach(content => {
       expect(content).toHaveCssClass('collapse');
       expect(content).toHaveCssClass('show');
     });
@@ -330,7 +402,7 @@ describe('ngb-accordion', () => {
     tc.closeOthers = true;
     fixture.detectChanges();
 
-    const headingLinks = getPanelsTitle(fixture.nativeElement);
+    const headingLinks = getPanelsButton(fixture.nativeElement);
 
     headingLinks[0].click();
     fixture.detectChanges();
@@ -362,7 +434,7 @@ describe('ngb-accordion', () => {
     tc.panels[0].disabled = true;
     fixture.detectChanges();
 
-    const headingLinks = getPanelsTitle(fixture.nativeElement);
+    const headingLinks = getPanelsButton(fixture.nativeElement);
 
     headingLinks[0].click();
     fixture.detectChanges();
@@ -379,7 +451,7 @@ describe('ngb-accordion', () => {
     fixture.detectChanges();
     expectOpenPanels(el, [false, false, false]);
 
-    const headingLinks = getPanelsTitle(fixture.nativeElement);
+    const headingLinks = getPanelsButton(fixture.nativeElement);
 
     headingLinks[0].click();
     fixture.detectChanges();
@@ -413,7 +485,7 @@ describe('ngb-accordion', () => {
 
     tc.activeIds = ['one'];
     fixture.detectChanges();
-    const headingLinks = getPanelsTitle(fixture.nativeElement);
+    const headingLinks = getPanelsButton(fixture.nativeElement);
     expectOpenPanels(fixture.nativeElement, [true, false, false]);
     expect(headingLinks[0].disabled).toBeFalsy();
 
@@ -421,6 +493,35 @@ describe('ngb-accordion', () => {
     fixture.detectChanges();
     expectOpenPanels(fixture.nativeElement, [false, false, false]);
     expect(headingLinks[0].disabled).toBeTruthy();
+  });
+
+  it('should add custom class to the card element', () => {
+    const testHtml = `
+      <ngb-accordion>
+        <ngb-panel></ngb-panel>
+        <ngb-panel cardClass="custom-class"></ngb-panel>
+        <ngb-panel cardClass="custom-class custom-class-2"></ngb-panel>
+        <ngb-panel [cardClass]="null"></ngb-panel>
+      </ngb-accordion>
+    `;
+    const fixture = createTestComponent(testHtml);
+    const cards = <HTMLDivElement[]>Array.from(fixture.nativeElement.querySelectorAll('.card'));
+
+    fixture.detectChanges();
+    expect(cards[0].classList.length).toBe(1);
+    expect(cards[0]).toHaveCssClass('card');
+
+    expect(cards[1].classList.length).toBe(2);
+    expect(cards[1]).toHaveCssClass('card');
+    expect(cards[1]).toHaveCssClass('custom-class');
+
+    expect(cards[2].classList.length).toBe(3);
+    expect(cards[2]).toHaveCssClass('card');
+    expect(cards[2]).toHaveCssClass('custom-class');
+    expect(cards[2]).toHaveCssClass('custom-class-2');
+
+    expect(cards[3].classList.length).toBe(1);
+    expect(cards[3]).toHaveCssClass('card');
   });
 
   it('should remove collapsed panels content from DOM', () => {
@@ -454,32 +555,38 @@ describe('ngb-accordion', () => {
     expect(panelContents.length).toBe(3);
   });
 
-  it('should emit panel change event when toggling panels', () => {
+  it('should emit panel events when toggling panels', () => {
     const fixture = TestBed.createComponent(TestComponent);
     fixture.detectChanges();
 
-    fixture.componentInstance.changeCallback = () => {};
-
     spyOn(fixture.componentInstance, 'changeCallback');
+    spyOn(fixture.componentInstance, 'shownCallback');
+    spyOn(fixture.componentInstance, 'hiddenCallback');
+    spyOn(fixture.componentInstance, 'panelShownCallback');
+    spyOn(fixture.componentInstance, 'panelHiddenCallback');
 
     // Select the first tab -> change event
     getButton(fixture.nativeElement, 0).click();
     fixture.detectChanges();
     expect(fixture.componentInstance.changeCallback)
         .toHaveBeenCalledWith(jasmine.objectContaining({panelId: 'one', nextState: true}));
+    expect(fixture.componentInstance.shownCallback).toHaveBeenCalledWith('one');
+    expect(fixture.componentInstance.panelShownCallback).toHaveBeenCalledWith(undefined);
 
     // Select the first tab again -> change event
     getButton(fixture.nativeElement, 0).click();
     fixture.detectChanges();
     expect(fixture.componentInstance.changeCallback)
         .toHaveBeenCalledWith(jasmine.objectContaining({panelId: 'one', nextState: false}));
+    expect(fixture.componentInstance.hiddenCallback).toHaveBeenCalledWith('one');
+    expect(fixture.componentInstance.panelHiddenCallback).toHaveBeenCalledWith(undefined);
   });
 
   it('should cancel panel toggle when preventDefault() is called', () => {
     const fixture = TestBed.createComponent(TestComponent);
     fixture.detectChanges();
 
-    let changeEvent = null;
+    let changeEvent: NgbPanelChangeEvent | null = null;
     fixture.componentInstance.changeCallback = event => {
       changeEvent = event;
       event.preventDefault();
@@ -488,7 +595,7 @@ describe('ngb-accordion', () => {
     // Select the first tab -> toggle will be canceled
     getButton(fixture.nativeElement, 0).click();
     fixture.detectChanges();
-    expect(changeEvent).toEqual(jasmine.objectContaining({panelId: 'one', nextState: true}));
+    expect(changeEvent !).toEqual(jasmine.objectContaining({panelId: 'one', nextState: true}));
     expectOpenPanels(fixture.nativeElement, [false, false, false]);
   });
 
@@ -536,10 +643,10 @@ describe('ngb-accordion', () => {
     fixture.detectChanges();
 
     const headers = getPanels(fixture.nativeElement);
-    headers.forEach((header: HTMLElement) => expect(header.getAttribute('role')).toBe('tab'));
+    headers.forEach(header => expect(header.getAttribute('role')).toBe('tab'));
 
     const contents = getPanelsContent(fixture.nativeElement);
-    contents.forEach((content: HTMLElement) => expect(content.getAttribute('role')).toBe('tabpanel'));
+    contents.forEach(content => expect(content.getAttribute('role')).toBe('tabpanel'));
   });
 
   describe('Custom config', () => {
@@ -564,7 +671,7 @@ describe('ngb-accordion', () => {
   });
 
   describe('Custom config as provider', () => {
-    let config = new NgbAccordionConfig();
+    let config = new NgbAccordionConfig(new NgbConfig());
     config.closeOthers = true;
     config.type = 'success';
 
@@ -759,6 +866,186 @@ describe('ngb-accordion', () => {
   });
 });
 
+if (isBrowserVisible('ngb-accordion animations')) {
+  describe('ngb-accordion animations', () => {
+
+    @Component({
+      template: `
+      <ngb-accordion activeIds="first" (panelChange)="onPanelChange($event)" (shown)="onShown($event)" (hidden)="onHidden($event)">
+        <ngb-panel id="first" (shown)="onPanelShown()" (hidden)="onPanelHidden()"></ngb-panel>
+        <ngb-panel id="second"></ngb-panel>
+      </ngb-accordion>
+    `,
+      host: {'[class.ngb-reduce-motion]': 'reduceMotion'}
+    })
+    class TestAnimationComponent {
+      reduceMotion = true;
+      onShown = (panelId) => panelId;
+      onHidden = (panelId) => panelId;
+      onPanelChange = () => {};
+      onPanelShown = () => {};
+      onPanelHidden = () => {};
+    }
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        declarations: [TestAnimationComponent],
+        imports: [NgbAccordionModule],
+        providers: [{provide: NgbConfig, useClass: NgbConfigAnimation}]
+      });
+    });
+
+    it(`should run collapsing transition (force-reduced-motion = false)`, (done) => {
+      const fixture = TestBed.createComponent(TestAnimationComponent);
+      fixture.componentInstance.reduceMotion = false;
+      fixture.detectChanges();
+
+      const buttonEl = getPanelsButton(fixture.nativeElement)[0];
+      let panelEl = getPanelsContent(fixture.nativeElement)[0];
+      const onShownSpy = spyOn(fixture.componentInstance, 'onShown');
+      const onHiddenSpy = spyOn(fixture.componentInstance, 'onHidden');
+      const onPanelChangeSpy = spyOn(fixture.componentInstance, 'onPanelChange');
+      const onPanelShownSpy = spyOn(fixture.componentInstance, 'onPanelShown');
+      const onPanelHiddenSpy = spyOn(fixture.componentInstance, 'onPanelHidden');
+
+      onHiddenSpy.and.callFake((panelId) => {
+        expect(onPanelHiddenSpy).toHaveBeenCalled();
+        expect(panelId).toBe('first');
+        expect(panelEl).toHaveClass('collapse');
+        expect(panelEl).not.toHaveClass('collapsing');
+        expect(panelEl).not.toHaveClass('show');
+
+        // Expanding
+        buttonEl.click();
+        fixture.detectChanges();
+        expect(onPanelChangeSpy).toHaveBeenCalledTimes(2);
+
+      });
+
+      onShownSpy.and.callFake((panelId) => {
+        expect(onPanelShownSpy).toHaveBeenCalled();
+        expect(panelId).toBe('first');
+
+        // The previous one has been destroyed, need to get the new element
+        panelEl = getPanelsContent(fixture.nativeElement)[0];
+        expect(panelEl).toHaveClass('collapse');
+        expect(panelEl).not.toHaveClass('collapsing');
+        expect(panelEl).toHaveClass('show');
+        done();
+      });
+
+      expect(panelEl).toHaveClass('collapse');
+      expect(panelEl).toHaveClass('show');
+      expect(panelEl).not.toHaveClass('collapsing');
+
+      // Collapsing
+      buttonEl.click();
+      fixture.detectChanges();
+
+      expect(onPanelChangeSpy).toHaveBeenCalledTimes(1);
+      expect(panelEl).not.toHaveClass('collapse');
+      expect(panelEl).not.toHaveClass('show');
+      expect(panelEl).toHaveClass('collapsing');
+
+    });
+
+    it(`should run collapsing transition (force-reduced-motion = true)`, () => {
+      const fixture = TestBed.createComponent(TestAnimationComponent);
+      fixture.componentInstance.reduceMotion = true;
+      fixture.detectChanges();
+
+      const buttonEl = getPanelsButton(fixture.nativeElement)[0];
+      let panelEl = getPanelsContent(fixture.nativeElement)[0];
+      const onShownSpy = spyOn(fixture.componentInstance, 'onShown');
+      const onHiddenSpy = spyOn(fixture.componentInstance, 'onHidden');
+      const onPanelChangeSpy = spyOn(fixture.componentInstance, 'onPanelChange');
+      const onPanelShownSpy = spyOn(fixture.componentInstance, 'onPanelShown');
+      const onPanelHiddenSpy = spyOn(fixture.componentInstance, 'onPanelHidden');
+
+      expect(panelEl).toHaveClass('collapse');
+      expect(panelEl).toHaveClass('show');
+      expect(panelEl).not.toHaveClass('collapsing');
+
+      // Collapsing
+      buttonEl.click();
+      fixture.detectChanges();
+
+      expect(onPanelChangeSpy).toHaveBeenCalledTimes(1);
+      expect(onHiddenSpy).toHaveBeenCalledWith('first');
+      expect(onPanelHiddenSpy).toHaveBeenCalled();
+      expect(panelEl).toHaveClass('collapse');
+      expect(panelEl).not.toHaveClass('show');
+      expect(panelEl).not.toHaveClass('collapsing');
+
+      // Expanding
+      buttonEl.click();
+      fixture.detectChanges();
+
+      expect(onPanelChangeSpy).toHaveBeenCalledTimes(2);
+      expect(onShownSpy).toHaveBeenCalledWith('first');
+      expect(onPanelShownSpy).toHaveBeenCalled();
+
+      // The previous one has been destroyed, need to get the new element
+      panelEl = getPanelsContent(fixture.nativeElement)[0];
+      expect(panelEl).toHaveClass('collapse');
+      expect(panelEl).toHaveClass('show');
+      expect(panelEl).not.toHaveClass('collapsing');
+
+    });
+
+    it(`should run revert collapsing transition (force-reduced-motion = false)`, (done) => {
+      const fixture = TestBed.createComponent(TestAnimationComponent);
+      fixture.componentInstance.reduceMotion = false;
+      fixture.detectChanges();
+
+      const buttonEl = getPanelsButton(fixture.nativeElement)[0];
+      let panelEl = getPanelsContent(fixture.nativeElement)[0];
+
+      const onPanelChangeSpy = spyOn(fixture.componentInstance, 'onPanelChange');
+      const onHiddenSpy = spyOn(fixture.componentInstance, 'onHidden');
+      const onShownSpy = spyOn(fixture.componentInstance, 'onShown');
+      const onPanelShownSpy = spyOn(fixture.componentInstance, 'onPanelShown');
+      const onPanelHiddenSpy = spyOn(fixture.componentInstance, 'onPanelHidden');
+
+      onShownSpy.and.callFake((panelId) => {
+        expect(onHiddenSpy).not.toHaveBeenCalled();
+        expect(onPanelHiddenSpy).not.toHaveBeenCalled();
+        expect(onPanelShownSpy).toHaveBeenCalled();
+        expect(panelId).toBe('first');
+
+        // The previous one has been destroyed, need to get the new element
+        panelEl = getPanelsContent(fixture.nativeElement)[0];
+        expect(panelEl).toHaveClass('collapse');
+        expect(panelEl).toHaveClass('show');
+        expect(panelEl).not.toHaveClass('collapsing');
+        done();
+      });
+
+      expect(panelEl).toHaveClass('collapse');
+      expect(panelEl).toHaveClass('show');
+      expect(panelEl).not.toHaveClass('collapsing');
+
+      // Collapsing
+      buttonEl.click();
+      fixture.detectChanges();
+      expect(onPanelChangeSpy).toHaveBeenCalledTimes(1);
+      expect(panelEl).not.toHaveClass('collapse');
+      expect(panelEl).not.toHaveClass('show');
+      expect(panelEl).toHaveClass('collapsing');
+
+      // Expanding
+      buttonEl.click();
+      fixture.detectChanges();
+      expect(onPanelChangeSpy).toHaveBeenCalledTimes(2);
+      panelEl = getPanelsContent(fixture.nativeElement)[0];
+      expect(panelEl).not.toHaveClass('collapse');
+      expect(panelEl).not.toHaveClass('show');
+      expect(panelEl).toHaveClass('collapsing');
+    });
+
+  });
+}
+
 @Component({selector: 'test-cmp', template: ''})
 class TestComponent {
   activeIds: string | string[] = [];
@@ -770,5 +1057,9 @@ class TestComponent {
     {id: 'three', disabled: false, title: 'Panel 3', content: 'baz', type: ''}
   ];
   changeCallback = (event: NgbPanelChangeEvent) => {};
+  shownCallback = (panelId: string) => {};
+  hiddenCallback = (panelId: string) => {};
+  panelShownCallback = (panelId?: string) => {};
+  panelHiddenCallback = (panelId?: string) => {};
   preventDefaultCallback = (event: NgbPanelChangeEvent) => { event.preventDefault(); };
 }

@@ -1,0 +1,15 @@
+ngb-datepicker-navigation-select > .custom-select {
+  flex: 1 1 auto;
+  padding: 0 0.5rem;
+  font-size: 0.875rem;
+  height: 1.85rem;
+
+  &:focus {
+    z-index: 1;
+  }
+
+  // IE11, Edge: Fix arrow icon disappears on focus
+  &::-ms-value {
+    background-color: transparent !important;
+  }
+}

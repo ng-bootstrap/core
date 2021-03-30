@@ -1,17 +1,27 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "outDir": "../out-tsc/lib",
+    "declarationMap": true,
+    "target": "es2015",
+    "declaration": true,
     "inlineSources": true,
-    "importHelpers": true
+    "types": [
+      "jasmine",
+      "node"
+    ],
+    "lib": [
+      "dom",
+      "es2018"
+    ]
   },
   "angularCompilerOptions": {
-    "annotateForClosureCompiler": true,
     "skipTemplateCodegen": true,
     "strictMetadataEmit": true,
-    "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true
+    "fullTemplateTypeCheck": true
   },
-  "include": [
-    "./**/*.ts"
+  "exclude": [
+    "test.ts",
+    "**/*.spec.ts"
   ]
 }

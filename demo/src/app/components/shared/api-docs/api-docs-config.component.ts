@@ -26,7 +26,7 @@ export class NgbdApiDocsConfig {
   @Input() set type(typeName: string) {
     this.apiDocs = docs[typeName];
     this.directiveName = typeName.slice(0, -CONFIG_SUFFIX_LENGTH);
-  };
+  }
 
   trackSourceClick() {
     this._analytics.trackEvent('Source File View', this.apiDocs.className);

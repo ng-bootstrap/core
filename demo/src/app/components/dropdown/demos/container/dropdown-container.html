@@ -1,0 +1,52 @@
+<p>
+  Set the <code>container</code> property to "body" to have the dropdown menu be appended to the body instead of
+  where it belongs. This option is useful if the dropdown is defined inside an element that clips its contents (i.e.
+  <code>overflow: hidden</code>).
+</p>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Items</th>
+      <th scope="col">Actions</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>
+        Item
+        <div>
+          <small class="text-muted">Both &ldquo;Actions&rdquo; table cells define an overflow hidden</small>
+        </div>
+      </td>
+      <td class="overflow-hidden">
+        <div ngbDropdown container="body">
+          <button class="btn btn-outline-primary btn-sm" ngbDropdownToggle>Actions</button>
+          <div ngbDropdownMenu>
+            <button ngbDropdownItem>Edit</button>
+            <button ngbDropdownItem>Duplicate</button>
+            <button ngbDropdownItem>Move</button>
+            <div class="dropdown-divider"></div>
+            <button ngbDropdownItem>Delete</button>
+          </div>
+        </div>
+        <small class="text-muted">Dropdown uses container "body"</small>
+      </td>
+      <td class="overflow-hidden">
+        <div ngbDropdown>
+          <button class="btn btn-outline-primary btn-sm" ngbDropdownToggle>Actions</button>
+          <div ngbDropdownMenu>
+            <button ngbDropdownItem>Edit</button>
+            <button ngbDropdownItem>Duplicate</button>
+            <button ngbDropdownItem>Move</button>
+            <div class="dropdown-divider"></div>
+            <button ngbDropdownItem>Delete</button>
+          </div>
+        </div>
+        <small class="text-muted">Default dropdown</small>
+      </td>
+    </tr>
+  </tbody>
+</table>

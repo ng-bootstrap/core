@@ -6,50 +6,65 @@ import { NgbdComponentsSharedModule, NgbdDemoList } from '../shared';
 import { NgbdApiPage } from '../shared/api-page/api.component';
 import { NgbdExamplesPage } from '../shared/examples-page/examples.component';
 import { NgbdAccordionBasic } from './demos/basic/accordion-basic';
+import { NgbdAccordionBasicModule } from './demos/basic/accordion-basic.module';
 import { NgbdAccordionConfig } from './demos/config/accordion-config';
+import { NgbdAccordionConfigModule } from './demos/config/accordion-config.module';
+import { NgbdAccordionHeader } from './demos/header/accordion-header';
+import { NgbdAccordionHeaderModule } from './demos/header/accordion-header.module';
 import { NgbdAccordionPreventchange } from './demos/preventchange/accordion-preventchange';
+import { NgbdAccordionPreventchangeModule } from './demos/preventchange/accordion-preventchange.module';
 import { NgbdAccordionStatic } from './demos/static/accordion-static';
+import { NgbdAccordionStaticModule } from './demos/static/accordion-static.module';
 import { NgbdAccordionToggle } from './demos/toggle/accordion-toggle';
-
-const DEMO_DIRECTIVES = [NgbdAccordionBasic, NgbdAccordionPreventchange, NgbdAccordionStatic, NgbdAccordionToggle, NgbdAccordionConfig];
+import { NgbdAccordionToggleModule } from './demos/toggle/accordion-toggle.module';
 
 const DEMOS = {
   basic: {
     title: 'Accordion',
-    code: require('!raw-loader!./demos/basic/accordion-basic'),
-    markup: require('!raw-loader!./demos/basic/accordion-basic.html'),
+    code: require('!raw-loader!./demos/basic/accordion-basic').default,
+    markup: require('!raw-loader!./demos/basic/accordion-basic.html').default,
     type: NgbdAccordionBasic
   },
   static: {
     title: 'One open panel at a time',
-    code: require('!!raw-loader!./demos/static/accordion-static'),
-    markup: require('!!raw-loader!./demos/static/accordion-static.html'),
+    code: require('!!raw-loader!./demos/static/accordion-static').default,
+    markup: require('!!raw-loader!./demos/static/accordion-static.html').default,
     type: NgbdAccordionStatic
   },
   toggle: {
     title: 'Toggle panels',
-    code: require('!!raw-loader!./demos/toggle/accordion-toggle'),
-    markup: require('!!raw-loader!./demos/toggle/accordion-toggle.html'),
+    code: require('!!raw-loader!./demos/toggle/accordion-toggle').default,
+    markup: require('!!raw-loader!./demos/toggle/accordion-toggle.html').default,
     type: NgbdAccordionToggle
+  },
+  header: {
+    title: 'Custom header',
+    code: require('!!raw-loader!./demos/header/accordion-header').default,
+    markup: require('!!raw-loader!./demos/header/accordion-header.html').default,
+    type: NgbdAccordionHeader
   },
   preventchange: {
     title: 'Prevent panel toggle',
-    code: require('!!raw-loader!./demos/preventchange/accordion-preventchange'),
-    markup: require('!!raw-loader!./demos/preventchange/accordion-preventchange.html'),
+    code: require('!!raw-loader!./demos/preventchange/accordion-preventchange').default,
+    markup: require('!!raw-loader!./demos/preventchange/accordion-preventchange.html').default,
     type: NgbdAccordionPreventchange
   },
   config: {
     title: 'Global configuration of accordions',
-    code: require('!!raw-loader!./demos/config/accordion-config'),
-    markup: require('!!raw-loader!./demos/config/accordion-config.html'),
+    code: require('!!raw-loader!./demos/config/accordion-config').default,
+    markup: require('!!raw-loader!./demos/config/accordion-config.html').default,
     type: NgbdAccordionConfig
   }
 };
 
 export const ROUTES = [
   { path: '', pathMatch: 'full', redirectTo: 'examples' },
-  { path: '',
+  {
+    path: '',
     component: ComponentWrapper,
+    data: {
+      bootstrap: 'https://getbootstrap.com/docs/%version%/components/collapse/#accordion-example'
+    },
     children: [
       { path: 'examples', component: NgbdExamplesPage },
       { path: 'api', component: NgbdApiPage }
@@ -58,9 +73,16 @@ export const ROUTES = [
 ];
 
 @NgModule({
-  imports: [NgbdSharedModule, NgbdComponentsSharedModule],
-  declarations: DEMO_DIRECTIVES,
-  entryComponents: DEMO_DIRECTIVES
+  imports: [
+    NgbdSharedModule,
+    NgbdComponentsSharedModule,
+    NgbdAccordionBasicModule,
+    NgbdAccordionConfigModule,
+    NgbdAccordionHeaderModule,
+    NgbdAccordionToggleModule,
+    NgbdAccordionStaticModule,
+    NgbdAccordionPreventchangeModule
+  ]
 })
 export class NgbdAccordionModule {
   constructor(demoList: NgbdDemoList) {

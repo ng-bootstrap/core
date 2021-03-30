@@ -1,20 +1,22 @@
+import {DebugElement} from '@angular/core';
 import {TestBed, ComponentFixture} from '@angular/core/testing';
 import {Key} from '../util/key';
 
 
 
-export function createGenericTestComponent<T>(html: string, type: {new (...args: any[]): T}): ComponentFixture<T> {
+export function createGenericTestComponent<T>(
+    html: string, type: {new (...args: any[]): T}, detectChanges = true): ComponentFixture<T> {
   TestBed.overrideComponent(type, {set: {template: html}});
   const fixture = TestBed.createComponent(type);
-  fixture.detectChanges();
+  if (detectChanges) {
+    fixture.detectChanges();
+  }
   return fixture as ComponentFixture<T>;
 }
 
 export type Browser = 'ie9' | 'ie10' | 'ie11' | 'ie' | 'edge' | 'chrome' | 'safari' | 'firefox';
 
 export function getBrowser(ua = window.navigator.userAgent) {
-  let browser = 'unknown';
-
   // IE < 11
   const msie = ua.indexOf('MSIE ');
   if (msie > 0) {
@@ -47,9 +49,7 @@ export function getBrowser(ua = window.navigator.userAgent) {
     return 'firefox';
   }
 
-  if (browser === 'unknown') {
-    throw new Error('Browser detection failed for: ' + ua);
-  }
+  throw new Error('Browser detection failed for: ' + ua);
 }
 
 export function isBrowser(browsers: Browser | Browser[], ua = window.navigator.userAgent) {
@@ -63,6 +63,14 @@ export function isBrowser(browsers: Browser | Browser[], ua = window.navigator.u
   }
 }
 
+export function isBrowserVisible(suiteName: string) {
+  if (document.hidden) {
+    console.warn(`${suiteName} tests were skipped because browser tab running these tests is hidden or inactive`);
+    return false;
+  }
+  return true;
+}
+
 export function createKeyEvent(key: Key, options: {type: 'keyup' | 'keydown'} = {
   type: 'keyup'
 }) {
@@ -72,4 +80,10 @@ export function createKeyEvent(key: Key, options: {type: 'keyup' | 'keydown'} = 
   Object.defineProperties(event, {which: {get: () => key}});
 
   return event;
+}
+
+export function triggerEvent(element: DebugElement | HTMLElement, eventName: string) {
+  const evt = document.createEvent('Event');
+  evt.initEvent(eventName, true, false);
+  (element instanceof DebugElement ? element.nativeElement : element).dispatchEvent(evt);
 }

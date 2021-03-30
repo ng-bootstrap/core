@@ -119,7 +119,7 @@ describe('NgbTime', () => {
     expect(t.toString()).toBe('10:30:30');
   });
 
-  it('should properly change undefined minutes', () => {
+  it('should properly change undefined seconds', () => {
     const t = new NgbTime(1, 20, undefined);
 
     t.changeSecond(30);
@@ -210,11 +210,11 @@ describe('NgbTime', () => {
 
   it('should have a validity flag', () => {
     expect(new NgbTime(11, 0, 30).isValid()).toBeTruthy();
-    expect(new NgbTime(null, 0, 30).isValid()).toBeFalsy();
-    expect(new NgbTime(11, null, 30).isValid()).toBeFalsy();
-    expect(new NgbTime(11, 0, null).isValid()).toBeFalsy();
-    expect(new NgbTime(null, 0, null).isValid()).toBeFalsy();
-    expect(new NgbTime(null, null, null).isValid()).toBeFalsy();
+    expect(new NgbTime(<any>null, 0, 30).isValid()).toBeFalsy();
+    expect(new NgbTime(11, <any>null, 30).isValid()).toBeFalsy();
+    expect(new NgbTime(11, 0, <any>null).isValid()).toBeFalsy();
+    expect(new NgbTime(<any>null, 0, <any>null).isValid()).toBeFalsy();
+    expect(new NgbTime(<any>null, <any>null, <any>null).isValid()).toBeFalsy();
   });
 
   it('should have a validity flag with optional seconds checking',

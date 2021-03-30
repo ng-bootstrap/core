@@ -12,7 +12,7 @@
   </div>
 </form>
 
-<ng-template #customDay let-date="date" let-currentMonth="currentMonth" let-selected="selected" let-disabled="disabled" let-focused="focused">
+<ng-template #customDay let-date let-currentMonth="currentMonth" let-selected="selected" let-disabled="disabled" let-focused="focused">
   <span class="custom-day" [class.weekend]="isWeekend(date)" [class.focused]="focused"
         [class.bg-primary]="selected" [class.hidden]="date.month !== currentMonth" [class.text-muted]="disabled">
     {{ date.day }}

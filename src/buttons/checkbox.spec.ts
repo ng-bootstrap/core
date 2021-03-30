@@ -1,8 +1,8 @@
-import {TestBed, ComponentFixture, async, fakeAsync, tick} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {createGenericTestComponent} from '../test/common';
 
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {NgbButtonsModule} from './buttons.module';
@@ -10,6 +10,9 @@ import {NgbCheckBox} from './checkbox';
 
 const createTestComponent = (html: string) =>
     createGenericTestComponent(html, TestComponent) as ComponentFixture<TestComponent>;
+
+const createOnPushTestComponent = (html: string) =>
+    createGenericTestComponent(html, TestComponentOnPush) as ComponentFixture<TestComponentOnPush>;
 
 function getLabel(nativeEl: HTMLElement): HTMLElement {
   return <HTMLElement>nativeEl.querySelector('label');
@@ -22,8 +25,10 @@ function getInput(nativeEl: HTMLElement): HTMLInputElement {
 describe('NgbCheckBox', () => {
 
   beforeEach(() => {
-    TestBed.configureTestingModule(
-        {declarations: [TestComponent], imports: [NgbButtonsModule, FormsModule, ReactiveFormsModule]});
+    TestBed.configureTestingModule({
+      declarations: [TestComponent, TestComponentOnPush],
+      imports: [NgbButtonsModule, FormsModule, ReactiveFormsModule]
+    });
   });
 
   describe('bindings', () => {
@@ -151,10 +156,46 @@ describe('NgbCheckBox', () => {
 
   });
 
+  describe('on push', () => {
+    it('should set initial model value', fakeAsync(() => {
+         const fixture = createOnPushTestComponent(`
+        <label ngbButtonLabel>
+          <input type="checkbox" ngbButton [ngModel]="true">
+        </label>
+      `);
+
+         fixture.detectChanges();
+         tick();
+         fixture.detectChanges();
+         expect(getInput(fixture.debugElement.nativeElement).checked).toBeTruthy();
+         expect(getLabel(fixture.debugElement.nativeElement)).toHaveCssClass('active');
+       }));
+  });
+
+  describe('auto attributes', () => {
+
+    it('should not have autocomplete attribute set to off', () => {
+      const fixture = createTestComponent(`
+        <label ngbButtonLabel>
+          <input type="checkbox" ngbButton>
+        </label>
+      `);
+
+      fixture.detectChanges();
+      const input = fixture.debugElement.nativeElement.querySelector('input');
+      expect(input.getAttribute('autocomplete')).toBeNull();
+    });
+
+  });
+
 });
 
 @Component({selector: 'test-cmp', template: ''})
 class TestComponent {
   disabled;
   model;
+}
+
+@Component({selector: 'test-cmp-on-push', template: '', changeDetection: ChangeDetectionStrategy.OnPush})
+class TestComponentOnPush {
 }

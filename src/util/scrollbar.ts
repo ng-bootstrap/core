@@ -19,28 +19,34 @@ export type CompensationReverter = () => void;
  */
 @Injectable({providedIn: 'root'})
 export class ScrollBar {
-  constructor(@Inject(DOCUMENT) private _document) {}
+  constructor(@Inject(DOCUMENT) private _document: any) {}
 
   /**
-   * Detects if a scrollbar is present and if yes, already compensates for its
-   * removal by adding an equivalent padding on the right of the body.
+   * To be called right before a potential vertical scrollbar would be removed:
+   *
+   * - if there was a scrollbar, adds some compensation padding to the body
+   * to keep the same layout as when the scrollbar is there
+   * - if there was none, there is nothing to do
    *
    * @return a callback used to revert the compensation (noop if there was none,
    * otherwise a function removing the padding)
    */
-  compensate(): CompensationReverter { return !this._isPresent() ? noop : this._adjustBody(this._getWidth()); }
+  compensate(): CompensationReverter {
+    const width = this._getWidth();
+    return !this._isPresent(width) ? noop : this._adjustBody(width);
+  }
 
   /**
    * Adds a padding of the given width on the right of the body.
    *
    * @return a callback used to revert the padding to its previous value
    */
-  private _adjustBody(width: number): CompensationReverter {
+  private _adjustBody(scrollbarWidth: number): CompensationReverter {
     const body = this._document.body;
-    const userSetPadding = body.style.paddingRight;
-    const paddingAmount = parseFloat(window.getComputedStyle(body)['padding-right']);
-    body.style['padding-right'] = `${paddingAmount + width}px`;
-    return () => body.style['padding-right'] = userSetPadding;
+    const userSetPaddingStyle = body.style.paddingRight;
+    const actualPadding = parseFloat(window.getComputedStyle(body)['padding-right']);
+    body.style['padding-right'] = `${actualPadding + scrollbarWidth}px`;
+    return () => body.style['padding-right'] = userSetPaddingStyle;
   }
 
   /**
@@ -48,9 +54,11 @@ export class ScrollBar {
    *
    * @return true if scrollbar is present, false otherwise
    */
-  private _isPresent(): boolean {
+  private _isPresent(scrollbarWidth: number): boolean {
     const rect = this._document.body.getBoundingClientRect();
-    return rect.left + rect.right < window.innerWidth;
+    const bodyToViewportGap = window.innerWidth - (rect.left + rect.right);
+    const uncertainty = 0.1 * scrollbarWidth;
+    return bodyToViewportGap >= scrollbarWidth - uncertainty;
   }
 
   /**

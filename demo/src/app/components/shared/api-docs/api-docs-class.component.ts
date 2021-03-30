@@ -29,7 +29,7 @@ export class NgbdApiDocsClass {
 
   @Input() set type(typeName: string) {
     this.apiDocs = docs[typeName];
-  };
+  }
 
   methodSignature(method: MethodDesc): string { return signature(method); }
 

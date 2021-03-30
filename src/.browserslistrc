@@ -1,0 +1,8 @@
+# Source: https://github.com/twbs/bootstrap/blob/v4.1.3/.browserslistrc
+# And intersection with Angular list: https://angular.io/guide/browser-support#browser-support
+
+last 2 major versions
+not dead
+Firefox ESR
+Edge 18
+IE 11

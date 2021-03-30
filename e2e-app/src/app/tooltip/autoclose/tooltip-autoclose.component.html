@@ -1,0 +1,25 @@
+<h3>
+  Tooltip autoclose tests
+  <span class="ml-1 badge {{d.isOpen() ? 'badge-success' : 'badge-danger'}}" id="open-status">{{d.isOpen() ? 'open' : 'closed'}}</span>
+</h3>
+
+<form id="default" (contextmenu)="$event.preventDefault()">
+  <div class="form-group form-inline">
+
+    <button #d="ngbTooltip" ngbTooltip="Tooltip here" [autoClose]="autoClose" triggers="click" type="button" class="btn btn-outline-secondary ml-2">
+      Tooltip
+    </button>
+
+    <div ngbDropdown class="d-inline-block ml-3">
+      <button class="btn btn-outline-secondary" id="autoclose-dropdown" ngbDropdownToggle>Choose Autoclose</button>
+      <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+        <button class="dropdown-item" id="autoclose-true" (click)="autoClose = true">True</button>
+        <button class="dropdown-item" id="autoclose-false" (click)="autoClose = false">False</button>
+        <button class="dropdown-item" id="autoclose-outside" (click)="autoClose = 'outside'">'Outside'</button>
+        <button class="dropdown-item" id="autoclose-inside" (click)="autoClose = 'inside'">'Inside'</button>
+      </div>
+    </div>
+
+    <button class="btn btn-outline-secondary ml-1" id="outside-button">Outside button</button>
+  </div>
+</form>

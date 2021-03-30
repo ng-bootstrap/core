@@ -6,42 +6,49 @@ import { NgbdComponentsSharedModule, NgbdDemoList } from '../shared';
 import { NgbdApiPage } from '../shared/api-page/api.component';
 import { NgbdExamplesPage } from '../shared/examples-page/examples.component';
 import { NgbdButtonsCheckbox } from './demos/checkbox/buttons-checkbox';
+import { NgbdButtonsCheckboxModule } from './demos/checkbox/buttons-checkbox.module';
+import { NgbdButtonsCheckboxReactiveModule } from './demos/checkboxreactive/buttons-checkbox-reactive.module';
 import { NgbdButtonsCheckboxreactive } from './demos/checkboxreactive/buttons-checkboxreactive';
 import { NgbdButtonsRadio } from './demos/radio/buttons-radio';
+import { NgbdButtonsRadioModule } from './demos/radio/buttons-radio.module';
+import { NgbdButtonsRadioReactiveModule } from './demos/radioreactive/buttons-radio-reactive.module';
 import { NgbdButtonsRadioreactive } from './demos/radioreactive/buttons-radioreactive';
-
-const DEMO_DIRECTIVES = [NgbdButtonsCheckbox, NgbdButtonsCheckboxreactive, NgbdButtonsRadio, NgbdButtonsRadioreactive];
 
 const DEMOS = {
   checkbox: {
     title: 'Checkbox buttons',
     type: NgbdButtonsCheckbox,
-    code: require('!!raw-loader!./demos/checkbox/buttons-checkbox'),
-    markup: require('!!raw-loader!./demos/checkbox/buttons-checkbox.html')
+    code: require('!!raw-loader!./demos/checkbox/buttons-checkbox').default,
+    markup: require('!!raw-loader!./demos/checkbox/buttons-checkbox.html').default
   },
   checkboxreactive: {
     title: 'Checkbox buttons (Reactive Forms)',
     type: NgbdButtonsCheckboxreactive,
-    code: require('!!raw-loader!./demos/checkboxreactive/buttons-checkboxreactive'),
-    markup: require('!!raw-loader!./demos/checkboxreactive/buttons-checkboxreactive.html')
+    code: require('!!raw-loader!./demos/checkboxreactive/buttons-checkboxreactive').default,
+    markup: require('!!raw-loader!./demos/checkboxreactive/buttons-checkboxreactive.html').default
   },
   radio: {
     title: 'Radio buttons',
     type: NgbdButtonsRadio,
-    code: require('!!raw-loader!./demos/radio/buttons-radio'),
-    markup: require('!!raw-loader!./demos/radio/buttons-radio.html')
+    code: require('!!raw-loader!./demos/radio/buttons-radio').default,
+    markup: require('!!raw-loader!./demos/radio/buttons-radio.html').default
   },
   radioreactive: {
     title: 'Radio buttons (Reactive Forms)',
     type: NgbdButtonsRadioreactive,
-    code: require('!!raw-loader!./demos/radioreactive/buttons-radioreactive'),
-    markup: require('!!raw-loader!./demos/radioreactive/buttons-radioreactive.html')
-  }};
+    code: require('!!raw-loader!./demos/radioreactive/buttons-radioreactive').default,
+    markup: require('!!raw-loader!./demos/radioreactive/buttons-radioreactive.html').default
+  }
+};
 
 export const ROUTES = [
   { path: '', pathMatch: 'full', redirectTo: 'examples' },
-  { path: '',
+  {
+    path: '',
     component: ComponentWrapper,
+    data: {
+      bootstrap: 'https://getbootstrap.com/docs/%version%/components/buttons/#checkbox-and-radio-buttons'
+    },
     children: [
       { path: 'examples', component: NgbdExamplesPage },
       { path: 'api', component: NgbdApiPage }
@@ -50,9 +57,14 @@ export const ROUTES = [
 ];
 
 @NgModule({
-  imports: [NgbdSharedModule, NgbdComponentsSharedModule ],
-  declarations: DEMO_DIRECTIVES,
-  entryComponents: DEMO_DIRECTIVES
+  imports: [
+    NgbdSharedModule,
+    NgbdComponentsSharedModule,
+    NgbdButtonsCheckboxModule,
+    NgbdButtonsCheckboxReactiveModule,
+    NgbdButtonsRadioModule,
+    NgbdButtonsRadioReactiveModule
+  ]
 })
 export class NgbdButtonsModule {
   constructor(demoList: NgbdDemoList) {
