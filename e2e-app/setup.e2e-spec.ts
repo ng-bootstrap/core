@@ -1,12 +1,24 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import {ConsoleMessage} from 'playwright';
-import {browserName, test, launchOptions} from './playwright.conf';
+import {BrowserContextOptions, LaunchOptions} from 'playwright';
+import {Playwright} from '../playwright/controller';
+import {setupTest, test} from './playwright.conf';
 
 beforeAll(async() => {
   Error.stackTraceLimit = Infinity;
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000000;
   try {
+    process.env.NGB_BROWSER = (process.env.NGB_BROWSER || 'chromium').trim();
+    const browserName = process.env.NGB_BROWSER;
+    const launchOptions: LaunchOptions = {headless: !!process.env.CI};
+    if (process.env.NGB_SLOW_MOTION) {
+      launchOptions.slowMo = 1000;
+    }
+    const contextOptions: BrowserContextOptions = {
+      viewport: {width: 1280, height: 720},
+      recordVideo: process.env.NGB_VIDEO ? {dir: `test-videos/e2e/${browserName}`} : undefined
+    };
+    setupTest(new Playwright(browserName, launchOptions, contextOptions));
     console.log(`Launch browser ${browserName} with`, launchOptions);
     await test.newPage();
   } catch (e) {
@@ -31,7 +43,7 @@ beforeAll(async() => {
 });
 
 afterAll(async() => {
-  if (browserName === 'chromium') {
+  if (test.browserName === 'chromium') {
     try {
       console.log('Retrieving coverage...');
       const coverage: string = await test.page.evaluate('JSON.stringify(window.__coverage__);');

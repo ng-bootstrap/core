@@ -61,9 +61,9 @@ describe('Modal', () => {
   it('should close modal when dragging from backdrop -> dialog', async() => {
     await openModal();
     await mouseMove(SELECTOR_MODAL_WINDOW);
-    await test.page.mouse.down();
+    await test.mouse.down();
     await mouseMove(SELECTOR_MODAL_DIALOG);
-    await test.page.mouse.up();
+    await test.mouse.up();
 
     await waitForModalCount(0, 'The modal should be closed on drag from backdrop -> dialog');
     await waitDismissReason('Click', `Modal should have been dismissed with 'Click' reason`);
@@ -72,9 +72,9 @@ describe('Modal', () => {
   it('should NOT close modal when dragging from dialog -> backdrop', async() => {
     await openModal();
     await mouseMove(SELECTOR_MODAL_DIALOG);
-    await test.page.mouse.down();
+    await test.mouse.down();
     await mouseMove(SELECTOR_MODAL_WINDOW);
-    await test.page.mouse.up();
+    await test.mouse.up();
 
     await waitForNoChange();
     await waitForModalCount(1, 'The modal should stay opened on drag from dialog -> backdrop');

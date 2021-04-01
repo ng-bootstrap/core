@@ -7,7 +7,7 @@ import {baseUrl, test} from '../../playwright.conf';
  * https://playwright.dev/docs/api/class-keyboard?_highlight=keyboard#keyboardpresskey-options
  */
 export const sendKey = async(key: string) => {
-  await test.page.keyboard.press(key);
+  await test.keyboard.press(key);
 };
 
 /**
@@ -128,5 +128,5 @@ export const mouseMove = async(selector: string) => {
   const rect = await getBoundingBox(selector);
   const x = rect.x + rect.width / 2;
   const y = rect.y + rect.height / 2;
-  await test.page.mouse.move(x, y);
+  await test.mouse.move(x, y);
 };
