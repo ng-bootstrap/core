@@ -299,6 +299,10 @@ export class NgbDropdown implements AfterContentInit, OnDestroy {
    * Toggles the dropdown menu.
    */
   toggle(): void {
+    if (this._anchor.nativeElement !== document.activeElement) {
+      return;
+    }
+
     if (this.isOpen()) {
       this.close();
     } else {
