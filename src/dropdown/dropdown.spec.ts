@@ -55,7 +55,7 @@ describe('ngb-dropdown', () => {
   it('should be closed and down by default', () => {
     const html = `
       <div ngbDropdown>
-          <button ngbDropdownAnchor></button>
+          <button type="button" ngbDropdownAnchor></button>
           <div ngbDropdownMenu>
             <a class="dropdown-item">dropDown item</a>
             <a class="dropdown-item">dropDown item</a>
@@ -71,7 +71,7 @@ describe('ngb-dropdown', () => {
   it('should have dropup CSS class if placed on top', () => {
     const html = `
       <div ngbDropdown placement="top">
-          <button ngbDropdownAnchor></button>
+          <button type="button" ngbDropdownAnchor></button>
           <div ngbDropdownMenu>
             <a class="dropdown-item">dropDown item</a>
             <a class="dropdown-item">dropDown item</a>
@@ -87,7 +87,7 @@ describe('ngb-dropdown', () => {
   it('should have dropdown CSS class if placement is other than top', () => {
     const html = `
       <div ngbDropdown placement="bottom">
-          <button ngbDropdownAnchor></button>
+          <button type="button" ngbDropdownAnchor></button>
           <div ngbDropdownMenu>
             <a class="dropdown-item">dropDown item</a>
             <a class="dropdown-item">dropDown item</a>
@@ -103,7 +103,7 @@ describe('ngb-dropdown', () => {
   it('should allow setting a custom dropdown class', () => {
     const html = `
       <div ngbDropdown placement="bottom" class="my-class" [dropdownClass]="dropdownClass">
-          <button ngbDropdownAnchor></button>
+          <button type="button" ngbDropdownAnchor></button>
           <div ngbDropdownMenu>
             <a class="dropdown-item">dropDown item</a>
           </div>
@@ -134,7 +134,7 @@ describe('ngb-dropdown', () => {
   it('should allow setting a custom dropdown class (container="body")', () => {
     const html = `
       <div ngbDropdown placement="bottom" container="body" class="my-class" [dropdownClass]="dropdownClass">
-          <button ngbDropdownAnchor></button>
+          <button type="button" ngbDropdownAnchor></button>
           <div ngbDropdownMenu>
             <a class="dropdown-item">dropDown item</a>
           </div>
@@ -178,7 +178,7 @@ describe('ngb-dropdown', () => {
   it('should have x-placement attribute reflecting placement', () => {
     const html = `
       <div ngbDropdown placement="bottom-right">
-          <button ngbDropdownAnchor></button>
+          <button type="button" ngbDropdownAnchor></button>
           <div ngbDropdownMenu>
             <a class="dropdown-item">dropDown item</a>
             <a class="dropdown-item">dropDown item</a>
@@ -196,7 +196,7 @@ describe('ngb-dropdown', () => {
 
     const html = `
     <div ngbDropdown placement="bottom-right">
-      <button ngbDropdownAnchor></button>
+      <button type="button" ngbDropdownAnchor></button>
       <div *ngIf="true" ngbDropdownMenu>
         <a class="dropdown-item">dropDown item</a>
         <a class="dropdown-item">dropDown item</a>
@@ -213,7 +213,7 @@ describe('ngb-dropdown', () => {
   it('should be open initially if open expression is true', () => {
     const html = `
       <div ngbDropdown [open]="true">
-          <button ngbDropdownAnchor></button>
+          <button type="button" ngbDropdownAnchor></button>
           <div ngbDropdownMenu>
             <a class="dropdown-item">dropDown item</a>
             <a class="dropdown-item">dropDown item</a>
@@ -229,7 +229,7 @@ describe('ngb-dropdown', () => {
   it('should toggle open on "open" binding change', () => {
     const html = `
       <div ngbDropdown [open]="isOpen">
-        <button ngbDropdownAnchor></button>
+        <button type="button" ngbDropdownAnchor></button>
         <div ngbDropdownMenu></div>
       </div>`;
 
@@ -253,7 +253,7 @@ describe('ngb-dropdown', () => {
       <button (click)="drop.close(); $event.stopPropagation()">Close</button>
       <button (click)="drop.toggle(); $event.stopPropagation()">Toggle</button>
       <div ngbDropdown #drop="ngbDropdown">
-        <button ngbDropdownAnchor></button>
+        <button type="button" ngbDropdownAnchor></button>
         <div ngbDropdownMenu></div>
       </div>`;
 
