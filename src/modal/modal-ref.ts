@@ -49,6 +49,7 @@ export class NgbModalRef<T = any> {
     if (this._contentRef && this._contentRef.componentRef) {
       return this._contentRef.componentRef.instance;
     }
+    return undefined as any;
   }
 
   /**
