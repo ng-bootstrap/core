@@ -104,7 +104,14 @@
               "demo/src/style/app.scss",
               "demo/src/style/demos.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "aot": false,
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -138,7 +145,8 @@
             "ie": {
               "tsConfig": "demo/tsconfig.ie.json"
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -196,7 +204,14 @@
               "e2e-app/src/style/app.scss"
             ],
             "scripts": [],
-            "progress": false
+            "progress": false,
+            "aot": false,
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -207,14 +222,14 @@
                 }
               ],
               "optimization": true,
-              "sourceMap": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "ngx-build-plus:dev-server",
@@ -273,7 +288,14 @@
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "aot": false,
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -293,7 +315,8 @@
               "buildOptimizer": true,
               "progress": false
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -325,7 +348,9 @@
             "outputPath": "ssr-app/dist/server",
             "main": "ssr-app/server.ts",
             "tsConfig": "ssr-app/tsconfig.server.json",
-            "progress": false
+            "progress": false,
+            "sourceMap": true,
+            "optimization": false
           },
           "configurations": {
             "production": {
@@ -336,7 +361,8 @@
                 }
               ]
             }
-          }
+          },
+          "defaultConfiguration": ""
         }
       }
     },
@@ -355,7 +381,6 @@
             "main": "test-app/src/main.ts",
             "polyfills": "test-app/src/polyfills.ts",
             "tsConfig": "test-app/tsconfig.json",
-            "aot": true,
             "assets": [
               "test-app/src/favicon.ico"
             ],
@@ -363,7 +388,13 @@
               "node_modules/bootstrap/dist/css/bootstrap.css",
               "test-app/src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -381,7 +412,8 @@
               "vendorChunk": false,
               "buildOptimizer": true
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
