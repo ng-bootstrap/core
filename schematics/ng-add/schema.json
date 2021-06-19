@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "id": "ng-bootstrap-ng-add",
+  "$id": "ng-bootstrap-ng-add",
   "title": "ng-bootstrap ng-add schematic",
   "type": "object",
   "properties": {
