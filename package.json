@@ -57,7 +57,8 @@
     "schematics:build": "rimraf schematics/dist && tsc --project schematics/tsconfig.json",
     "schematics:tdd": "ts-node-dev --respawn --project misc/tsconfig.json node_modules/jasmine/bin/jasmine schematics/**/*.spec.ts",
     "schematics:test": "ts-node --project misc/tsconfig.json node_modules/jasmine/bin/jasmine schematics/**/*.spec.ts",
-    "ci": "yarn check-ts && yarn test && yarn e2e && yarn build --progress false && yarn ssr"
+    "ci": "yarn check-ts && yarn test && yarn e2e && yarn build --progress false && yarn ssr",
+    "prepare": "is-ci || husky install scripts/.husky"
   },
   "repository": {
     "type": "git",
@@ -111,7 +112,8 @@
     "fs-extra": "^9.0.1",
     "gh-pages": "^3.1.0",
     "glob": "^7.1.1",
-    "husky": "4.3.0",
+    "husky": "^6.0.0",
+    "is-ci": "^3.0.0",
     "jasmine": "~3.6.3",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",
