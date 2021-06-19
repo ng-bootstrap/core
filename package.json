@@ -124,7 +124,7 @@
     "karma-sauce-launcher": "^4.3.3",
     "marked": "^1.2.3",
     "ng-packagr": "^12.0.6",
-    "ngx-build-plus": "^11.0.0",
+    "ngx-build-plus": "^12.0.1",
     "nyc": "14.1.1",
     "playwright": "^1.9.1",
     "prismjs": "1.22.0",
