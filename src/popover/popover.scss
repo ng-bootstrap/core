@@ -1,3 +1,4 @@
+@use "sass:math";
 
 $arrow-size: 1rem;
 
@@ -5,7 +6,7 @@ ngb-popover-window {
   &.bs-popover-top > .arrow,
   &.bs-popover-bottom > .arrow {
     left: 50%;
-    margin-left: -$arrow-size / 2;
+    margin-left: -(math.div($arrow-size, 2));
   }
 
   &.bs-popover-top-left > .arrow,
@@ -22,7 +23,7 @@ ngb-popover-window {
   &.bs-popover-left > .arrow,
   &.bs-popover-right > .arrow {
     top: 50%;
-    margin-top: -$arrow-size / 2;
+    margin-top: -(math.div($arrow-size, 2));
   }
 
   &.bs-popover-left-top > .arrow,

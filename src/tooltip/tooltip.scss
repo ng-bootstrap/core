@@ -1,3 +1,4 @@
+@use "sass:math";
 
 $arrow-size: 0.8rem;
 
@@ -10,7 +11,7 @@ ngb-tooltip-window {
 
   &.bs-tooltip-top .arrow,
   &.bs-tooltip-bottom .arrow {
-    left: calc(50% - #{$arrow-size / 2});
+    left: calc(50% - math.div($arrow-size, 2));
   }
 
   &.bs-tooltip-top-left .arrow,
@@ -26,7 +27,7 @@ ngb-tooltip-window {
 
   &.bs-tooltip-left .arrow,
   &.bs-tooltip-right .arrow {
-    top: calc(50% - #{$arrow-size / 2});
+    top: calc(50% - math.div($arrow-size, 2));
   }
 
   &.bs-tooltip-left-top .arrow,
