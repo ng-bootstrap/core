@@ -21,6 +21,7 @@ const FILTER_REGEX = /[^0-9]/g;
  * A directive that helps with wth picking hours, minutes and seconds.
  */
 @Component({
+  exportAs: 'ngbTimepicker',
   selector: 'ngb-timepicker',
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['./timepicker.scss'],
@@ -209,21 +210,33 @@ export class NgbTimepicker implements ControlValueAccessor,
 
   setDisabledState(isDisabled: boolean) { this.disabled = isDisabled; }
 
+  /**
+   * Increments the hours by the given step.
+   */
   changeHour(step: number) {
     this.model.changeHour(step);
     this.propagateModelChange();
   }
 
+  /**
+   * Increments the minutes by the given step.
+   */
   changeMinute(step: number) {
     this.model.changeMinute(step);
     this.propagateModelChange();
   }
 
+  /**
+   * Increments the seconds by the given step.
+   */
   changeSecond(step: number) {
     this.model.changeSecond(step);
     this.propagateModelChange();
   }
 
+  /**
+   * Update hours with the new value.
+   */
   updateHour(newVal: string) {
     const isPM = this.model.hour >= 12;
     const enteredHour = toInteger(newVal);
@@ -235,11 +248,17 @@ export class NgbTimepicker implements ControlValueAccessor,
     this.propagateModelChange();
   }
 
+  /**
+   * Update minutes with the new value.
+   */
   updateMinute(newVal: string) {
     this.model.updateMinute(toInteger(newVal));
     this.propagateModelChange();
   }
 
+  /**
+   * Update seconds with the new value.
+   */
   updateSecond(newVal: string) {
     this.model.updateSecond(toInteger(newVal));
     this.propagateModelChange();

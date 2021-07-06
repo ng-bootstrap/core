@@ -183,7 +183,6 @@ describe('ngb-timepicker', () => {
        }));
   });
 
-
   describe('model updates in response to increment / decrement button clicks', () => {
 
     it('should increment / decrement hours', fakeAsync(() => {
@@ -1615,6 +1614,32 @@ describe('ngb-timepicker', () => {
          tick();
          fixture.detectChanges();
          expectToDisplayTime(fixture.nativeElement, '13:30');
+       }));
+  });
+
+  describe('on export', () => {
+
+    it('should change active time by calling change on an exported directive instance', fakeAsync(() => {
+         const html = `
+        <ngb-timepicker #myTimepicker="ngbTimepicker" [ngModel]="model"></ngb-timepicker>
+        <button type="button" id="hours" (click)="myTimepicker.changeHour(1)"></button>
+        <button type="button" id="minutes" (click)="myTimepicker.changeMinute(1)"></button>`;
+
+         const fixture = createTestComponent(html);
+         fixture.componentInstance.model = {hour: 1, minute: 23, second: 45};
+         fixture.detectChanges();
+         tick();
+         fixture.detectChanges();
+
+         const buttonChangeHours = fixture.nativeElement.querySelector('#hours') as HTMLButtonElement;
+         buttonChangeHours.click();
+         fixture.detectChanges();
+         expectToDisplayTime(fixture.nativeElement, '02:23');
+
+         const buttonChangeMinutes = fixture.nativeElement.querySelector('#minutes') as HTMLButtonElement;
+         buttonChangeMinutes.click();
+         fixture.detectChanges();
+         expectToDisplayTime(fixture.nativeElement, '02:24');
        }));
   });
 });
