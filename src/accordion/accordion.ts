@@ -117,6 +117,27 @@ export class NgbPanel implements AfterContentChecked {
   @Input() cardClass: string;
 
   /**
+   * An optional style applied to the accordion button element that represents the button in the accordion header.
+   *
+   *
+   */
+  @Input() buttonStyle: {[klass: string]: any;};
+
+  /**
+   * An optional style applied to the accordion header element that wraps the title.
+   *
+   *
+   */
+  @Input() headerStyle: {[klass: string]: any;};
+
+  /**
+   * An optional style applied to the accordion body element that wraps the content.
+   *
+   *
+   */
+  @Input() bodyStyle: {[klass: string]: any;};
+
+  /**
    * An event emitted when the panel is shown, after the transition. It has no payload.
    *
    * @since 8.0.0
@@ -185,19 +206,19 @@ export interface NgbPanelChangeEvent {
   host: {'class': 'accordion', 'role': 'tablist', '[attr.aria-multiselectable]': '!closeOtherPanels'},
   template: `
     <ng-template #t ngbPanelHeader let-panel>
-      <button class="accordion-button" [ngbPanelToggle]="panel">
+      <button class="accordion-button" [ngStyle]="panel.buttonStyle" [ngbPanelToggle]="panel">
         {{panel.title}}<ng-template [ngTemplateOutlet]="panel.titleTpl?.templateRef"></ng-template>
       </button>
     </ng-template>
     <ng-template ngFor let-panel [ngForOf]="panels">
       <div [class]="'accordion-item ' + (panel.cardClass || '')">
-        <div role="tab" id="{{panel.id}}-header" [class]="'accordion-header ' + (panel.type ? 'bg-'+panel.type: type ? 'bg-'+type : '')">
+        <div role="tab" id="{{panel.id}}-header" [class]="'accordion-header ' + (panel.type ? 'bg-'+panel.type: type ? 'bg-'+type : '')" [ngStyle]="panel.headerStyle">
           <ng-template [ngTemplateOutlet]="panel.headerTpl?.templateRef || t"
                        [ngTemplateOutletContext]="{$implicit: panel, opened: panel.isOpen}"></ng-template>
         </div>
         <div id="{{panel.id}}" role="tabpanel" [attr.aria-labelledby]="panel.id + '-header'"
              *ngIf="!destroyOnHide || panel.isOpen || panel.transitionRunning">
-          <div class="accordion-body">
+          <div class="accordion-body" [ngStyle]="panel.bodyStyle">
             <ng-template [ngTemplateOutlet]="panel.contentTpl?.templateRef || null"></ng-template>
           </div>
         </div>
