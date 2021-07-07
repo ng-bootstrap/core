@@ -29,6 +29,7 @@ import {TypeaheadFocusComponent} from './typeahead/focus/typeahead-focus.compone
 import {TimepickerFilterComponent} from './timepicker/filter/timepicker-filter.component';
 import {TimepickerNavigationComponent} from './timepicker/navigation/timepicker-navigation.component';
 import {TypeaheadValidationComponent} from './typeahead/validation/typeahead-validation.component';
+import {ScrollComponent} from './position/scroll/scroll.component';
 
 
 @NgModule({
@@ -48,6 +49,7 @@ import {TypeaheadValidationComponent} from './typeahead/validation/typeahead-val
     ModalStackComponent,
     ModalStackConfirmationComponent,
     PopoverAutocloseComponent,
+    ScrollComponent,
     TooltipAutocloseComponent,
     TooltipFocusComponent,
     TooltipPositionComponent,

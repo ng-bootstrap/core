@@ -1,0 +1,21 @@
+<h3>Position with scroll tests</h3>
+
+<div>
+  <button class="btn btn-outline-secondary ml-1" id="container-null" (click)="container = null">Append to widget</button>
+  <button class="btn btn-outline-secondary ml-1" id="container-body" (click)="container = 'body'">Append to body</button>
+</div>
+<div id="outer-container" class="p-3" style="height: 400px; overflow: scroll">
+  <div id="inner-container" class="position-relative d-inline-block p-3" style="height: 200px; overflow: scroll;">
+    <div class="position-relative d-flex justify-content-center align-items-center" style="height: 250px;">
+      <button id="tooltip-target" ngbTooltip="Tooltip here" [autoClose]="false" triggers="click" type="button"
+        class="btn btn-outline-secondary ml-2" [container]="container">
+        Tooltip
+      </button>
+      <button id="popover-target" ngbPopover="Popover here" [container]="container" [autoClose]="false" triggers="click" type="button"
+        class="btn btn-outline-secondary ml-2" [container]="container">
+        Popover
+      </button>
+    </div>
+  </div>
+  <div style="height: 300px; width: 100%;"></div>
+</div>

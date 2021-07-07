@@ -14,6 +14,7 @@ import {ModalNestingComponent} from './modal/nesting/modal-nesting.component';
 import {ModalStackComponent} from './modal/stack/modal-stack.component';
 import {ModalStackConfirmationComponent} from './modal/stack-confirmation/modal-stack-confirmation.component';
 import {PopoverAutocloseComponent} from './popover/autoclose/popover-autoclose.component';
+import {ScrollComponent} from './position/scroll/scroll.component';
 import {TooltipAutocloseComponent} from './tooltip/autoclose/tooltip-autoclose.component';
 import {TooltipFocusComponent} from './tooltip/focus/tooltip-focus.component';
 import {TooltipPositionComponent} from './tooltip/position/tooltip-position.component';
@@ -50,8 +51,7 @@ export const routes: Routes = [
       {path: 'focus', component: DropdownFocusComponent}, {path: 'position', component: DropdownPositionComponent}
     ]
   },
-  {path: 'popover', children: [{path: 'autoclose', component: PopoverAutocloseComponent}]},
-  {
+  {path: 'popover', children: [{path: 'autoclose', component: PopoverAutocloseComponent}]}, {
     path: 'tooltip',
     children: [
       {path: 'autoclose', component: TooltipAutocloseComponent}, {path: 'focus', component: TooltipFocusComponent},
@@ -72,6 +72,7 @@ export const routes: Routes = [
       {path: 'filter', component: TimepickerFilterComponent},
     ]
   },
+  {path: 'position', children: [{path: 'scroll', component: ScrollComponent}]}
 ];
 
 export const routing: ModuleWithProviders<RouterModule> = RouterModule.forRoot(routes, {useHash: true});
