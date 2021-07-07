@@ -23,6 +23,7 @@ export class Positioning {
     let elPosition: ClientRect;
     let parentOffset: ClientRect = {width: 0, height: 0, top: 0, bottom: 0, left: 0, right: 0};
 
+    let scrollTop = 0, scrollLeft = 0;
     if (this.getStyle(element, 'position') === 'fixed') {
       elPosition = element.getBoundingClientRect();
       elPosition = {
@@ -44,12 +45,17 @@ export class Positioning {
 
       parentOffset.top += offsetParentEl.clientTop;
       parentOffset.left += offsetParentEl.clientLeft;
+      const tagname = offsetParentEl.tagName.toLowerCase();
+      if (tagname !== 'html' && tagname !== 'body') {
+        scrollTop = offsetParentEl.scrollTop;
+        scrollLeft = offsetParentEl.scrollLeft;
+      }
     }
 
-    elPosition.top -= parentOffset.top;
-    elPosition.bottom -= parentOffset.top;
-    elPosition.left -= parentOffset.left;
-    elPosition.right -= parentOffset.left;
+    elPosition.top -= parentOffset.top - scrollTop;
+    elPosition.bottom -= parentOffset.top - scrollTop;
+    elPosition.left -= parentOffset.left - scrollLeft;
+    elPosition.right -= parentOffset.left - scrollLeft;
 
     if (round) {
       elPosition.top = Math.round(elPosition.top);
