@@ -219,4 +219,37 @@ describe('NgbTime', () => {
 
   it('should have a validity flag with optional seconds checking',
      () => { expect(new NgbTime(11, 0).isValid(false)).toBeTruthy(); });
+
+  it('should compare times, if seconds not specified in any compare only by hour and minutes', () => {
+    const t = new NgbTime(11, 15, 30);
+    expect(t.before(t)).toBeFalsy();
+    expect(t.after(t)).toBeFalsy();
+
+    expect(new NgbTime(11, 15, 31).after(t)).toBeTruthy();
+    expect(new NgbTime(11, 15, 29).after(t)).toBeFalsy();
+    expect(new NgbTime(11, 15, null).after(t)).toBeFalsy();
+    expect(new NgbTime(11, 16, null).after(t)).toBeTruthy();
+    expect(new NgbTime(11, 14, null).after(t)).toBeFalsy();
+    expect(new NgbTime(12, 0, null).after(t)).toBeTruthy();
+    expect(new NgbTime(10, 0, null).after(t)).toBeFalsy();
+
+    expect(new NgbTime(11, 15, 31).before(t)).toBeFalsy();
+    expect(new NgbTime(11, 15, 29).before(t)).toBeTruthy();
+    expect(new NgbTime(11, 15, null).before(t)).toBeFalsy();
+    expect(new NgbTime(11, 16, null).before(t)).toBeFalsy();
+    expect(new NgbTime(11, 14, null).before(t)).toBeTruthy();
+    expect(new NgbTime(12, 0, null).before(t)).toBeFalsy();
+    expect(new NgbTime(10, 0, null).before(t)).toBeTruthy();
+  });
+
+  it('should compare times only by hour and minutes', () => {
+    const t = new NgbTime(11, 15, 30);
+
+    expect(new NgbTime(11, 15, 31).after(t, false)).toBeFalsy();
+    expect(new NgbTime(11, 15, 29).after(t, false)).toBeFalsy();
+
+    expect(new NgbTime(11, 15, 31).before(t, false)).toBeFalsy();
+    expect(new NgbTime(11, 15, 29).before(t, false)).toBeFalsy();
+  });
+
 });

@@ -48,4 +48,16 @@ export class NgbTime {
   }
 
   toString() { return `${this.hour || 0}:${this.minute || 0}:${this.second || 0}`; }
+
+  before(time: NgbTime, compareSecsIfSpecified = true) {
+    return this.hour < time.hour || (this.hour === time.hour && this.minute < time.minute) ||
+        (compareSecsIfSpecified && this.second && time.second && this.hour === time.hour &&
+         this.minute === time.minute && this.second < time.second);
+  }
+
+  after(time: NgbTime, compareSecsIfSpecified = true) {
+    return this.hour > time.hour || (this.hour === time.hour && this.minute > time.minute) ||
+        (compareSecsIfSpecified && this.second && time.second && this.hour === time.hour &&
+         this.minute === time.minute && this.second > time.second);
+  }
 }
