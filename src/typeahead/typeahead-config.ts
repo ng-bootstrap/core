@@ -12,6 +12,7 @@ export class NgbTypeaheadConfig {
   container;
   editable = true;
   focusFirst = true;
+  selectByEnter = true;
   showHint = false;
   placement: PlacementArray = ['bottom-left', 'bottom-right', 'top-left', 'top-right'];
 }
