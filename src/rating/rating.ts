@@ -115,7 +115,7 @@ export class NgbRating implements ControlValueAccessor,
   @Output() leave = new EventEmitter<number>();
 
   /**
-   * An event emitted when the user selects a new rating.
+   * An event emitted when the rating is changed.
    *
    * Event payload equals to the newly selected rating.
    */
