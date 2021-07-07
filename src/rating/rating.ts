@@ -42,13 +42,13 @@ export interface StarTemplateContext {
   encapsulation: ViewEncapsulation.None,
   host: {
     'class': 'd-inline-flex',
-    '[tabindex]': 'disabled ? -1 : 0',
+    '[tabindex]': 'isInteractive() ? 0 : -1',
     'role': 'slider',
     'aria-valuemin': '0',
     '[attr.aria-valuemax]': 'max',
     '[attr.aria-valuenow]': 'nextRate',
     '[attr.aria-valuetext]': 'ariaValueText()',
-    '[attr.aria-disabled]': 'readonly ? true : null',
+    '[attr.aria-disabled]': '!isInteractive() || null',
     '(blur)': 'handleBlur()',
     '(keydown)': 'handleKeyDown($event)',
     '(mouseleave)': 'reset()'
@@ -67,8 +67,8 @@ export interface StarTemplateContext {
 })
 export class NgbRating implements ControlValueAccessor,
     OnInit, OnChanges {
+  private _disabled = false;
   contexts: StarTemplateContext[] = [];
-  disabled = false;
   nextRate: number;
 
 
@@ -131,7 +131,7 @@ export class NgbRating implements ControlValueAccessor,
 
   ariaValueText() { return `${this.nextRate} out of ${this.max}`; }
 
-  isInteractive(): boolean { return !this.readonly && !this.disabled; }
+  isInteractive(): boolean { return !this.readonly && !this._disabled; }
 
   enter(value: number): void {
     if (this.isInteractive()) {
@@ -193,7 +193,7 @@ export class NgbRating implements ControlValueAccessor,
     this._updateState(this.rate);
   }
 
-  setDisabledState(isDisabled: boolean) { this.disabled = isDisabled; }
+  setDisabledState(isDisabled: boolean) { this._disabled = isDisabled; }
 
   update(value: number, internalChange = true): void {
     const newRate = getValueInRange(value, this.max, 0);

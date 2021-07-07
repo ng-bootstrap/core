@@ -439,28 +439,84 @@ describe('ngb-rating', () => {
 
     it('updates aria-disabled when readonly', () => {
       const fixture = createTestComponent('<ngb-rating></ngb-rating>');
-      let ratingEl = fixture.debugElement.query(By.directive(NgbRating));
+      const ratingEl = fixture.debugElement.query(By.directive(NgbRating));
+      const ratingComp = <NgbRating>ratingEl.componentInstance;
+
       fixture.detectChanges();
       expect(ratingEl.attributes['aria-disabled'] == null).toBeTruthy();
 
-      let ratingComp = <NgbRating>ratingEl.componentInstance;
       ratingComp.readonly = true;
+      fixture.detectChanges();
+      expect(ratingEl.attributes['aria-disabled']).toBe('true');
+    });
+
+    it('updates aria-disabled when disabled', () => {
+      const fixture = createTestComponent('<ngb-rating></ngb-rating>');
+      const ratingEl = fixture.debugElement.query(By.directive(NgbRating));
+      const ratingComp = <NgbRating>ratingEl.componentInstance;
+
+      fixture.detectChanges();
+      expect(ratingEl.attributes['aria-disabled'] == null).toBeTruthy();
+
+      ratingComp.setDisabledState(true);
       fixture.detectChanges();
       expect(ratingEl.attributes['aria-disabled']).toBe('true');
     });
   });
 
-  it('should set tabindex to -1 when disabled', () => {
-    const fixture = createTestComponent('<ngb-rating></ngb-rating>');
-    let ratingEl = fixture.debugElement.query(By.directive(NgbRating));
-    let ratingComp = <NgbRating>ratingEl.componentInstance;
+  describe('tabindex support', () => {
+    it('updates tabindex when readonly', () => {
+      const fixture = createTestComponent('<ngb-rating></ngb-rating>');
+      const ratingEl = fixture.debugElement.query(By.directive(NgbRating));
+      const ratingComp = <NgbRating>ratingEl.componentInstance;
 
-    fixture.detectChanges();
-    expect(ratingEl.nativeElement.getAttribute('tabindex')).toEqual('0');
+      fixture.detectChanges();
+      expect(ratingEl.nativeElement.getAttribute('tabindex')).toEqual('0');
 
-    ratingComp.disabled = true;
-    fixture.detectChanges();
-    expect(ratingEl.nativeElement.getAttribute('tabindex')).toEqual('-1');
+      ratingComp.readonly = true;
+      fixture.detectChanges();
+      expect(ratingEl.nativeElement.getAttribute('tabindex')).toEqual('-1');
+    });
+
+    it('updates tabindex when disabled', () => {
+      const fixture = createTestComponent('<ngb-rating></ngb-rating>');
+      const ratingEl = fixture.debugElement.query(By.directive(NgbRating));
+      const ratingComp = <NgbRating>ratingEl.componentInstance;
+
+      fixture.detectChanges();
+      expect(ratingEl.nativeElement.getAttribute('tabindex')).toEqual('0');
+
+      ratingComp.setDisabledState(true);
+      fixture.detectChanges();
+      expect(ratingEl.nativeElement.getAttribute('tabindex')).toEqual('-1');
+    });
+
+    it('should preserve tabindex for readonly component when disabled is false', () => {
+      const fixture = createTestComponent('<ngb-rating [readonly]="true"></ngb-rating>');
+      const ratingEl = fixture.debugElement.query(By.directive(NgbRating));
+      const ratingComp = <NgbRating>ratingEl.componentInstance;
+
+      fixture.detectChanges();
+      expect(ratingEl.nativeElement.getAttribute('tabindex')).toEqual('-1');
+
+      ratingComp.setDisabledState(false);
+      fixture.detectChanges();
+      expect(ratingEl.nativeElement.getAttribute('tabindex')).toEqual('-1');
+    });
+
+    it('should preserve tabindex for disabled component when readonly is false', () => {
+      const fixture = createTestComponent('<ngb-rating [readonly]="true"></ngb-rating>');
+      const ratingEl = fixture.debugElement.query(By.directive(NgbRating));
+      const ratingComp = <NgbRating>ratingEl.componentInstance;
+
+      ratingComp.setDisabledState(true);
+      fixture.detectChanges();
+      expect(ratingEl.nativeElement.getAttribute('tabindex')).toEqual('-1');
+
+      ratingComp.readonly = false;
+      fixture.detectChanges();
+      expect(ratingEl.nativeElement.getAttribute('tabindex')).toEqual('-1');
+    });
   });
 
   describe('keyboard support', () => {
