@@ -34,7 +34,7 @@ const FILTER_REGEX = /[^0-9]/g;
             <span class="chevron ngb-tp-chevron"></span>
             <span class="sr-only" i18n="@@ngb.timepicker.increment-hours">Increment hours</span>
           </button>
-          <input type="text" class="ngb-tp-input form-control" [class.form-control-sm]="isSmallSize"
+          <input type="text" class="ngb-tp-input form-control" aria-live="polite" aria-atomic="true" [class.form-control-sm]="isSmallSize"
             [class.form-control-lg]="isLargeSize"
             maxlength="2" inputmode="numeric" placeholder="HH" i18n-placeholder="@@ngb.timepicker.HH"
             [value]="formatHour(model?.hour)" (change)="updateHour($any($event).target.value)"
@@ -58,7 +58,7 @@ const FILTER_REGEX = /[^0-9]/g;
             <span class="chevron ngb-tp-chevron"></span>
             <span class="sr-only" i18n="@@ngb.timepicker.increment-minutes">Increment minutes</span>
           </button>
-          <input type="text" class="ngb-tp-input form-control" [class.form-control-sm]="isSmallSize" [class.form-control-lg]="isLargeSize"
+          <input type="text" class="ngb-tp-input form-control" aria-live="polite" aria-atomic="true" [class.form-control-sm]="isSmallSize" [class.form-control-lg]="isLargeSize"
             maxlength="2" inputmode="numeric" placeholder="MM" i18n-placeholder="@@ngb.timepicker.MM"
             [value]="formatMinSec(model?.minute)" (change)="updateMinute($any($event).target.value)"
             [readOnly]="readonlyInputs" [disabled]="disabled" aria-label="Minutes" i18n-aria-label="@@ngb.timepicker.minutes"
@@ -81,7 +81,7 @@ const FILTER_REGEX = /[^0-9]/g;
             <span class="chevron ngb-tp-chevron"></span>
             <span class="sr-only" i18n="@@ngb.timepicker.increment-seconds">Increment seconds</span>
           </button>
-          <input type="text" class="ngb-tp-input form-control" [class.form-control-sm]="isSmallSize" [class.form-control-lg]="isLargeSize"
+          <input type="text" class="ngb-tp-input form-control" aria-live="polite" aria-atomic="true" [class.form-control-sm]="isSmallSize" [class.form-control-lg]="isLargeSize"
             maxlength="2" inputmode="numeric" placeholder="SS" i18n-placeholder="@@ngb.timepicker.SS"
             [value]="formatMinSec(model?.second)" (change)="updateSecond($any($event).target.value)"
             [readOnly]="readonlyInputs" [disabled]="disabled" aria-label="Seconds" i18n-aria-label="@@ngb.timepicker.seconds"
