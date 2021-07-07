@@ -10,9 +10,6 @@ ngb-datepicker-navigation {
     display: inline-block;
     width: 0.75em;
     height: 0.75em;
-    margin-left: 0.25em;
-    margin-right: 0.15em;
-    transform: rotate(-135deg);
   }
 
   &-arrow {
@@ -24,16 +21,23 @@ ngb-datepicker-navigation {
     width: 2rem;
     height: 2rem;
 
-    &.right {
-      justify-content: flex-end;
-
+    &-prev {
       .ngb-dp-navigation-chevron {
-        transform: rotate(45deg);
-        margin-left: 0.15em;
-        margin-right: 0.25em;
+        margin-left: 0.25em;
+        margin-right: 0.15em;
+        transform: rotate(-135deg);
       }
     }
 
+    &-next {
+      justify-content: flex-end;
+
+      .ngb-dp-navigation-chevron {
+        margin-left: 0.15em;
+        margin-right: 0.25em;
+        transform: rotate(45deg);
+      }
+    }
   }
 
   &-arrow-btn {
