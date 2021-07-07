@@ -210,18 +210,24 @@ export class NgbTimepicker implements ControlValueAccessor,
   setDisabledState(isDisabled: boolean) { this.disabled = isDisabled; }
 
   changeHour(step: number) {
-    this.model.changeHour(step);
-    this.propagateModelChange();
+    if(!this.readonlyInputs && !this.disabled) {
+      this.model.changeHour(step);
+      this.propagateModelChange();
+    }
   }
 
   changeMinute(step: number) {
-    this.model.changeMinute(step);
-    this.propagateModelChange();
+    if(!this.readonlyInputs && !this.disabled) {
+      this.model.changeMinute(step);
+      this.propagateModelChange();
+    }
   }
 
   changeSecond(step: number) {
-    this.model.changeSecond(step);
-    this.propagateModelChange();
+    if(!this.readonlyInputs && !this.disabled) {
+      this.model.changeSecond(step);
+      this.propagateModelChange();
+    }
   }
 
   updateHour(newVal: string) {
