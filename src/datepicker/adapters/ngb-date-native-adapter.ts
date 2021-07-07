@@ -29,7 +29,7 @@ export class NgbDateNativeAdapter extends NgbDateAdapter<Date> {
   }
 
   protected _toNativeDate(date: NgbDateStruct): Date {
-    const jsDate = new Date(date.year, date.month - 1, date.day, 12);
+    const jsDate = new Date(date.year, date.month - 1, date.day);
     // avoid 30 -> 1930 conversion
     jsDate.setFullYear(date.year);
     return jsDate;

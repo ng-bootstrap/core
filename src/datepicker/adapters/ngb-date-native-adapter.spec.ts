@@ -35,12 +35,12 @@ describe('ngb-date-native model adapter', () => {
     });
 
     it('should convert a valid date',
-       () => { expect(adapter.toModel({year: 2016, month: 10, day: 15})).toEqual(new Date(2016, 9, 15, 12)); });
+       () => { expect(adapter.toModel({year: 2016, month: 10, day: 15})).toEqual(new Date(2016, 9, 15)); });
 
     it('should convert years between 0 and 99 correctly', () => {
 
       function jsDate(jsYear: number, jsMonth: number, jsDay: number): Date {
-        const date = new Date(jsYear, jsMonth, jsDay, 12);
+        const date = new Date(jsYear, jsMonth, jsDay);
         if (jsYear >= 0 && jsYear <= 99) {
           date.setFullYear(jsYear);
         }
