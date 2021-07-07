@@ -1,10 +1,11 @@
 import {Injectable, Injector} from '@angular/core';
 import {NgbConfig} from '../ngb-config';
+import {NgbModalRef} from './modal-ref';
 
 /**
  * Options available when opening new modal windows with `NgbModal.open()` method.
  */
-export interface NgbModalOptions {
+export interface NgbModalOptions<T = any> {
   /**
    * If `true`, modal opening and closing will be animated.
    *
@@ -45,7 +46,7 @@ export interface NgbModalOptions {
    *
    * then the modal won't be dismissed.
    */
-  beforeDismiss?: () => boolean | Promise<boolean>;
+  beforeDismiss?: (modalRef: NgbModalRef<T>) => boolean | Promise<boolean>;
 
   /**
    * If `true`, the modal will be centered vertically.
@@ -121,7 +122,7 @@ export class NgbModalConfig implements Required<NgbModalOptions> {
   ariaLabelledBy: string;
   ariaDescribedBy: string;
   backdrop: boolean | 'static' = true;
-  beforeDismiss: () => boolean | Promise<boolean>;
+  beforeDismiss: (modalRef: NgbModalRef<any>) => boolean | Promise<boolean>;
   centered: boolean;
   container: string;
   injector: Injector;
